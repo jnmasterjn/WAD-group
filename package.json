@@ -1,0 +1,24 @@
+{
+  "name": "wad-group",
+  "version": "1.0.0",
+  "description": "hehehhihi ahodaw",
+  "main": "janice.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jnmasterjn/WAD-group.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/jnmasterjn/WAD-group/issues"
+  },
+  "homepage": "https://github.com/jnmasterjn/WAD-group#readme",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
