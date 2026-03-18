@@ -5,11 +5,26 @@ const mongoose = require("mongoose")
 
 //creates sthe schema
 const userSchema = new mongoose.Schema({
-    username: String,
-    email: String,
-    password: String,
-    role: { type: String, default: "user" }, // tells the system what permissions the user has if no specification the default is role: "user"
-    createdAt: { type: Date, default: Date.now } // automatically records when the account was created
+    username: {
+        type: String,
+        required: [true, 'A user must have a username']
+    },
+    email: {
+        type: String,
+        required: [true, 'A user must have an email']
+    },
+    password: {
+        type: String,
+        required: [true, 'A user must have a password']  
+    },
+    joinedAt: {
+        type: Date,
+        default: Date.now 
+    },
+    watchlist: {
+        type: Array,
+        default: []
+    }
 })
 
 module.exports = mongoose.model("User", userSchema)
