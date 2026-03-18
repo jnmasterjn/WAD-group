@@ -4,15 +4,26 @@ const mongoose = require("mongoose")
 
 // Create a new 'movie' schema
 const movieSchema = new mongoose.Schema({
-    title: String,
-    genre: String,
-    releaseYear: Number,
-    status: String,
-    userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
+    title: {
+        type: String,
+        required: [true, 'A movie must have a title']
     },
-    createdAt: { type: Date, default: Date.now }
+    genre: {
+        type: String,
+        required: [true, 'A movie must need a genre']
+    },
+    releaseYear: {
+        type: Number,
+        required: [true, 'A movie must have a release year']
+    },
+    rating: {
+        type: Number,
+        default: 0.0
+    },
+    price: {
+        type: Number,
+        required: [true, 'A movie must have a price']
+    }
 })
 
 module.exports = mongoose.model("Movie", movieSchema)
