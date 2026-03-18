@@ -1,4 +1,6 @@
-//to store the movie title, the genre, the status, which user's watchlist the movie belongs to
+// Without this file mongoDB wouldn't know the structure of the movie data
+
+//to store the movie ID, title, the genre, year released, rating, and whether the movie has been watched or not
 
 const mongoose = require("mongoose")
 
@@ -24,9 +26,9 @@ const movieSchema = new mongoose.Schema({
         type: Number,
         default: 0.0
     },
-    price: {
-        type: Number,
-        required: [true, 'A movie must have a price']
+    isWatched: {
+        type: Boolean,
+        default: false
     }
 })
 

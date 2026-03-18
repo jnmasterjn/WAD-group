@@ -1,5 +1,7 @@
 // Without this file mongoDB wouldn't know the structure of the user data
 
+//to store the user ID, username, email, password, when they joined, what movies are in their watchlist, and whether they're an admin or user(we use bool here as there are only 2 roles)
+
 // Loads mongoose (the tool that connects node.js to mongodb)
 const mongoose = require("mongoose")
 
@@ -29,9 +31,9 @@ const userSchema = new mongoose.Schema({
         type: Array,
         default: []
     },
-    role: {
-        type: String,
-        default: "user"
+    isAdmin: {
+        type: Boolean,
+        default: false
     }
 })
 
