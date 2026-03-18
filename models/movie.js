@@ -2,6 +2,7 @@
 
 const mongoose = require("mongoose")
 
+// Create a new 'movie' schema
 const movieSchema = new mongoose.Schema({
     title: String,
     genre: String,
