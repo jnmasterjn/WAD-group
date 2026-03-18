@@ -24,6 +24,10 @@ const userSchema = new mongoose.Schema({
     watchlist: {
         type: Array,
         default: []
+    },
+    role: {
+        type: String,
+        default: "user"
     }
 })
 
