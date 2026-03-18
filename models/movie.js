@@ -4,6 +4,10 @@ const mongoose = require("mongoose")
 
 // Create a new 'movie' schema
 const movieSchema = new mongoose.Schema({
+    movieId: {
+        type: Number,
+        required: [true, 'A movie must have an ID']
+    },
     title: {
         type: String,
         required: [true, 'A movie must have a title']
