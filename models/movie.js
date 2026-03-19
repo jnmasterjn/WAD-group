@@ -6,13 +6,13 @@ const mongoose = require("mongoose")
 
 // Create a new 'movie' schema
 const movieSchema = new mongoose.Schema({
-    movieId: {
-        type: Number,
-        required: [true, 'A movie must have an ID']
-    },
     title: {
         type: String,
         required: [true, 'A movie must have a title']
+    },
+    description:{
+        type:String,
+        required: [true, 'A movie must have a description']
     },
     genre: {
         type: String,
@@ -25,11 +25,7 @@ const movieSchema = new mongoose.Schema({
     rating: {
         type: Number,
         default: 0.0
-    },
-    isWatched: {
-        type: Boolean,
-        default: false
     }
 })
 
-module.exports = mongoose.model("Movie", movieSchema)
+module.exports = mongoose.model("Movie", movieSchema, "movies")
