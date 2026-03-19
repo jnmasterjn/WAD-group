@@ -21,4 +21,7 @@ mongoose.connect(process.env.MONGO_URI)
 const userRoutes = require("./routes/userRoutes");
 app.use("/", userRoutes);
 
+const movieRoutes = require("./routes/movieRoute");
+app.use("/", movieRoutes);
+
 app.listen(3000, () => console.log("Server running on port 3000"));

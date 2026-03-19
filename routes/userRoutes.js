@@ -58,4 +58,9 @@ router.get("/my-reviews", (req, res) => {
     res.render("myReviews", { username: req.session.username });
 });
 
+//landing page
+router.get("/", (req, res) => {
+    res.render("index")
+});
+
 module.exports = router;
