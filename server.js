@@ -1,13 +1,24 @@
-const express = require('express');
-const dotenv = require('dotenv');
-const mongoose = require('mongoose');
+const dotenv = require("dotenv");
+const express = require("express");
+const mongoose = require("mongoose");
+const session = require("express-session");
 
 const app = express();
+dotenv.config();
 
-app.get("/", (req, res) => {
-    res.send("Hello Guys This is for TESTING ONLY.");
-});
+app.set("view engine", "ejs");
+app.use(express.urlencoded({ extended: true }));
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false
+}));
 
-app.listen(3000, () => {
-    console.log("---Server running on port 3000---");
-});
+mongoose.connect(process.env.MONGO_URI)
+    .then(() => console.log("MongoDB connected!"))
+    .catch((err) => console.log(err));
+
+const userRoutes = require("./routes/userRoutes");
+app.use("/", userRoutes);
+
+app.listen(3000, () => console.log("Server running on port 3000"));
