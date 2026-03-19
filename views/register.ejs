@@ -1,6 +1,9 @@
 <html>
     <body>
         <h1>Register</h1>
+        <% if (error) { %>
+            <p style="color:red"><%= error %></p>
+        <% } %>
         <form method="POST" action="/register">
             <input type="text" name="username" placeholder="Username" required><br>
             <input type="email" name="email" placeholder="Email" required><br>

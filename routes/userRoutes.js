@@ -9,6 +9,15 @@ router.get("/login", (req, res) => res.render("login", { error: null }));
 
 router.post("/register", async (req, res) => {
     const { username, email, password } = req.body;
+    if (!username || !email || !password) {
+        return res.render("register", { error: "All fields are required" });
+    }
+    if (password.length < 6) {
+        return res.render("register", { error: "Password must be at least 6 characters" });
+    }
+    if (!/\S+@\S+\.\S+/.test(email)) {
+        return res.render("register", { error: "Invalid email format" });
+    }
     try {
         const hashed = await bcrypt.hash(password, 10);
         const user = new User({ username, email, password: hashed });
