@@ -8,16 +8,14 @@ const router = express.Router();
 const Movie = require("../models/movie");
 const fs = require("fs");
 
-
-router.get("/test-movies", async (req, res) => {
-    const movies = await Movie.find();
-    res.json(movies);
-});
-
 router.get("/movie", async (req, res) => {
     const movies = await Movie.find()
     res.render("movies/movieList", {movies})
 })
 
-module.exports = router;
+router.get("/movie/:id", async (req, res) => {
+    const ind_movie = await Movie.findById(req.params.id);
+    res.render("movies/movieDetail", {ind_movie})
+})
 
+module.exports = router;
