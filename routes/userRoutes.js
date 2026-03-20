@@ -85,7 +85,7 @@ router.get("/logout", (req, res) => {
 
 //landing page
 router.get("/", (req, res) => {
-    res.render("index")
+    res.render("index", { username: req.session.username || null })
 });
 
 module.exports = router;
