@@ -7,34 +7,28 @@ const mongoose = require("mongoose")
 
 //creates sthe schema
 const userSchema = new mongoose.Schema({
-    userId: {
-        type: Number,
-        required: [true, 'A user must have an ID']
-    },
     username: {
         type: String,
-        required: [true, 'A user must have a username']
-    },
-    email: {
-        type: String,
-        required: [true, 'A user must have an email']
+        required: [true, 'A user must have a username'], 
+        unique: true,
+        trim: true
     },
     password: {
         type: String,
         required: [true, 'A user must have a password']  
     },
-    joinedAt: {
-        type: Date,
-        default: Date.now 
-    },
     watchlist: {
         type: Array,
-        default: []
+        default: [mongoose.Schema.Types.ObjectId],
+        ref: "Movie"
     },
     isAdmin: {
         type: Boolean,
         default: false
     }
+}, {
+    timestamps: true
 })
+// the timestamps thing will auto add createdAt (when user registered), updatedAt
 
-module.exports = mongoose.model("User", userSchema)
+module.exports = mongoose.model("User", userSchema, "users")
