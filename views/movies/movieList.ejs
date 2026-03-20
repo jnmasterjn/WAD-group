@@ -1,22 +1,24 @@
 <!-- all the movies listed in this page -->
 <!DOCTYPE html>
+<%- include("../partials/navbar") %>
 <html>
-<body>
 
-<h1>Browse Movie Options</h1>
+    <body>
 
-<div style="display:flex; flex-wrap:wrap;">
+        <h1>Browse Movie Options</h1>
 
-    <% movies.forEach(movie => { %>
-        <div style="width:150px; margin:10px; text-align:center">
-            <a href="/movie/<%= movie._id %>">
-                <img src="<%= movie.image %>" style="width:160px; border-radius: 20px;"><br>
-            </a>
-            <%= movie.title %>
+        <div style="display:flex; flex-wrap:wrap;">
+
+            <% movies.forEach(movie => { %>
+                <div style="width:150px; margin:10px; text-align:center">
+                    <a href="/movie/<%= movie._id %>">
+                        <img src="<%= movie.image %>" style="width:160px; border-radius: 20px;"><br>
+                    </a>
+                    <%= movie.title %>
+                </div>
+            <% }); %>
+
         </div>
-    <% }); %>
 
-</div>
-
-</body>
+    </body>
 </html>
