@@ -9,10 +9,11 @@ dotenv.config();
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
 app.use(session({
-    secret: process.env.SESSION_SECRET,
+    secret: "secret",
     resave: false,
     saveUninitialized: false
 }));
+
 
 mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log("MongoDB connected!"))
@@ -25,4 +26,3 @@ const movieRoutes = require("./routes/movieRoute");
 app.use("/", movieRoutes);
 
 app.listen(3000, () => console.log("Server running on port 3000"));
-
