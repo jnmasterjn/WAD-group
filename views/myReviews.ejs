@@ -1,6 +1,6 @@
-<html>
-    <head>
-        <title>My Reviews</title>
+<!-- <html>
+<head>
+    <title>My Reviews</title>
     </head>
     <body>
         <h1>Welcome <%= username %>!</h1>
@@ -8,5 +8,50 @@
         <p>Your reviews will appear here.</p>
         <a href="/watchlist">My Watchlist</a>
         <a href="/logout">Logout</a>
+    </body>
+</html> -->
+
+
+
+
+
+
+
+<!-- Need to link this to the movie details thingy -->
+
+<html>
+    <head>
+        <title>Reviews</title>
+    </head>
+    <body>
+        <h3>Leaving a review for: __Name of the show??___</h3>
+        
+        <form action="/reviews" method="post">
+            <!--Input for the review title-->
+            <label>Title:</label><br>
+            <input type="text" name="title"><br><br>
+
+            <!--Leaving review-->
+            <label>Content:</label><br>
+            <textarea name="content" rows="5" cols="40"></textarea><br><br>
+            <!--Submit button to post review-->
+            <button type="submit">Post</button>
+        </form>
+
+        <!--Seeing Reviews sent-->
+        <h3>All Reviews</h3>
+
+        <% if (reviews.length === 0) { %>
+            <!-- Message when no reviews are given -->
+            <p>No Reviews yet.</p>
+        <% } else { %>
+            <!-- EJS loop to render each blog post -->
+            <% reviews.forEach(review => { %>
+                <h3><%= review.title %></h3>
+                
+                <p><%= review.content %></p>
+            
+            <% }); %>
+        <% } %>
     </body>
 </html>
