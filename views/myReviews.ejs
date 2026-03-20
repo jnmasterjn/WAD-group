@@ -3,7 +3,7 @@
     <title>My Reviews</title>
     </head>
     <body>
-        <h1>Welcome <%= username %>!</h1>
+        <h1>Welcome //>//!</h1>
         <h2>My Reviews</h2>
         <p>Your reviews will appear here.</p>
         <a href="/watchlist">My Watchlist</a>
@@ -26,7 +26,7 @@
     <body>
         <h3>Leaving a review for: __Name of the show??___</h3>
         
-        <form action="/reviews" method="post">
+        <form action="/reviews-form" method="post">
             <!--Input for the review title-->
             <label>Title:</label><br>
             <input type="text" name="title"><br><br>
@@ -47,8 +47,9 @@
         <% } else { %>
             <!-- EJS loop to render each blog post -->
             <% reviews.forEach(review => { %>
+                <!--show review title-->
                 <h3><%= review.title %></h3>
-                
+                <!--show review content-->
                 <p><%= review.content %></p>
             
             <% }); %>
