@@ -9,14 +9,14 @@ const Movie = require("../models/movie");
 const fs = require("fs");
 
 
-
 router.get("/test-movies", async (req, res) => {
     const movies = await Movie.find();
     res.json(movies);
 });
 
-router.get("/movie", (req, res) => {
-    res.render("movies/movieList")
+router.get("/movie", async (req, res) => {
+    const movies = await Movie.find()
+    res.render("movies/movieList", {movies})
 })
 
 module.exports = router;

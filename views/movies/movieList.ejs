@@ -1,5 +1,20 @@
 <!-- all the movies listed in this page -->
+<!DOCTYPE html>
 <html>
-    <h2>Janice the GOAT</h2>
-    <h1>Movie Options</h1>
+<body>
+
+<h3>Browse Movie</h3>
+
+<div style="display:flex; flex-wrap:wrap;">
+
+    <% movies.forEach(movie => { %>
+        <div style="width:150px; margin:10px; text-align:center;">
+            <img src="<%= movie.image %>" style="width:150px;"><br>
+            <%= movie.title %>
+        </div>
+    <% }); %>
+
+</div>
+
+</body>
 </html>
