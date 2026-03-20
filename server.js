@@ -25,3 +25,4 @@ const movieRoutes = require("./routes/movieRoute");
 app.use("/", movieRoutes);
 
 app.listen(3000, () => console.log("Server running on port 3000"));
+
