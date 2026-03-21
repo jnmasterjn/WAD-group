@@ -13,11 +13,11 @@ router.get("/movie/add", isLoggedIn, isAdmin, (req, res) => {
 
 router.post("/movie/add", isLoggedIn, isAdmin, movieController.movieAdd);
 
-router.post("/movie/delete/:id", isLoggedIn, isAdmin.movieRemove);
+router.post("/movie/delete/:id", isLoggedIn, isAdmin, movieController.movieRemove);
 
-router.get("/movie/edit/:id", isLoggedIn, isAdmin.movieEdit)
+router.get("/movie/edit/:id", isLoggedIn, isAdmin, movieController.movieEdit)
 
-router.post("/movie/edit/:id", isLoggedIn, isAdmin.movieCheck)
+router.post("/movie/edit/:id", isLoggedIn, isAdmin, movieController.movieCheck)
 
 router.get("/movie/:id", isLoggedIn, movieController.movieDesc);
 
