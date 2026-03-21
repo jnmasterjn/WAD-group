@@ -49,5 +49,5 @@ exports.movieDesc = async (req, res) => {
     } catch (error) {
         console.error(error);
         res.send("Failed to display movie")
-    }  
+    }
 };

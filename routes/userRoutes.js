@@ -1,9 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const bcrypt = require("bcrypt");
-const User = require("../models/user");
 const isLoggedIn = require("../middleware/auth");
-const movie = require("../models/movie");
+const Movie = require("../models/movie");
 
 //reg page
 router.get("/register", (req, res) => {
@@ -16,74 +14,15 @@ router.get("/login", (req, res) => {
 })
 
 //reg logic
-router.post("/register", async (req, res) => {
-
-    const { username, password } = req.body;
-
-    if (!username || !password) {
-        return res.render("register", { error: "All fields are required" });
-    }
-    //password must > 6
-    if (password && password.length < 6) {
-        return res.render("register", { error: "Password must be at least 6 characters" });
-    }
-
-    try {
-        //check if username appear in db alr or not
-        const existingUser = await User.findOne({username});
-        if (existingUser) {
-            return res.render("register", {error: "Username already exists"})
-        }
-
-        const hashed = await bcrypt.hash(password, 10);
-
-        const user = new User({ 
-            username, 
-            password: hashed 
-        });
-
-        await user.save();
-
-        res.redirect("/login");
-
-    } catch (err) {
-        console.log(err)
-        res.render("register", { error: "Something went wrong, please try again." });
-    }
-});
+router.post("/register", userController.registerLogic);
 
 //login logic
-router.post("/login", async (req, res) => {
-    const {username, password} = req.body
-
-    try {
-        const user = await User.findOne({ username })
-
-        if (!user) {
-            return res.render("login", {error: "User not found"})
-        }
-    
-        const match = await bcrypt.compare(password, user.password)
-    
-        if (!match){
-            return res.render("login", {error: "Password does not match"})
-        }
-        
-        //session
-        req.session.userId = user._id;
-        req.session.username = user.username;
-
-        res.redirect("/movie")
-    
-    }catch(err){
-        console.log(err)
-        res.render("login", {error: "Something went wrong, please try again."})
-    }
-})
+router.post("/login", userController.loginLogic);
 
 //logout
 router.get("/logout", (req, res) => {
-    req.session.destroy();
+    req.session.userId = null;
+    req.session.username = null;
     res.redirect("/login");
 });
 
@@ -92,8 +31,24 @@ router.get("/profile", isLoggedIn, async(req, res) => {
 
     const user = await User.findById(req.session.userId);
 
+    const recentlyIds = req.session.recentlyViewed || [];
+    const recentlyMovies = await Movie.find({
+        _id: { $in: recentlyIds }
+    });
+
+    let orderedMovies = [];
+
+    for (let i = 0; i < recentlyIds.length; i++) {
+        for (let j = 0; j < recentlyMovies.length; j++) {
+            if (recentlyMovies[j]._id.toString() === recentlyIds[i].toString()) {
+                orderedMovies.push(recentlyMovies[j]);
+        }
+    }
+}
+
     res.render("profile", {
-        user
+        user,
+        recentlyMovies: orderedMovies
     })
 })
 

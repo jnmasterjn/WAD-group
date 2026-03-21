@@ -25,7 +25,7 @@
         </form>
     <%}%>
 
-    <!-- Add A Review -->
+    <!-- Add A Review
     <br> 
     <form action="/myReviews/" method="POST">
         <button>Write A Review</button>
@@ -34,4 +34,53 @@
 
     <a href="/movie"> Back</a>
 
+</html> -->
+
+<!-- new code -->
+
+   <!-- Add A Review -->
+   <!-- <br>
+   <form action="/myReviews/" method="POST">
+       <button>Write A Review</button>
+   </form>
+   <br> -->
+
+   <button id="openreviewpopup"> Write A Review</button>
+
+   <div id="reviewstuff" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.5);">
+       <div style="background:white; padding:20px; margin:100px auto; width:300px;">
+          
+           <h3>Leaving a review for <label><%= ind_movie.title %></label>:  </h3>
+
+           <form action="/myReviews" method="post">
+           <!--Input for the review title-->
+           <input type="hidden" name="movieId" value="<%= ind_movie._id %>">
+
+           <!--Leaving review-->
+           <label>Content:</label><br>
+           <textarea name="content" rows="5" cols="30"></textarea><br><br>
+           <!--Submit button to post review-->
+           <button type="submit">Post</button>
+           <button type="button" id="closepopupbutton">Cancel</button>
+       </form>
+       </div>
+   </div>
+   
+   <script>
+       const openPopupButton = document.getElementById("openreviewpopup");
+       const closePopupButton = document.getElementById("closepopupbutton");
+       const reviewstuff = document.getElementById("reviewstuff");
+
+       openPopupButton.addEventListener("click", () => {
+           reviewstuff.style.display = "block";
+       });
+
+       closePopupButton.addEventListener("click", () => {
+           reviewstuff.style.display = "none";
+       });
+   </script>
+
+   <a href="/movie"> Back</a>
+
 </html>
+
