@@ -97,7 +97,7 @@ exports.movieAdd = async (req, res) => {
         console.log(error); // print the error out
         res.send("Error adding movie."); // user will see this
     }
-});
+};
 
 // function to remove movie
 exports.movieRemove = async (req, res) => {
@@ -108,7 +108,7 @@ exports.movieRemove = async (req, res) => {
         console.log(error);
         res.send("Error deleting movie.");
     }
-});
+};
 
 // function to edit
 exports.movieEdit = async (req, res) => {
@@ -119,7 +119,7 @@ exports.movieEdit = async (req, res) => {
         console.log(error);
         res.send("Error loading edit page.");
     }
-});
+};
 
 // function to check all fills 
 exports.movieCheck = async (req, res) => {
@@ -143,8 +143,4 @@ exports.movieCheck = async (req, res) => {
         console.log(error);
         res.send("Error updating movie.");
     }
-});
-
-
-    
 };
