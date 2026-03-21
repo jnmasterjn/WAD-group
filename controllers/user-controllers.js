@@ -67,7 +67,30 @@ exports.loginLogic = async (req, res) => {
 };
 
 // profile
-exports.profile = async(req, res) => {
-    const user = await User.findById(req.session.userId);
-    res.render("profile", { user })
+exports.profile = async (req, res) => {
+    try {
+        const user = await User.findById(req.session.userId);
+
+        const recentlyIds = req.session.recentlyViewed || [];
+        const recentlyMovies = await Movie.find({
+            _id: { $in: recentlyIds }
+        });
+
+        let orderedMovies = [];
+        for (let i = 0; i < recentlyIds.length; i++) {
+            for (let j = 0; j < recentlyMovies.length; j++) {
+                if (recentlyMovies[j]._id.toString() === recentlyIds[i].toString()) {
+                    orderedMovies.push(recentlyMovies[j]);
+                }
+            }
+        }
+
+        res.render("profile", {
+            user,
+            recentlyMovies: orderedMovies
+        });
+    } catch (err) {
+        console.error(err);
+        res.send("Failed to load profile");
+    }
 };
