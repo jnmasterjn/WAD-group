@@ -1,5 +1,6 @@
 const Movie = require("../models/movie");
 const User = require("../models/user");
+const Review = require("../models/review");
 
 // Controller function to load all movies on the website
 exports.displayMovies = async (req, res) => { 
@@ -38,6 +39,9 @@ exports.movieDesc = async (req, res) => {
         //req.params = values from the URL
         const ind_movie = await Movie.findById(req.params.id);
         const user = await User.findById(req.session.userId);
+        const reviews = await Review.find({
+            movie: req.params.id
+        }).populate("user"); // optional (to show username)
         
         //Recently view
 
@@ -66,7 +70,7 @@ exports.movieDesc = async (req, res) => {
             id.toString() === ind_movie._id.toString()
         );
 
-        res.render("movies/movieDetail", {ind_movie, isInWatchlist})
+        res.render("movies/movieDetail", {ind_movie, isInWatchlist, reviews})
         console.log(req.session.recentlyViewed);
     } catch (error) {
         console.error(error);
