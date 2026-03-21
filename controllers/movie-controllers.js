@@ -71,5 +71,79 @@ exports.movieDesc = async (req, res) => {
         console.error(error);
         res.send("Failed to display movie")
     }
+
+// function to handle movie form submission 
+exports.movieAdd = async (req, res) => {
+    try { // try block
+        const { title, description, genre, releaseYear, image } = req.body; // Take values from the submitted form and store them in variables
+
+        if (!title || !description || !genre || !releaseYear) { // Check whether any required field is missing
+            return res.send("Please fill in all required fields.");
+        }
+        // create a movie object
+        const newMovie = new Movie({
+            title,
+            description,
+            genre,
+            releaseYear,
+            image
+        });
+
+        await newMovie.save(); // Save the new movie into MongoDB
+
+        res.redirect("/movie"); // After saving, send the user back to movie list page to immediately see the updated list
+    } catch (error) { // if anything inside try fails, this will run instead, for example invalid date or save error
+        console.log(error); // print the error out
+        res.send("Error adding movie."); // user will see this
+    }
+});
+
+// function to remove movie
+exports.movieRemove = async (req, res) => {
+    try {
+        await Movie.findByIdAndDelete(req.params.id);
+        res.redirect("/movie");
+    } catch (error) {
+        console.log(error);
+        res.send("Error deleting movie.");
+    }
+});
+
+// function to edit
+exports.movieEdit = async (req, res) => {
+    try {
+        const movie = await Movie.findById(req.params.id);
+        res.render("movies/editMovie", { movie });
+    } catch (error) {
+        console.log(error);
+        res.send("Error loading edit page.");
+    }
+});
+
+// function to check all fills 
+exports.movieCheck = async (req, res) => {
+    try {
+        const { title, description, genre, releaseYear, image } = req.body;
+
+        if (!title || !description || !genre || !releaseYear) {
+            return res.send("Please fill in all required fields.");
+        }
+
+        await Movie.findByIdAndUpdate(req.params.id, {
+            title,
+            description,
+            genre,
+            releaseYear,
+            image
+        });
+
+        res.redirect("/movie");
+    } catch (error) {
+        console.log(error);
+        res.send("Error updating movie.");
+    }
+});
+
+
     
 };
