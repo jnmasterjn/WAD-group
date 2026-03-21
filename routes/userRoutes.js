@@ -31,9 +31,6 @@ router.get("/logout", (req, res) => {
 });
 
 //profile
-<<<<<<< Updated upstream
-router.get("/profile", isLoggedIn, userController.profile);
-=======
 router.get("/profile", isLoggedIn, async(req, res) => {
 
     const user = await User.findById(req.session.userId);
@@ -58,7 +55,6 @@ router.get("/profile", isLoggedIn, async(req, res) => {
         recentlyMovies: orderedMovies
     })
 })
->>>>>>> Stashed changes
 
 //landing page
 router.get("/", (req, res) => {

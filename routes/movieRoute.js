@@ -11,10 +11,6 @@ const movieController = require("../controllers/movie-controllers")
 
 router.get("/movie", isLoggedIn, movieController.displayMovies);
 
-<<<<<<< Updated upstream
-router.get("/movie/:id", isLoggedIn, movieController.movieDesc);
-
-=======
 router.get("/movie/:id", isLoggedIn, async (req, res) => {
 
     //req.params = values from the URL
@@ -52,5 +48,4 @@ router.get("/movie/:id", isLoggedIn, async (req, res) => {
     res.render("movies/movieDetail", {ind_movie, isInWatchlist})
     console.log(req.session.recentlyViewed);
 })
->>>>>>> Stashed changes
 module.exports = router;
