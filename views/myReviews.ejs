@@ -1,39 +1,26 @@
-<!-- Need to link this to the movie details thingy -->
-
 <html>
-    <head>
-        <title>Reviews</title>
-    </head>
-    <body>
-        <h3>Leaving a review for: </h3>
-        
-        <form action="/myReviews" method="post">
-            <!--Input for the review title-->
-            <label>Title:</label><br>
-            <input type="text" name="title"><br><br>
+   <head>
+       <title>Reviews</title>
+   </head>
+   <body>
+       <!--Seeing Reviews sent-->
+       <h3>All Reviews</h3>
 
-            <!--Leaving review-->
-            <label>Content:</label><br>
-            <textarea name="content" rows="5" cols="40"></textarea><br><br>
-            <!--Submit button to post review-->
-            <button type="submit">Post</button>
-        </form>
-
-        <!--Seeing Reviews sent-->
-        <h3>All Reviews</h3>
-
-        <% if (reviews.length === 0) { %>
-            <!-- Message when no reviews are given -->
-            <p>No Reviews yet.</p>
-        <% } else { %>
-            <!-- EJS loop to render each blog post -->
-            <% reviews.forEach(review => { %>
-                <!--show review title-->
-                <h3><%= review.title %></h3>
-                <!--show review content-->
-                <p><%= review.content %></p>
-            
-            <% }); %>
-        <% } %>
-    </body>
+       <% if (reviews.length === 0) { %>
+           <!-- Message when no reviews are given -->
+           <p>No Reviews yet.</p>
+       <% } else { %>
+           <!-- EJS loop to render each blog post -->
+           <% reviews.forEach(review => { %>
+               <!--show review content-->
+               <p><%= review.content %></p>
+          
+           <% }); %>
+       <% } %>
+   </body>
 </html>
+
+
+
+
+
