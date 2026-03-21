@@ -57,6 +57,7 @@ exports.loginLogic = async (req, res) => {
         //session
         req.session.userId = user._id;
         req.session.username = user.username;
+        req.session.isAdmin = user.isAdmin;
 
         res.redirect("/movie")
 
