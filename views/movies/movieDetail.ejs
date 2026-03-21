@@ -54,11 +54,18 @@
 
            <form action="/myReviews" method="post">
            <!--Input for the review title-->
-           <input type="hidden" name="movieId" value="<%= ind_movie._id %>">
+           <input type="hidden" name="movie" value="<%= ind_movie._id %>">
 
-           <!--Leaving review-->
+           <label>Rating:</label><br>
+           <input type="number" name="rating" min="1" max="5"> 
+           <br> 
+
            <label>Content:</label><br>
-           <textarea name="content" rows="5" cols="30"></textarea><br><br>
+           <textarea name="comment" rows="5" cols="30"></textarea>
+           
+           <br><br>
+
+
            <!--Submit button to post review-->
            <button type="submit">Post</button>
            <button type="button" id="closepopupbutton">Cancel</button>
