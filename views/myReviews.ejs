@@ -1,20 +1,22 @@
+<%- include("./partials/navbar") %>
 <html>
    <head>
        <title>Reviews</title>
    </head>
    <body>
-       <!--Seeing Reviews sent-->
-       <h3>All Reviews</h3>
+       <h3>All Your Reviews</h3>
 
        <% if (reviews.length === 0) { %>
            <!-- Message when no reviews are given -->
            <p>No Reviews yet.</p>
        <% } else { %>
-           <!-- EJS loop to render each blog post -->
+           <!-- loop to render each blog post -->
            <% reviews.forEach(review => { %>
-               <!--show review content-->
-               <p><%= review.content %></p>
-          
+            <p>User ID: <%= review.user %></p>
+            <p>Movie ID: <%= review.movie %></p>
+            <p>Rating: <%= review.rating %>/5</p>
+            <p>Comment: <%= review.comment %></p>
+            --------------------------------------------------------<br>
            <% }); %>
        <% } %>
    </body>

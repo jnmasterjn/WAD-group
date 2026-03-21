@@ -4,6 +4,8 @@ const mongoose = require("mongoose");
 const session = require("express-session");
 
 //val's fs
+
+const Review = require("./models/Review")
 // const fs = require("node:fs/promises")
 
 // const app = express();
@@ -40,16 +42,16 @@ const session = require("express-session");
 // //route to handle form submission (new review post)
 // app.post("/myReviews", async (req, res) => {
 //     const title = req.body.title;
-//     const content = req.body.content;
+//     const comment, rating, movie = req.body.comment, rating, movie;
 
 //     // create a javascript object for the new post 
 //     const newReview = {
 //         title,
-//         content,
+//         comment, rating, movie,
 //     };
 
-//     //if either title or content is missing, redirect back to the form
-//     if (!title || !content) return res.redirect("/myReviews");
+//     //if either title or comment, rating, movie is missing, redirect back to the form
+//     if (!title || !comment, rating, movie) return res.redirect("/myReviews");
 
 //     try {
 //         let reviews = [];
@@ -80,7 +82,7 @@ const session = require("express-session");
 
 //val new code
 //val's fs
-const fs = require("node:fs/promises")
+// const fs = require("node:fs/promises")
 
 const app = express();
 dotenv.config();
@@ -95,20 +97,34 @@ app.use(session({
 
 //route to handle form submission (new review post)
 app.post("/myReviews", async (req, res) => {
-   const content = req.body;
+   const { comment, rating, movie } = req.body;
 
-   if (!content) return res.redirect(`/movie`);
+   if (!comment) return res.send("Comment is required!");
 
    try {
-       const newReview = new Review({ content })
+       const newReview = new Review({ comment, rating, movie, user:req.session.userId });
+       
        await newReview.save(); // save to mongoDB
-
        res.redirect(`/movie`);
    } catch (err) {
        console.error("Error saving review:", err);
-       res.redirect(`/movie`)
+       res.send(err.message)
    }
 });
+
+//route to get the reviews page
+app.get("/myReviews", async (req,res) => {
+    try {
+        const reviews = await Review.find(); // get all reviews
+        res.render("myReviews", { reviews });
+    } catch (err) {
+        console.error(err);
+        res.send("Error loading reviews");
+    }
+});
+
+
+
 
 const userRoutes = require("./routes/userRoutes");
 app.use("/", userRoutes);
