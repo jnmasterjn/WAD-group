@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 const User = require("../models/user");
+const isLoggedIn = require("../middleware/auth");
 
 //reg page
 router.get("/register", (req, res) => {
@@ -50,6 +51,7 @@ router.post("/register", async (req, res) => {
     }
 });
 
+//login logic
 router.post("/login", async (req, res) => {
     const {username, password} = req.body
 
@@ -78,6 +80,7 @@ router.post("/login", async (req, res) => {
     }
 })
 
+//logout
 router.get("/logout", (req, res) => {
     req.session.destroy();
     res.redirect("/login");
@@ -87,5 +90,15 @@ router.get("/logout", (req, res) => {
 router.get("/", (req, res) => {
     res.render("index")
 });
+
+//watchlist page
+router.get("/watchlist", isLoggedIn, (req, res) => {
+    res.render("watchlist")
+})
+
+//add-to-watchlist
+router.post("/add-to-watchlist/:movieId", isLoggedIn, (req, res) => {
+    console.log(req)
+})
 
 module.exports = router;
