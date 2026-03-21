@@ -5,15 +5,16 @@
    </head>
    <body>
        <h3>All Your Reviews</h3>
-
+        
        <% if (reviews.length === 0) { %>
            <!-- Message when no reviews are given -->
            <p>No Reviews yet.</p>
        <% } else { %>
            <!-- loop to render each blog post -->
            <% reviews.forEach(review => { %>
-            <p>User ID: <%= review.user %></p>
             <p>Movie ID: <%= review.movie %></p>
+            <p>User ID: <%= review.user %></p>
+            <p>Username: <%= review.username %></p>
             <p>Rating: <%= review.rating %>/5</p>
             <p>Comment: <%= review.comment %></p>
             --------------------------------------------------------<br>

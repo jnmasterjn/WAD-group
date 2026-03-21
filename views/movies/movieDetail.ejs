@@ -9,6 +9,8 @@
         <p>Overview: <%= ind_movie.description %></p>
         <p>Genre: <%= ind_movie.genre %></p>
         <p>Release Year: <%= ind_movie.releaseYear %></p>
+
+
     </div>
     <!--  Add to watchlist button, also check if it's in watchlist alr-->
 
@@ -55,7 +57,7 @@
            <form action="/myReviews" method="post">
            <!--Input for the review title-->
            <input type="hidden" name="movie" value="<%= ind_movie._id %>">
-
+            <input type="hidden" name="movieName" value="<%= ind_movie.title %>">
            <label>Rating:</label><br>
            <input type="number" name="rating" min="1" max="5"> 
            <br> 
@@ -64,7 +66,6 @@
            <textarea name="comment" rows="5" cols="30"></textarea>
            
            <br><br>
-
 
            <!--Submit button to post review-->
            <button type="submit">Post</button>
@@ -87,7 +88,25 @@
        });
    </script>
 
+   <br>
    <a href="/movie"> Back</a>
+
+   <h3>Reviews/Ratings:</h3>
+        
+       <% if (reviews.length === 0) { %>
+           <!-- Message when no reviews are given -->
+           <p>No Reviews yet.</p>
+       <% } else { %>
+           <!-- loop to render each blog post -->
+           <% reviews.forEach(review => { %>
+            <p>Movie ID: <%= review.movie %></p>
+            <p>User ID: <%= review.user %></p>
+            <p>Username: <%= review.username %></p>
+            <p>Rating: <%= review.rating %>/5</p>
+            <p>Comment: <%= review.comment %></p>
+            --------------------------------------------------------<br>
+           <% }); %>
+       <% } %>
 
 </html>
 

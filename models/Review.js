@@ -16,6 +16,9 @@ const reviewSchema = new mongoose.Schema({
         ref: "User",
         required: true
     },
+    username: {
+        type: String,
+    },
     movie:{
         type: mongoose.Schema.Types.ObjectId,
         ref:"Movie",

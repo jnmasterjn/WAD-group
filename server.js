@@ -102,8 +102,7 @@ app.post("/myReviews", async (req, res) => {
    if (!comment) return res.send("Comment is required!");
 
    try {
-       const newReview = new Review({ comment, rating, movie, user:req.session.userId });
-       
+       const newReview = new Review({ comment, rating, movie, user:req.session.userId, username: req.session.username});
        await newReview.save(); // save to mongoDB
        res.redirect(`/movie`);
    } catch (err) {
@@ -115,7 +114,7 @@ app.post("/myReviews", async (req, res) => {
 //route to get the reviews page
 app.get("/myReviews", async (req,res) => {
     try {
-        const reviews = await Review.find(); // get all reviews
+        const reviews = await Review.find({ user: req.session.userId }); // get all reviews
         res.render("myReviews", { reviews });
     } catch (err) {
         console.error(err);
@@ -123,6 +122,7 @@ app.get("/myReviews", async (req,res) => {
     }
 });
 
+//route the get all reviews for one Movie
 
 
 
