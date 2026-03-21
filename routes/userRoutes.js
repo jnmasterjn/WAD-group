@@ -87,6 +87,16 @@ router.get("/logout", (req, res) => {
     res.redirect("/login");
 });
 
+//profile
+router.get("/profile", isLoggedIn, async(req, res) => {
+
+    const user = await User.findById(req.session.userId);
+
+    res.render("profile", {
+        user
+    })
+})
+
 //landing page
 router.get("/", (req, res) => {
     res.render("index", { username: req.session.username || null })

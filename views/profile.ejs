@@ -1,0 +1,7 @@
+<% include("partials/navbar") %>
+
+<h1>My Profile</h1>
+
+<p>Username: <%= user.username %></p>
+<p>Movies in Watchlist: <%= user.watchlist.length %></p>
+<p>Joined at: <%=user.createdAt%></p>
