@@ -12,7 +12,6 @@ router.post("/watchlist/add/:id", isLoggedIn, async (req, res) => {
     await User.findByIdAndUpdate(req.session.userId, {
     $addToSet: { watchlist: movieId }
     });
-
     res.redirect("/watchlist");
 });
 
@@ -31,3 +30,15 @@ router.get("/watchlist", isLoggedIn, async (req, res) => {
 });
 
 module.exports = router;
+
+//Remove
+router.post("/watchlist/remove/:id", isLoggedIn, async (req, res) => {
+    const movieId = req.params.id;
+
+    await User.findByIdAndUpdate(req.session.userId, {
+        $pull: { watchlist: movieId }
+    });
+
+    res.redirect("/watchlist");
+});
+
