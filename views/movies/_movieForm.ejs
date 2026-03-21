@@ -1,0 +1,28 @@
+<form action="<%= formAction %>" method="POST">
+    <div>
+        <label for="title">Title</label>
+        <input type="text" name="title" id="title" value="<%= movie ? movie.title : '' %>" required>
+    </div>
+
+    <div>
+        <label for="description">Description</label>
+        <textarea name="description" id="description" required><%= movie ? movie.description : '' %></textarea>
+    </div>
+
+    <div>
+        <label for="genre">Genre (Example: Sci-Fi, Action)</label>
+        <input type="text" name="genre" id="genre" value="<%= movie ? movie.genre : '' %>" required>
+    </div>
+
+    <div>
+        <label for="releaseYear">Release Year</label>
+        <input type="number" name="releaseYear" id="releaseYear" value="<%= movie ? movie.releaseYear : '' %>" required>
+    </div>
+
+    <div>
+        <label for="image">Image URL</label>
+        <input type="text" name="image" id="image" value="<%= movie ? movie.image : '' %>">
+    </div>
+
+    <button type="submit"><%= buttonText %></button>
+</form>
