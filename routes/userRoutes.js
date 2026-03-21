@@ -92,18 +92,4 @@ router.get("/", (req, res) => {
     res.render("index", { username: req.session.username || null })
 });
 
-//watchlist page
-router.get("/watchlist", isLoggedIn, async(req, res) => {
-
-    const user = await User.findById(req.session.userId)
-    const movies = await movie.find({
-        _id: {$in: user.watchlist}
-    })
-
-    res.render("watchlist", {
-        username:req.session.username, 
-        movies
-    })
-})
-
 module.exports = router;
