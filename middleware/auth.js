@@ -7,4 +7,11 @@ function isLoggedIn(req, res, next) {
     next(); //next is a func provided by express, it means "go run the next thing in line"
 }
 
-module.exports = isLoggedIn;
+function isAdmin(req, res, next) {
+    if (!req.session.isAdmin) {
+        return res.status(403).send("Admins only.");
+    }
+    next();
+}
+
+module.exports = { isLoggedIn, isAdmin };
