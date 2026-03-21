@@ -10,12 +10,11 @@
         <p>Genre: <%= ind_movie.genre %></p>
         <p>Release Year: <%= ind_movie.releaseYear %></p>
     </div>
-    <!--  Add to watchlist button -->
     <!--  Add to watchlist button, also check if it's in watchlist alr-->
 
     <% if (isInWatchlist) { %>
         <button disabled>Already in Watchlist</button>
-        
+
         <form action="/watchlist/remove/<%= ind_movie._id %>" method="POST">
             <button>Remove from Watchlist</button>
         </form>
