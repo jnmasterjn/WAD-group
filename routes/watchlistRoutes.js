@@ -5,6 +5,7 @@ const watchlistController = require("../controllers/watchlist-controllers");
 
 // Add to watchlist
 router.post("/watchlist/add/:id", isLoggedIn, watchlistController.addMovietoWatchlist);
+
 // View watchlist
 router.get("/watchlist", isLoggedIn, watchlistController.viewWatchlist);
 
