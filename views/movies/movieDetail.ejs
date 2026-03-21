@@ -14,7 +14,9 @@
     <form action="/watchlist/add/<%= ind_movie._id %>" method="POST">
         <button>Add to Watchlist</button>
     </form>
-
+    <form action="/watchlist/remove/<%= ind_movie._id %>" method="POST">
+        <button>Remove from Watchlist</button>
+    </form>
     <a href="/movie"> Back</a>
 
 </html>
