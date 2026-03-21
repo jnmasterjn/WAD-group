@@ -21,7 +21,7 @@ exports.displayMovies = async (req, res) => {
         res.render("movies/movieList", {
             movies, //movie list
             genres, //dropdown options
-            selectedGenre:genre //whatever the user selected
+            selectedGenre:genre, //whatever the user selected
             isAdmin: req.session.isAdmin || false
         })
 
