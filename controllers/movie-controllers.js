@@ -71,6 +71,7 @@ exports.movieDesc = async (req, res) => {
         console.error(error);
         res.send("Failed to display movie")
     }
+};
 
 // function to handle movie form submission 
 exports.movieAdd = async (req, res) => {
