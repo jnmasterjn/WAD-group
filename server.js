@@ -25,4 +25,7 @@ app.use("/", userRoutes);
 const movieRoutes = require("./routes/movieRoute");
 app.use("/", movieRoutes);
 
+const watchlistRoutes = require("./routes/watchlistRoutes");
+app.use("/", watchlistRoutes);
+
 app.listen(3000, () => console.log("Server running on port 3000"));
