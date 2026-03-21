@@ -79,7 +79,7 @@ exports.movieAdd = async (req, res) => {
     try { 
         const { title, description, genre, releaseYear, image } = req.body; // Take values from the submitted form and store them in variables
 
-        const existingMovie = await Movie.findOne({ title });
+        const existingMovie = await Movie.findOne({ title, genre, releaseYear });
         if (existingMovie){
             return res.render("movies/addMovie", {
                 error:"Movie with this title already exists."})
