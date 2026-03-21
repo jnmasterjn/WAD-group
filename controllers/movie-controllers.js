@@ -22,6 +22,7 @@ exports.displayMovies = async (req, res) => {
             movies, //movie list
             genres, //dropdown options
             selectedGenre:genre //whatever the user selected
+            isAdmin: req.session.isAdmin || false
         })
 
     } catch (error) {
