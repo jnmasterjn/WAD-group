@@ -123,7 +123,26 @@ app.get("/myReviews", async (req,res) => {
 });
 
 //route the get all reviews for one Movie
+app.get("/home", async (req,res) => {
+    try {
+        const movieId = req.params.movieId;
 
+        if (!movieId) return res.render("Movie ID is missing");
+
+        // fetch the movie doc from mongodb
+        const ind_movie = await movie.findById(movieId);
+        if (!ind_movie) return res.send("Movie not found");
+
+        //fetch reviews for this movie
+        const movieReviews = await Review.find({ movie: movieId});
+
+        // render the page with movie and reviews
+        res.render("home", { ind_movie, movieReviews })
+    } catch (err) {
+        console.error(err);
+        res.send("Error loading reviews for this movie");
+    }
+});
 
 
 const userRoutes = require("./routes/userRoutes");
@@ -133,6 +152,7 @@ const movieRoutes = require("./routes/movieRoute");
 app.use("/", movieRoutes);
 
 const watchlistRoutes = require("./routes/watchlistRoutes");
+const movie = require("./models/movie");
 app.use("/", watchlistRoutes);
 
 async function connectDB() {

@@ -1,2 +1,20 @@
 <!-- only log-in users can view -->
 
+<!-- temp place for a movies reviews -->
+
+
+   <h3>Reviews/Ratings:</h3>         
+       <% if (movieReviews.length === 0) { %>
+           <!-- Message when no reviews are given -->
+           <p>No Reviews yet.</p>
+       <% } else { %>
+           <!-- loop to render each review post -->
+           <% movieReviews.forEach(review => { %>
+            <p>Movie ID: <%= review.movie %></p>
+            <p>User ID: <%= review.user %></p>
+            <p>Username: <%= review.username %></p>
+            <p>Rating: <%= review.rating %>/5</p>
+            <p>Comment: <%= review.comment %></p>
+            --------------------------------------------------------<br>
+           <% }); %>
+       <% } %>
