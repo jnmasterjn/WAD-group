@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const isLoggedIn = require("../middleware/auth");
+const { isLoggedIn } = require("../middleware/auth");
 const watchlistController = require("../controllers/watchlist-controllers");
 
 // Add to watchlist
