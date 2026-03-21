@@ -3,6 +3,7 @@ const router = express.Router();
 const bcrypt = require("bcrypt");
 const User = require("../models/user");
 const isLoggedIn = require("../middleware/auth");
+const movie = require("../models/movie");
 
 //reg page
 router.get("/register", (req, res) => {
@@ -92,13 +93,17 @@ router.get("/", (req, res) => {
 });
 
 //watchlist page
-router.get("/watchlist", isLoggedIn, (req, res) => {
-    res.render("watchlist")
-})
+router.get("/watchlist", isLoggedIn, async(req, res) => {
 
-//add-to-watchlist
-router.post("/add-to-watchlist/:movieId", isLoggedIn, (req, res) => {
-    console.log(req)
+    const user = await User.findById(req.session.userId)
+    const movies = await movie.find({
+        _id: {$in: user.watchlist}
+    })
+
+    res.render("watchlist", {
+        username:req.session.username, 
+        movies
+    })
 })
 
 module.exports = router;
