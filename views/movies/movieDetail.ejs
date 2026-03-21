@@ -10,11 +10,12 @@
         <p>Genre: <%= ind_movie.genre %></p>
         <p>Release Year: <%= ind_movie.releaseYear %></p>
     </div>
-
-    <form action="/" method="POST" >
-
-
+    <!--  Add to watchlist button -->
+    <form action="/watchlist/add/<%= ind_movie._id %>" method="POST">
+        <button>Add to Watchlist</button>
     </form>
-    
-    <a href="/movie">Back</a>
+
+    <a href="/movie"> Back</a>
+
+>>>>>>> 17191dcf1730c0b112521574a5b68685a1ac0130
 </html>

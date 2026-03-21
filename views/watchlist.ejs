@@ -1,10 +1,22 @@
+<%- include("./partials/navbar") %>
 <html>
+    <head><title>My Watchlist</title></head>
     <body>
-        <head><title>My Watchlist</title></head>
-    <p>Here is your watch list:</p>
-    <br>
-    <a href="/my-reviews">My Reviews</a>
-    <br>
-    <a href="/logout">Logout</a>
+
+        <h1>Welcome, <%= username %>!</h1>
+        <p>Here is your watch list:</p>
+        <div style="display:flex; flex-wrap:wrap;">
+
+            <% movies.forEach(movie => { %>
+                <div style="width:150px; margin:10px; text-align:center">
+                    <a href="/movie/<%= movie._id %>">
+                    <img src="<%= movie.image %>" 
+                        style="width:160px; border-radius:20px;"><br>
+                    </a>  
+                    <%= movie.title %>
+                </div>
+            <% }) %>
+        </div>
+>>>>>>> 17191dcf1730c0b112521574a5b68685a1ac0130
     </body>
-</html>
+    </html>
