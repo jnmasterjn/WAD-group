@@ -41,3 +41,4 @@ router.post("/watchlist/remove/:id", isLoggedIn, async (req, res) => {
 
     res.redirect("/watchlist");
 });
+
