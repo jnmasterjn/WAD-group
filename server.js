@@ -21,7 +21,7 @@ app.use(session({
 const filePath = "review-data.json";
 
 //route to display review form and all blog posts
-app.get("/reviews-form", async (req, res) => {
+app.get("/myReviews", async (req, res) => {
     try {
         // read review data from file and parse json string into an array
         const raw = await fs.readFile(filePath, "utf-8");
@@ -38,7 +38,7 @@ app.get("/reviews-form", async (req, res) => {
 });
 
 //route to handle form submission (new review post)
-app.post("/reviews-form", async (req, res) => {
+app.post("/myReviews", async (req, res) => {
     const title = req.body.title;
     const content = req.body.content;
 
@@ -49,7 +49,7 @@ app.post("/reviews-form", async (req, res) => {
     };
 
     //if either title or content is missing, redirect back to the form
-    if (!title || !content) return res.redirect("/reviews-form");
+    if (!title || !content) return res.redirect("/myReviews");
 
     try {
         let reviews = [];
@@ -70,7 +70,7 @@ app.post("/reviews-form", async (req, res) => {
         await fs.writeFile(filePath, jsonReviewsData);
 
         // Redirect to the reviews form page to show updated list
-        res.redirect("/reviews-form");
+        res.redirect("/myReviews");
     } catch (error) {
         console.error("Error saving review post:", error);
     }
