@@ -3,15 +3,13 @@
 <%- include("../partials/navbar") %>
 <html>
     <body>
-        <h1>Browse Movie Options</h1>
+        <h1>Browse Movies</h1>
 
     <% if (isAdmin) { %>
         <a href="/movie/add">
             <button type="button">Add Movie</button>
         </a>
     <% } %>
-
-    <br><br>
 
         <input type="text" id="searchBar" placeholder="Search movies..." onkeyup="filterMovies()">
 
