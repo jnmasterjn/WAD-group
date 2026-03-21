@@ -5,7 +5,6 @@
         <h1>Welcome, <%= username %>!</h1>
         <p>Here is your watch list:</p>
         <div style="display:flex; flex-wrap:wrap;">
-
             <% movies.forEach(movie => { %>
                 <div style="width:150px; margin:10px; text-align:center">
                     <a href="/movie/<%= movie._id %>">
