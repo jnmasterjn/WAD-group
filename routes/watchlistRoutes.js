@@ -12,7 +12,6 @@ router.post("/watchlist/add/:id", isLoggedIn, async (req, res) => {
     await User.findByIdAndUpdate(req.session.userId, {
     $addToSet: { watchlist: movieId }
     });
-
     res.redirect("/watchlist");
 });
 
