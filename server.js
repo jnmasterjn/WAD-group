@@ -5,7 +5,7 @@ const session = require("express-session");
 
 //val's fs
 
-const Review = require("./models/Review")
+const Review = require("./models/review")
 // const fs = require("node:fs/promises")
 
 // const app = express();
