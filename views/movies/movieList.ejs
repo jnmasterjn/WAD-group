@@ -1,23 +1,42 @@
 <!-- all the movies listed in this page -->
 <!DOCTYPE html>
-<%- include("../partials/navbar") %>
 <html>
     <body>
+        <%- include("../partials/navbar") %>
         <h1>Browse Movies</h1>
 
+    <!-- add movie button for admin -->
     <% if (isAdmin) { %>
         <a href="/movie/add">
             <button type="button">Add Movie</button>
         </a>
     <% } %>
 
-        <input type="text" id="searchBar" placeholder="Search movies..." onkeyup="filterMovies()">
+    <!-- searching movie -->
+    <div style="display:flex; 
+    justify-content:center;">
+        <input  type="text" 
+                id="searchBar" 
+                placeholder="Search movies..." 
+                onkeyup="filterMovies()" 
+                style="width: 400px; padding: 12px; font-size: 16px; border-radius:10px">
+    </div>
+    <script>
+            function filterMovies() {
+                const query = document.getElementById("searchBar").value.toLowerCase();
+                const movies = document.querySelectorAll(".movie-card");
+                movies.forEach(movie => {
+                    const title = movie.querySelector(".movie-title").textContent.toLowerCase();
+                    movie.style.display = title.includes(query) ? "block" : "none";
+                });
+            }
+    </script>
 
         <!-- filtering movie by genre -->
         <br><br>
         <form method="GET" action="/movie">
             <!-- onchange is when user select something the form auto submit -->
-            Sort by genre: <select name="genre" onchange="this.form.submit()">
+            Sort movie by genre: <select name="genre" onchange="this.form.submit()">
                 <option value="">All Genres</option>
 
 
@@ -51,17 +70,6 @@
             </div>
         <% }) %>
     </div>
-
-    <script>
-        function filterMovies() {
-            const query = document.getElementById("searchBar").value.toLowerCase();
-            const movies = document.querySelectorAll(".movie-card");
-            movies.forEach(movie => {
-                const title = movie.querySelector(".movie-title").textContent.toLowerCase();
-                movie.style.display = title.includes(query) ? "block" : "none";
-            });
-        }
-        </script>
 
     </body>
 </html>
