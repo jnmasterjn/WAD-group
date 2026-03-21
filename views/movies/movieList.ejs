@@ -7,6 +7,23 @@
 
         <input type="text" id="searchBar" placeholder="Search movies..." onkeyup="filterMovies()">
 
+        <!-- filtering movie by genre -->
+        <br><br>
+        <form method="GET" action="/movie">
+            <!-- onchange is when user select something the form auto submit -->
+            Sort by genre: <select name="genre" onchange="this.form.submit()">
+                <option value="">All Genres</option>
+
+
+                <% genres.forEach(g => { %>
+                    <option value="<%=g%>"
+                        <%=selectedGenre === g? "selected": ""%>>
+                        <%=g%>
+                    </option>
+                <%}); %>
+            </select>
+        </form>
+
         <div style="display:flex; flex-wrap:wrap;">
             <% movies.forEach(movie => { %>
                 <div class="movie-card" style="width:150px; margin:10px; text-align:center">

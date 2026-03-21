@@ -4,6 +4,82 @@ const mongoose = require("mongoose");
 const session = require("express-session");
 
 //val's fs
+// const fs = require("node:fs/promises")
+
+// const app = express();
+// dotenv.config();
+
+// app.set("view engine", "ejs");
+// app.use(express.urlencoded({ extended: true }));
+// app.use(session({
+//     secret: "secret",
+//     resave: false,
+//     saveUninitialized: false
+// }));
+
+//val's  old review//
+//const filePath = "review-data.json";
+
+// //route to display review form and all blog posts
+// app.get("/myReviews", async (req, res) => {
+//     try {
+//         // read review data from file and parse json string into an array
+//         const raw = await fs.readFile(filePath, "utf-8");
+//         const reviews = raw.trim() ? JSON.parse(raw) : [];
+
+//         // reverse the order to show newest reviews first
+//         reviews.reverse();
+
+//         // Render the EJS view and pass the reviews to it
+//         res.render("myReviews", { reviews });
+//     } catch (error) {
+//         console.error("Error reading reviews file:", error);
+//     }
+// });
+
+// //route to handle form submission (new review post)
+// app.post("/myReviews", async (req, res) => {
+//     const title = req.body.title;
+//     const content = req.body.content;
+
+//     // create a javascript object for the new post 
+//     const newReview = {
+//         title,
+//         content,
+//     };
+
+//     //if either title or content is missing, redirect back to the form
+//     if (!title || !content) return res.redirect("/myReviews");
+
+//     try {
+//         let reviews = [];
+
+//         // try reading existing reviews from the file
+//         try {
+//             const raw = await fs.readFile(filePath, "utf-8");
+//             reviews = JSON.parse(raw);
+//         } catch (error) {
+//             console.error("Error reading reviews file:", error);
+//         }
+
+//         //Add new reviews to the reviews array
+//         reviews.push(newReview);
+
+//         //Save the updated reviews array back to the file
+//         const jsonReviewsData = JSON.stringify(reviews, null, 2);
+//         await fs.writeFile(filePath, jsonReviewsData);
+
+//         // Redirect to the reviews form page to show updated list
+//         res.redirect("/myReviews");
+//     } catch (error) {
+//         console.error("Error saving review post:", error);
+//     }
+// });
+
+//// end of my code 
+
+//val new code
+//val's fs
 const fs = require("node:fs/promises")
 
 const app = express();
@@ -12,71 +88,43 @@ dotenv.config();
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
 app.use(session({
-    secret: "secret",
-    resave: false,
-    saveUninitialized: false
+   secret: "secret",
+   resave: false,
+   saveUninitialized: false
 }));
-
-//val's review//
-const filePath = "review-data.json";
-
-//route to display review form and all blog posts
-app.get("/myReviews", async (req, res) => {
-    try {
-        // read review data from file and parse json string into an array
-        const raw = await fs.readFile(filePath, "utf-8");
-        const reviews = raw.trim() ? JSON.parse(raw) : [];
-
-        // reverse the order to show newest reviews first
-        reviews.reverse();
-
-        // Render the EJS view and pass the reviews to it
-        res.render("myReviews", { reviews });
-    } catch (error) {
-        console.error("Error reading reviews file:", error);
-    }
-});
 
 //route to handle form submission (new review post)
 app.post("/myReviews", async (req, res) => {
-    const title = req.body.title;
-    const content = req.body.content;
+   const content = req.body;
 
-    // create a javascript object for the new post 
-    const newReview = {
-        title,
-        content,
-    };
+   if (!content) return res.redirect(`/movie`);
 
-    //if either title or content is missing, redirect back to the form
-    if (!title || !content) return res.redirect("/myReviews");
+   try {
+       const newReview = new Review({ content })
+       await newReview.save(); // save to mongoDB
 
-    try {
-        let reviews = [];
-
-        // try reading existing reviews from the file
-        try {
-            const raw = await fs.readFile(filePath, "utf-8");
-            reviews = JSON.parse(raw);
-        } catch (error) {
-            console.error("Error reading reviews file:", error);
-        }
-
-        //Add new reviews to the reviews array
-        reviews.push(newReview);
-
-        //Save the updated reviews array back to the file
-        const jsonReviewsData = JSON.stringify(reviews, null, 2);
-        await fs.writeFile(filePath, jsonReviewsData);
-
-        // Redirect to the reviews form page to show updated list
-        res.redirect("/myReviews");
-    } catch (error) {
-        console.error("Error saving review post:", error);
-    }
+       res.redirect(`/movie`);
+   } catch (err) {
+       console.error("Error saving review:", err);
+       res.redirect(`/movie`)
+   }
 });
 
-//// end of my code 
+
+app.get(`/movie/:id`, async (req,res) => {
+   const movieId = req.params.id;
+   const movie = movies.find(m => m._id === movieId);
+
+   if (!movie) return res.send("Movie not found!")
+
+   try {
+       const reviews = await Review.find({ movie: movie._id }).sort({ createdAt: -1 });
+       res.render("movie", {movie, reviews});
+   } catch (err) {
+       console.error("Error fetching reviews:", err);
+       res.render("movie", { movie, reviews: [] });
+   }
+});
 
 const userRoutes = require("./routes/userRoutes");
 app.use("/", userRoutes);

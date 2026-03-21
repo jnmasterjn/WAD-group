@@ -4,8 +4,27 @@ const User = require("../models/user");
 // Controller function to load all movies on the website
 exports.displayMovies = async (req, res) => { 
     try {
-        const movies = await Movie.find()
-        res.render("movies/movieList", {movies})
+
+        // get selected genre from URL (?genre=Action)
+        const genre = req.query.genre;
+
+        //get all unique from db (for dropdown)
+        let genres = await Movie.distinct('genre')
+
+        let movies; //define movie first
+
+        //if user select a genre --> show movies of that genre, else: show all movie
+        if (genre){
+            movies = await Movie.find({genre:genre});
+        }else{
+            movies = await Movie.find()
+        }
+        res.render("movies/movieList", {
+            movies, //movie list
+            genres, //dropdown options
+            selectedGenre:genre //whatever the user selected
+        })
+
     } catch (error) {
         console.error(error);
         res.send("Failed to display movies")
