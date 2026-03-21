@@ -1,11 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const isLoggedIn = require("../middleware/auth");
-<<<<<<< Updated upstream
-const userController = require("../controllers/user-controllers")
-=======
 const Movie = require("../models/movie");
->>>>>>> Stashed changes
 
 //reg page
 router.get("/register", (req, res) => {
