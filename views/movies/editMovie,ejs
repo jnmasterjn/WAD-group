@@ -1,0 +1,9 @@
+<%- include("../partials/navbar") %>
+
+<h1>Edit Movie</h1>
+
+<%- include("_movieForm", {
+    formAction: "/movie/edit/" + movie._id,
+    buttonText: "Update Movie",
+    movie: movie
+}) %>
