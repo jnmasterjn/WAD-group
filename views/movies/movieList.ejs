@@ -53,9 +53,8 @@
             <% movies.forEach(movie => { %>
                 <div class="movie-card" style="width:150px; margin:10px; text-align:center">
                     <a href="/movie/<%= movie._id %>">
-                        <img src="<%= movie.image %>" style="width:160px; border-radius: 20px;"><br>
+                        <img src="<%= movie.image %>" style="width:160px; border-radius: 20px; margin-bottom: 6px;"><br>
                     </a>
-                    <br>
                     <span class="movie-title"><%= movie.title %></span>
 
                 <% if (isAdmin) { %>
