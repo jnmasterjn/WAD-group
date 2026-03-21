@@ -4,7 +4,6 @@ const User = require("../models/user");
 // Controller function to load all movies on the website
 exports.displayMovies = async (req, res) => { 
     try {
-
         // get selected genre from URL (?genre=Action)
         const genre = req.query.genre;
 
@@ -34,39 +33,43 @@ exports.displayMovies = async (req, res) => {
 
 // Controller function to load the individual movie (like when you click on a movie it brings you to the page where you can see it's description and everything, uses ID in searchbar)
 exports.movieDesc = async (req, res) => {
+    try {
+        //req.params = values from the URL
+        const ind_movie = await Movie.findById(req.params.id);
+        const user = await User.findById(req.session.userId);
+        
+        //Recently view
 
-    //req.params = values from the URL
-    const ind_movie = await Movie.findById(req.params.id);
-    const user = await User.findById(req.session.userId);
+        if (!req.session.recentlyViewed) {
+            req.session.recentlyViewed = [];
+        }
 
-    
-    //Recently view
+        const currentMovieId = ind_movie._id.toString();
 
-    if (!req.session.recentlyViewed) {
-        req.session.recentlyViewed = [];
+        // remove duplicate
+        const updatedList = req.session.recentlyViewed.filter(function(id) {
+            return id.toString() !== currentMovieId;
+        });
+
+        req.session.recentlyViewed = updatedList;
+
+        // add to front
+        req.session.recentlyViewed.unshift(currentMovieId);
+
+        // limit 5
+        req.session.recentlyViewed = req.session.recentlyViewed.slice(0, 5);
+
+        //some --> check if ANY item matches
+        //toString() --> mongo object is different from string
+        const isInWatchlist = user.watchlist.some(id =>
+            id.toString() === ind_movie._id.toString()
+        );
+
+        res.render("movies/movieDetail", {ind_movie, isInWatchlist})
+        console.log(req.session.recentlyViewed);
+    } catch (error) {
+        console.error(error);
+        res.send("Failed to display movie")
     }
-
-    const currentMovieId = ind_movie._id.toString();
-
-    // remove duplicate
-    const updatedList = req.session.recentlyViewed.filter(function(id) {
-        return id.toString() !== currentMovieId;
-    });
-
-    req.session.recentlyViewed = updatedList;
-
-    // add to front
-    req.session.recentlyViewed.unshift(currentMovieId);
-
-    // limit 5
-    req.session.recentlyViewed = req.session.recentlyViewed.slice(0, 5);
-
-    //some --> check if ANY item matches
-    //toString() --> mongo object is different from string
-    const isInWatchlist = user.watchlist.some(id =>
-        id.toString() === ind_movie._id.toString()
-    );
-
-    res.render("movies/movieDetail", {ind_movie, isInWatchlist})
-    console.log(req.session.recentlyViewed);
+    
 };

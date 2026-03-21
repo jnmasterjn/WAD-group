@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const isLoggedIn = require("../middleware/auth");
 const userController = require("../controllers/user-controllers")
-const Movie = require("../models/movie");
 
 //reg page
 router.get("/register", (req, res) => {

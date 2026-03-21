@@ -110,22 +110,6 @@ app.post("/myReviews", async (req, res) => {
    }
 });
 
-
-app.get(`/movie/:id`, async (req,res) => {
-   const movieId = req.params.id;
-   const movie = movies.find(m => m._id === movieId);
-
-   if (!movie) return res.send("Movie not found!")
-
-   try {
-       const reviews = await Review.find({ movie: movie._id }).sort({ createdAt: -1 });
-       res.render("movie", {movie, reviews});
-   } catch (err) {
-       console.error("Error fetching reviews:", err);
-       res.render("movie", { movie, reviews: [] });
-   }
-});
-
 const userRoutes = require("./routes/userRoutes");
 app.use("/", userRoutes);
 

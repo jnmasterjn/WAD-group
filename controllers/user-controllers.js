@@ -1,5 +1,6 @@
 const bcrypt = require("bcrypt");
 const User = require("../models/user");
+const Movie = require("../models/movie");
 
 //register logic
 exports.registerLogic = async (req, res) => {
@@ -28,7 +29,6 @@ exports.registerLogic = async (req, res) => {
         });
 
         await user.save();
-
         res.redirect("/login");
 
     } catch (err) {
