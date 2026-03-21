@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const isLoggedIn = require("../middleware/auth");
+const { isLoggedIn } = require("../middleware/auth");
 const userController = require("../controllers/user-controllers")
 
 //reg page
