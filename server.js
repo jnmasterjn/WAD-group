@@ -44,9 +44,9 @@ app.post("/reviews-form", async (req, res) => {
 
     // create a javascript object for the new post 
     const newReview = {
-        title, 
+        title,
         content,
-    }; 
+    };
 
     //if either title or content is missing, redirect back to the form
     if (!title || !content) return res.redirect("/reviews-form");
@@ -71,17 +71,12 @@ app.post("/reviews-form", async (req, res) => {
 
         // Redirect to the reviews form page to show updated list
         res.redirect("/reviews-form");
-    } catch(error) {
+    } catch (error) {
         console.error("Error saving review post:", error);
     }
 });
 
 //// end of my code 
-
-
-mongoose.connect(process.env.MONGO_URI)
-    .then(() => console.log("MongoDB connected!"))
-    .catch((err) => console.log(err));
 
 const userRoutes = require("./routes/userRoutes");
 app.use("/", userRoutes);
@@ -92,4 +87,24 @@ app.use("/", movieRoutes);
 const watchlistRoutes = require("./routes/watchlistRoutes");
 app.use("/", watchlistRoutes);
 
-app.listen(3000, () => console.log("Server running on port 3000"));
+async function connectDB() {
+    try {
+        await mongoose.connect(process.env.MONGO_URI);
+        console.log("MongoDB connected successfully!");
+    } catch (error) {
+        console.error("MongoDB connection failed:", error.message);
+        process.exit(1);
+    }
+};
+
+function startServer() {
+    const hostname = "localhost"; // Define server hostname
+    const port = 3000;// Define port number
+
+    app.listen(port, hostname, () => {
+        console.log(`Server running at http://${hostname}:${port}/`)
+    });
+}
+
+// call connectDB first and when connection is ready we start the web server
+connectDB().then(startServer);
