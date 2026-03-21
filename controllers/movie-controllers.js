@@ -76,12 +76,15 @@ exports.movieDesc = async (req, res) => {
 
 // function to handle movie form submission 
 exports.movieAdd = async (req, res) => {
-    try { // try block
+    try { 
         const { title, description, genre, releaseYear, image } = req.body; // Take values from the submitted form and store them in variables
 
-        if (!title || !description || !genre || !releaseYear) { // Check whether any required field is missing
-            return res.send("Please fill in all required fields.");
+        const existingMovie = await Movie.findOne({ title });
+        if (existingMovie){
+            return res.render("movies/addMovie", {
+                error:"Movie with this title already exists."})
         }
+
         // create a movie object
         const newMovie = new Movie({
             title,
@@ -95,8 +98,11 @@ exports.movieAdd = async (req, res) => {
 
         res.redirect("/movie"); // After saving, send the user back to movie list page to immediately see the updated list
     } catch (error) { // if anything inside try fails, this will run instead, for example invalid date or save error
-        console.log(error); // print the error out
-        res.send("Error adding movie."); // user will see this
+        
+        console.log(error); 
+
+        return res.render("movies/addMovie", {
+            error:"Error adding movie."})
     }
 };
 

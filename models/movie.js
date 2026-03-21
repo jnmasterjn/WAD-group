@@ -9,7 +9,7 @@ const movieSchema = new mongoose.Schema({
     title: {
         type: String,
         required: [true, 'A movie must have a title'],
-        unique:True
+        unique:true
     },
     description:{
         type:String,
@@ -29,7 +29,7 @@ const movieSchema = new mongoose.Schema({
     },
     image:{
         type: String,
-        unique:True
+        unique:true
     }
 })
 
