@@ -5,6 +5,14 @@
     <body>
         <h1>Browse Movie Options</h1>
 
+    <% if (isAdmin) { %>
+        <a href="/movie/add">
+            <button type="button">Add Movie</button>
+        </a>
+    <% } %>
+
+    <br><br>
+
         <input type="text" id="searchBar" placeholder="Search movies..." onkeyup="filterMovies()">
 
         <!-- filtering movie by genre -->
@@ -31,11 +39,22 @@
                         <img src="<%= movie.image %>" style="width:160px; border-radius: 20px;"><br>
                     </a>
                     <span class="movie-title"><%= movie.title %></span>
-                </div>
-            <% }); %>
-        </div>
 
-        <script>
+                <% if (isAdmin) { %>
+                    <br>
+                    <a href="/movie/edit/<%= movie._id %>">
+                        <button type="button">Edit</button>
+                    </a>
+
+                    <form action="/movie/delete/<%= movie._id %>" method="POST" onsubmit="return confirm('Are you sure you want to delete this movie?')">
+                        <button type="submit">Delete</button>
+                    </form>
+                <% } %>
+            </div>
+        <% }) %>
+    </div>
+
+    <script>
         function filterMovies() {
             const query = document.getElementById("searchBar").value.toLowerCase();
             const movies = document.querySelectorAll(".movie-card");
