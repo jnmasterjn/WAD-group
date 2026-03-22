@@ -2,6 +2,10 @@
 
 <h1>Add Movie</h1>
 
+<% if (error) { %>
+    <p style="color:red;"><%= error %></p>
+<% } %>
+
 <%- include("_movieForm", {
     formAction: "/movie/add",
     buttonText: "Add Movie",
