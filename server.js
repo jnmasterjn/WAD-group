@@ -2,6 +2,9 @@ const dotenv = require("dotenv");
 const express = require("express");
 const mongoose = require("mongoose");
 const session = require("express-session");
+// I was having trouble connecting to the DB using home wifi so this was my fix for it (Jack)
+const dns = require('dns');
+dns.setServers(['8.8.8.8', '1.1.1.1']); //8.8.8.8 google's DNS ip address 1.1.1.1 cloudeflare's
 
 //val's fs
 // const fs = require("node:fs/promises")
@@ -118,6 +121,9 @@ app.use("/", movieRoutes);
 
 const watchlistRoutes = require("./routes/watchlistRoutes");
 app.use("/", watchlistRoutes);
+
+const watchedRoutes = require("./routes/watchedRoutes")
+app.use("/", watchedRoutes);
 
 async function connectDB() {
     try {

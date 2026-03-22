@@ -1,0 +1,28 @@
+const User = require("../models/user");
+const Movie = require("../models/movie");
+
+// Controller function to add watched movies to Watched Movies list
+
+exports.addWatchedMovies = async (req, res) => {
+    try {
+        const movieId = req.params.id; // extracts movie id from the url
+        await User.findByIdAndUpdate(req.session.userId, { // finds the logged in user in the database using their session ID and updates them in one operation
+            $addToSet: { watchedMovies: movieId } // addToSet instead of push to prevent duplicates
+        });
+        res.redirect("/watched");
+    } catch (error) {
+        console.error(error);
+        res.send("Failed to update watched movies list");
+    }
+};
+
+exports.viewWatchedMovies = async (req, res) => {
+    try {
+        const user = await User.findById(req.session.userId);
+        const movies = await Movie.find({ _id: { $in: user.watchedMovies } }); //find all movies that's id is in the watchedMovies list
+        res.render("watched-movies", { username: req.session.username, movies });
+    } catch (error) {
+        console.error(error);
+        res.send("Failed to load watchlist");
+    }
+};

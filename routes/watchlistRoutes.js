@@ -10,6 +10,6 @@ router.post("/watchlist/add/:id", isLoggedIn, watchlistController.addMovietoWatc
 router.get("/watchlist", isLoggedIn, watchlistController.viewWatchlist);
 
 //Remove
-router.post("/watchlist/remove/:id", isLoggedIn, watchlistController.removeMovie);
+router.post("/watchlist/remove/:id", isLoggedIn, watchlistController.removeWatchlistMovie);
 
 module.exports = router;

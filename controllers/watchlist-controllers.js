@@ -28,7 +28,7 @@ try {
     }
 };
 
-exports.removeMovie = async (req, res) => {
+exports.removeWatchlistMovie = async (req, res) => {
     try {
         const movieId = req.params.id;
         await User.findByIdAndUpdate(req.session.userId, { $pull: { watchlist: movieId } });

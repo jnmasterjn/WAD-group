@@ -1,0 +1,18 @@
+<html>
+    <head><title>My Watched Movies</title></head>
+    <body>
+        <h1>Welcome, <%= username %>!</h1>
+        <p>Here are the movies you've watched:</p>
+        <div style="display:flex; flex-wrap:wrap;">
+            <% movies.forEach(movie => { %>
+                <div style="width:150px; margin:10px; text-align:center">
+                    <a href="/movie/<%= movie._id %>">
+                    <img src="<%= movie.image %>" 
+                        style="width:160px; border-radius:20px;"><br>
+                    </a>  
+                    <%= movie.title %>
+                </div>
+            <% }) %>
+        </div>
+    </body>
+</html>
