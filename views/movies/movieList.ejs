@@ -38,8 +38,6 @@
             <!-- onchange is when user select something the form auto submit -->
             Sort movie by genre: <select name="genre" onchange="this.form.submit()">
                 <option value="">All Genres</option>
-
-
                 <% genres.forEach(g => { %>
                     <option value="<%=g%>"
                         <%=selectedGenre === g? "selected": ""%>>

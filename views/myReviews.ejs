@@ -3,26 +3,32 @@
     <head>
         <title>Reviews</title>
     </head>
-    <body>
-        <h1>My Reviews</h1>
-            
-        <% if (reviews.length === 0) { %>
-            <!-- Message when no reviews are given -->
-            <p>No Reviews yet.</p>
-        <% } else { %>
-            <!-- loop to render each blog post -->
-            <% reviews.forEach(review => { %>
-                <p><%= review.movie.title %></p>
-                <img src="<%= review.movie.image %>" style="width:160px; border-radius: 20px;">
-                <strong><p>Rating:</strong> <%= review.rating %>/5</p>
-                <strong><p>Comment:</strong> <%= review.comment %></p>
-                --------------------------------------------------------<br>
-            <% }); %>
-        <% } %>
-    </body>
+        <body>
+            <h1>My Reviews</h1>
+                
+            <% if (reviews.length === 0) { %>
+                <!-- Message when no reviews are given -->
+                <p>No Reviews yet.</p>
+            <% } else { %>
+                <!-- loop to render each blog post -->
+                <% reviews.forEach(review => { %>
+                    <p><%= review.movie.title %></p>
+                    <img src="<%= review.movie.image %>" style="width:160px; border-radius: 20px;">
+                    
+                    <strong><p>Rating:</strong> <%= review.rating %>/5</p>
+                    <strong><p>Comment:</strong> <%= review.comment %></p>
+
+                    <!-- edit review button -->
+                    <a href="/review/edit/<%= review._id %>">
+                        <button>Edit Comment</button>
+                    </a>
+
+                    <form action="/review/delete/<%= review._id %>" method="POST" onsubmit="return confirm('Are you sure?')">
+                        <button type="submit">Delete Comment</button>
+                    </form>
+
+                    <br><br>
+                <% }); %>
+            <% } %>
+        </body>
     </html>
-
-
-
-
-
