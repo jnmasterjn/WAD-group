@@ -10,18 +10,21 @@ const userSchema = new mongoose.Schema({
     username: {
         type: String,
         required: [true, 'A user must have a username'], 
-        unique: true,
+        unique: [true, 'A username must be unique'],
         trim: true
     },
     password: {
         type: String,
         required: [true, 'A user must have a password']  
     },
-    watchlist: {
-        type: Array,
-        default: [mongoose.Schema.Types.ObjectId],
+    watchlist: [{
+        type: mongoose.Schema.Types.ObjectId,
         ref: "Movie"
-    },
+    }],
+    watchedMovies: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Movie"
+    }],
     isAdmin: {
         type: Boolean,
         default: false
