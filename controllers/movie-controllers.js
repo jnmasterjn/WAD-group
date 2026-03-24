@@ -70,7 +70,11 @@ exports.movieDesc = async (req, res) => {
             id.toString() === ind_movie._id.toString()
         );
 
-        res.render("movies/movieDetail", {ind_movie, isInWatchlist, reviews})
+        const isInWatchedMovies = user.watchedMovies.some(id =>
+            id.toString() === ind_movie._id.toString()
+        );
+
+        res.render("movies/movieDetail", {ind_movie, isInWatchlist, isInWatchedMovies, reviews})
         console.log(req.session.recentlyViewed);
     } catch (error) {
         console.error(error);

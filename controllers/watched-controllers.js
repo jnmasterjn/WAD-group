@@ -26,3 +26,14 @@ exports.viewWatchedMovies = async (req, res) => {
         res.send("Failed to load watchlist");
     }
 };
+
+exports.removeWatchlistMovie = async (req, res) => {
+    try {
+        const movieId = req.params.id;
+        await User.findByIdAndUpdate(req.session.userId, { $pull: { watchedMovies: movieId } });
+        res.redirect("/watched");
+    } catch (error) {
+        console.error(error);
+        res.send("Failed to remove movie");
+    }
+};

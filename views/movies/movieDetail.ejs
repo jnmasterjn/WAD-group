@@ -28,8 +28,25 @@
         </form>
     <%}%>
 
+
+    <!-- add mark as watched button and check if it's marked as watched or not -->
+    <% if (isInWatchedMovies) { %>
+        <button disabled>Already Marked as Watched</button>
+
+        <form action="/watched/remove/<%= ind_movie._id %>" method="POST">
+            <button>Unmark Movie as Watched</button>
+        </form>
+
+    <% }else{ %>
+        <form action="/watched/add/<%= ind_movie._id %>" method="POST">
+            <button>Mark as Watched</button>
+        </form>
+    <%}%>
+
+
     <!-- add review button -->
     <button id="openreviewpopup"> Write A Review</button>
+    <br>
 
     <div id="reviewstuff" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.5);">
         <div style="background:white; padding:20px; margin:100px auto; width:300px;">
