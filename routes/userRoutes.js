@@ -34,4 +34,7 @@ router.get("/", (req, res) => {
     res.render("index", { username: req.session.username || null })
 });
 
+//user create bio
+router.post("/profile/bio", isLoggedIn, userController.createBio)
+
 module.exports = router;

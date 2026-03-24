@@ -17,6 +17,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: [true, 'A user must have a password']  
     },
+    bio:{
+        type:String,
+        default:""
+    },
     watchlist: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Movie"

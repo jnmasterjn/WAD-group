@@ -87,7 +87,7 @@ exports.profile = async (req, res) => {
         }
 
         res.render("profile", {
-            user,
+            user, //so in profile that page can access user. stuff
             recentlyMovies: orderedMovies
         });
     } catch (err) {
@@ -95,3 +95,18 @@ exports.profile = async (req, res) => {
         res.send("Failed to load profile");
     }
 };
+
+
+//create bio
+exports.createBio = async (req, res) => {
+    const bio = req.body.bio
+
+    try{
+        await User.findByIdAndUpdate(req.session.userId, {bio});
+
+        res.redirect("/profile")
+
+    }catch(err){
+        res.send("Failed to update bio")
+    }
+}

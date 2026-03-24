@@ -1,9 +1,23 @@
 <%- include("./partials/navbar") %>
 <h1>My Profile</h1>
 
-<p>Username: <%= user.username %></p>
-<p>Movies in Watchlist: <%= user.watchlist.length %></p>
-<p>Recently Viewed:</p>
+<p><strong>Username:</strong> <%= user.username %></p>
+<p><strong>Joined at:</strong> <%=user.createdAt%></p>
+<p><strong>Movies in Watchlist:</strong> <%= user.watchlist.length %></p>
+
+<p><strong>Bio:</strong></p>
+<% if (!user.bio){ %>
+    <form action="/profile/bio" method="POST">
+        <textarea name="bio" placeholder="Write something about yourself..."><%= user.bio %></textarea><br><br>
+        <button type="submit">Save Bio</button>
+    </form>
+<% }else{ %>
+    <%=user.bio%>
+    <br>
+    <button type="submit">Edit Bio</button>
+<% } %>
+
+<p><strong>Recently Viewed:</strong></p>
 <div style="display:flex; flex-wrap:wrap; gap:10px;">
     <% recentlyMovies.forEach(movie => { %>
         <div class="movie-card" style="width:120px; margin:10px; text-align:center">
@@ -14,4 +28,3 @@
         </div>
     <% }) %>
 </div>
-<p>Joined at: <%=user.createdAt%></p>
