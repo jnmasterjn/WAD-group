@@ -54,8 +54,11 @@
                         <img src="<%= movie.image %>" style="width:160px; border-radius: 20px; margin-bottom: 6px;"><br>
                     </a>
                     <span class="movie-title"><%= movie.title %></span>
-
-                <% if (isAdmin) { %>
+                
+                    <% if (watchedMoviesList.includes(movie._id.toString())) {%>
+                    <p><span style="size: 5px;background-color: yellow;">Watched</span></p>
+                    
+                    <% } if (isAdmin) { %>
                     <br>
                     <a href="/movie/edit/<%= movie._id %>">
                         <button type="button">Edit</button>

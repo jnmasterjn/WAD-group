@@ -31,16 +31,16 @@ exports.viewWatchedMovies = async (req, res) => {
 
 exports.removeWatchedMovies = async (req, res) => {
     try {
-        const movieId = new mongoose.Types.ObjectId(req.params.id);
+        const movieId = new mongoose.Types.ObjectId(req.params.id); // gets the movie id from the URL and turns it from String into an Object Id to avoid data type error
 
         // fetch user
-        const user = await User.findById(req.session.userId);
+        const user = await User.findById(req.session.userId); // finds the logged in user based on their Id
 
-        // normalize all watchedMovies items to ObjectId
+        // normalize all watchedMovies items to ObjectId from the user's watchedMovies array
         const normalizedWatched = user.watchedMovies.map(id => {
-            return id instanceof mongoose.Types.ObjectId ? id : new mongoose.Types.ObjectId(id);
+            return id instanceof mongoose.Types.ObjectId ? id : new mongoose.Types.ObjectId(id); // instanceof checks if the id is an objectId if it is leave it alone else turn it into an objectId
         });
-
+        
         await User.findByIdAndUpdate(req.session.userId, {
             $set: { watchedMovies: normalizedWatched}
         });

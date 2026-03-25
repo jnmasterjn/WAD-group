@@ -2,37 +2,6 @@ const Movie = require("../models/movie");
 const User = require("../models/user");
 const Review = require("../models/review");
 
-// Controller function to load all movies on the website
-exports.displayMovies = async (req, res) => { 
-    try {
-        // get selected genre from URL (?genre=Action)
-        const genre = req.query.genre;
-
-        //get all unique from db (for dropdown)
-        let genres = await Movie.distinct('genre')
-
-        let movies; //define movie first
-
-        //if user select a genre --> show movies of that genre, else: show all movie
-        if (genre){
-            movies = await Movie.find({genre:genre});
-        }else{
-            movies = await Movie.find()
-        }
-        res.render("movies/movieList", {
-            movies, //movie list
-            genres, //dropdown options
-            selectedGenre:genre, //whatever the user selected
-            isAdmin: req.session.isAdmin || false
-        })
-
-    } catch (error) {
-        console.error(error);
-        res.send("Failed to display movies")
-    }
-    
-};
-
 // Controller function to load the individual movie (like when you click on a movie it brings you to the page where you can see it's description and everything, uses ID in searchbar)
 exports.movieDesc = async (req, res) => {
     try {
@@ -80,6 +49,41 @@ exports.movieDesc = async (req, res) => {
         console.error(error);
         res.send("Failed to display movie")
     }
+};
+
+// Controller function to load all movies on the website
+exports.displayMovies = async (req, res) => { 
+    try {
+        const user = await User.findById(req.session.userId);
+        const watchedMoviesList = user ? user.watchedMovies.map(id => id.toString()) : [];
+
+        // get selected genre from URL (?genre=Action)
+        const genre = req.query.genre;
+
+        //get all unique from db (for dropdown)
+        let genres = await Movie.distinct('genre')
+
+        let movies; //define movie first
+
+        //if user select a genre --> show movies of that genre, else: show all movie
+        if (genre){
+            movies = await Movie.find({genre:genre});
+        }else{
+            movies = await Movie.find()
+        }
+        res.render("movies/movieList", {
+            movies, //movie list
+            genres, //dropdown options
+            selectedGenre:genre, //whatever the user selected
+            watchedMoviesList,
+            isAdmin: req.session.isAdmin || false
+        })
+
+    } catch (error) {
+        console.error(error);
+        res.send("Failed to display movies")
+    }
+    
 };
 
 // function to handle movie form submission 
