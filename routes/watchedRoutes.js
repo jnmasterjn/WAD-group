@@ -8,6 +8,6 @@ router.post("/watched/add/:id", isLoggedIn, watchedControllers.addWatchedMovies)
 
 router.get("/watched", isLoggedIn, watchedControllers.viewWatchedMovies);
 
-router.post("/watched/remove/:id", isLoggedIn, watchedControllers.addWatchedMovies); //function not implemented yet
+router.post("/watched/remove/:id", isLoggedIn, watchedControllers.removeWatchedMovies); //function not implemented yet
 
 module.exports = router;
