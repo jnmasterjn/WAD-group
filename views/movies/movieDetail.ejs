@@ -38,10 +38,18 @@
         </form>
 
     <% }else{ %>
+        <% if (isInWatchlist) { %>
+         <form action="/watched/add/<%= ind_movie._id %>" action="/watchlist/remove/<%= ind_movie._id %>" method="POST">
+            <button>Mark as Watched</button>
+        </form>
+        <% } else { %>
         <form action="/watched/add/<%= ind_movie._id %>" method="POST">
             <button>Mark as Watched</button>
         </form>
+        <% } %>
     <%}%>
+
+
 
 
     <!-- add review button -->

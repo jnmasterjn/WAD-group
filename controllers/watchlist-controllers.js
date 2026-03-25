@@ -9,7 +9,8 @@ exports.addMovietoWatchlist = async (req, res) => {
         const movieId = new mongoose.Types.ObjectId(req.params.id); // convert string to ObjectId
 
         await User.findByIdAndUpdate(req.session.userId, {
-            $addToSet: { watchlist: movieId } // now stored as ObjectId
+            $addToSet: { watchlist: movieId }, // now stored as ObjectId
+            $pull: { watchedMovies: movieId }
         });
         res.redirect("/watchlist");
     } catch (error) {
