@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const User = require("../models/user");
 const Movie = require("../models/movie");
 
@@ -5,7 +6,8 @@ const Movie = require("../models/movie");
 
 exports.addWatchedMovies = async (req, res) => {
     try {
-        const movieId = req.params.id; // extracts movie id from the url
+        const movieId = new mongoose.Types.ObjectId(req.params.id); 
+        
         await User.findByIdAndUpdate(req.session.userId, { // finds the logged in user in the database using their session ID and updates them in one operation
             $addToSet: { watchedMovies: movieId } // addToSet instead of push to prevent duplicates
         });
@@ -27,10 +29,26 @@ exports.viewWatchedMovies = async (req, res) => {
     }
 };
 
-exports.removeWatchlistMovie = async (req, res) => {
+exports.removeWatchedMovies = async (req, res) => {
     try {
-        const movieId = req.params.id;
-        await User.findByIdAndUpdate(req.session.userId, { $pull: { watchedMovies: movieId } });
+        const movieId = new mongoose.Types.ObjectId(req.params.id);
+
+        // fetch user
+        const user = await User.findById(req.session.userId);
+
+        // normalize all watchedMovies items to ObjectId
+        const normalizedWatched = user.watchedMovies.map(id => {
+            return id instanceof mongoose.Types.ObjectId ? id : new mongoose.Types.ObjectId(id);
+        });
+
+        await User.findByIdAndUpdate(req.session.userId, {
+            $set: { watchedMovies: normalizedWatched}
+        });
+
+        await User.findByIdAndUpdate(req.session.userId, {
+            $pull: { watchedMovies: movieId }
+        });
+        
         res.redirect("/watched");
     } catch (error) {
         console.error(error);
