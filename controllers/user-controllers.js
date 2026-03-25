@@ -96,7 +96,6 @@ exports.profile = async (req, res) => {
     }
 };
 
-
 //create bio
 exports.createBio = async (req, res) => {
     const bio = req.body.bio
@@ -108,5 +107,17 @@ exports.createBio = async (req, res) => {
 
     }catch(err){
         res.send("Failed to update bio")
+    }
+}
+
+exports.editBio = async(req, res) => {
+    const {bio} = req.body
+
+    try{
+        await User.findByIdAndUpdate(req.session.userId, { bio });
+
+        res.redirect("/profile");
+    }catch(err){
+        res.send("Failed to edit bio")
     }
 }
