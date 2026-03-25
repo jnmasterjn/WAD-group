@@ -21,9 +21,12 @@ router.post("/login", userController.loginLogic);
 
 //logout
 router.get("/logout", (req, res) => {
-    req.session.userId = null;
-    req.session.username = null;
-    res.redirect("/login");
+    // req.session.userId = null;
+    // req.session.username = null;
+    // res.redirect("/login");
+    req.session.destroy(()=>{
+        res.redirect('/login')
+    })
 });
 
 //profile
