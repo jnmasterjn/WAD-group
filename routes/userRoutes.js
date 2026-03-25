@@ -27,7 +27,7 @@ router.get("/logout", (req, res) => {
     req.session.destroy(()=>{
         res.redirect('/login')
     })
-});
+}); 
 
 //profile
 router.get("/profile", isLoggedIn, userController.profile);
@@ -39,5 +39,9 @@ router.get("/", (req, res) => {
 
 //user create bio
 router.post("/profile/bio", isLoggedIn, userController.createBio)
+
+
+//user edit bio
+router.post("/profile/bio/edit", isLoggedIn, userController.editBio)
 
 module.exports = router;

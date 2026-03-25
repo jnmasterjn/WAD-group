@@ -12,10 +12,35 @@
         <button type="submit">Save Bio</button>
     </form>
 <% }else{ %>
-    <%=user.bio%>
-    <br>
-    <button type="submit">Edit Bio</button>
+
+    <!-- display user current bio -->
+    <p id="bioText"><%=user.bio%></p>
+    
+    <button type="submit" onclick="showEdit()" id="editButton">Edit Bio</button>
+    
+    <form id="bioForm" method="post" action="/profile/bio/edit" style="display: none;">
+        <textarea name="bio" placeholder="Write something about yourself..."><%= user.bio %></textarea><br><br>
+        <!-- save button -->
+        <button type="submit">Save</button>
+        <!-- cancel button -->
+        <button type="button" onclick="hideEdit()">Cancel</button>
+    </form>
 <% } %>
+
+<script>
+    // show the edit bio form when user wanna edit their bio
+    function showEdit(){
+        document.getElementById("bioText").style.display = "none"
+        document.getElementById("bioForm").style.display = "block"
+        document.getElementById("editButton").style.display = "none"
+    }
+
+    function hideEdit(){
+        document.getElementById("bioText").style.display = "block"
+        document.getElementById("bioForm").style.display = "none"
+        document.getElementById("editButton").style.display = "block"
+    }
+</script>
 
 <p><strong>Recently Viewed:</strong></p>
 <div style="display:flex; flex-wrap:wrap; gap:10px;">
