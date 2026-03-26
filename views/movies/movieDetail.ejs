@@ -15,8 +15,6 @@
 
     <!--  Add to watchlist button, also check if it's in watchlist alr-->
     <% if (isInWatchlist) { %>
-        <button disabled>Already in Watchlist</button>
-
         <form action="/watchlist/remove/<%= ind_movie._id %>" method="POST">
             <button>Remove from Watchlist</button>
         </form>
@@ -37,15 +35,9 @@
         </form>
 
     <% }else{ %>
-        <% if (isInWatchlist) { %>
         <form action="/watched/add/<%= ind_movie._id %>" action="/watchlist/remove/<%= ind_movie._id %>" method="POST">
             <button>Mark as Watched</button>
         </form>
-        <% } else { %>
-        <form action="/watched/add/<%= ind_movie._id %>" method="POST">
-            <button>Mark as Watched</button>
-        </form>
-        <% } %>
     <%}%>
 
 
