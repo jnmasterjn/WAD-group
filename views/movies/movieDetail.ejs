@@ -10,11 +10,10 @@
         <p>Genre: <%= ind_movie.genre %></p>
         <p>Release Year: <%= ind_movie.releaseYear %></p>
         <p>Average Rating:</p>
-
-
     </div>
-    <!--  Add to watchlist button, also check if it's in watchlist alr-->
 
+
+    <!--  Add to watchlist button, also check if it's in watchlist alr-->
     <% if (isInWatchlist) { %>
         <button disabled>Already in Watchlist</button>
 
@@ -31,7 +30,7 @@
 
     <!-- add mark as watched button and check if it's marked as watched or not -->
     <% if (isInWatchedMovies) { %>
-        <button disabled>Already Marked as Watched</button>
+        <!-- <button disabled>Already Marked as Watched</button> -->
 
         <form action="/watched/remove/<%= ind_movie._id %>" method="POST">
             <button>Unmark Movie as Watched</button>
@@ -39,7 +38,7 @@
 
     <% }else{ %>
         <% if (isInWatchlist) { %>
-         <form action="/watched/add/<%= ind_movie._id %>" action="/watchlist/remove/<%= ind_movie._id %>" method="POST">
+        <form action="/watched/add/<%= ind_movie._id %>" action="/watchlist/remove/<%= ind_movie._id %>" method="POST">
             <button>Mark as Watched</button>
         </form>
         <% } else { %>
@@ -50,10 +49,8 @@
     <%}%>
 
 
-
-
     <!-- add review button -->
-    <button id="openreviewpopup"> Write A Review</button>
+    <button id="reviewPopUp"> Write A Review</button>
     <br>
 
     <div id="reviewstuff" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.5);">
@@ -62,32 +59,32 @@
             <h3>Leaving a review for <label><%= ind_movie.title %></label>:  </h3>
 
             <form action="/myReviews" method="post">
-            <!--Input for the review title-->
-            <input type="hidden" name="movie" value="<%= ind_movie._id %>">
+                <!--Input for the review title-->
+                <input type="hidden" name="movie" value="<%= ind_movie._id %>">
                 <input type="hidden" name="movieName" value="<%= ind_movie.title %>">
-            <label>Rating:</label><br>
-            <input type="number" name="rating" min="1" max="5"> 
-            <br> 
+                
+                <label>Rating:</label><br>
+                <input type="number" name="rating" min="1" max="5"> 
+                <br> 
 
-            <label>Content:</label><br>
-            <textarea name="comment" rows="5" cols="30"></textarea>
-            
-            <br><br>
+                <label>Content:</label><br>
+                <textarea name="comment" rows="5" cols="30"></textarea>
+                
+                <br><br>
 
-            <!--Submit button to post review-->
-            <button type="submit">Post</button>
-            <button type="button" id="closepopupbutton">Cancel</button>
-        </form>
+                <!--Submit button to post review-->
+                <button type="submit">Post</button>
+                <button type="button" id="closepopupbutton">Cancel</button>
+            </form>
         </div>
     </div>
     
     <script>
-        const openPopupButton = document.getElementById("openreviewpopup");
+        const openPopupButton = document.getElementById("reviewPopUp");
         const closePopupButton = document.getElementById("closepopupbutton");
         const reviewstuff = document.getElementById("reviewstuff");
 
-        openPopupButton.addEventListener("click", () => {
-            reviewstuff.style.display = "block";
+        openPopupButton.addEventListener("click", () => {reviewstuff.style.display = "block";
         });
 
         closePopupButton.addEventListener("click", () => {
