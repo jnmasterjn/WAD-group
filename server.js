@@ -6,12 +6,11 @@ const session = require("express-session");
 const dns = require('dns');
 dns.setServers(['8.8.8.8', '1.1.1.1']); //8.8.8.8 google's DNS ip address 1.1.1.1 cloudeflare's
 
-//val's fs
 
-const Review = require("./models/review")
 const app = express();
 dotenv.config();
 
+app.use(express.static("public"));
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
 app.use(session({

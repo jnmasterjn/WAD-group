@@ -10,7 +10,12 @@ router.get("/register", (req, res) => {
 
 //login page
 router.get("/login", (req, res) => {
-    res.render("login", { error:null })
+
+    const success = req.session.justRegistered
+
+    req.session.justRegistered = false
+    
+    res.render("login", { error:null, success})
 })
 
 //reg logic
@@ -21,9 +26,6 @@ router.post("/login", userController.loginLogic);
 
 //logout
 router.get("/logout", (req, res) => {
-    // req.session.userId = null;
-    // req.session.username = null;
-    // res.redirect("/login");
     req.session.destroy(()=>{
         res.redirect('/login')
     })
