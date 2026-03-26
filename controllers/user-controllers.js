@@ -7,18 +7,18 @@ exports.registerLogic = async (req, res) => {
     const { username, password } = req.body;
 
     if (!username || !password) {
-        return res.render("register", { error: "All fields are required" });
+        return res.render("register", { error: "All fields are required", success: null });
     }
     //password must > 6
     if (password && password.length < 6) {
-        return res.render("register", { error: "Password must be at least 6 characters" });
+        return res.render("register", { error: "Password must be at least 6 characters", success: null });
     }
 
     try {
         //check if username appear in db alr or not
         const existingUser = await User.findOne({ username });
         if (existingUser) {
-            return res.render("register", { error: "Username already exists" })
+            return res.render("register", { error: "Username already exists", success: null })
         }
 
         const hashed = await bcrypt.hash(password, 10);
@@ -29,11 +29,11 @@ exports.registerLogic = async (req, res) => {
         });
 
         await user.save();
-        res.redirect("/login");
+        return res.render("register", { success: "Account created successfully!", error: null });
 
     } catch (err) {
         console.log(err)
-        res.render("register", { error: "Something went wrong, please try again." });
+        res.render("register", { error: "Something went wrong, please try again.", success: null });
     }
 };
 

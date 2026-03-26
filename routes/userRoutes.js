@@ -5,7 +5,7 @@ const userController = require("../controllers/user-controllers")
 
 //reg page
 router.get("/register", (req, res) => {
-    res.render("register", {error:null})
+    res.render("register", {error:null, success: null})
 })
 
 //login page
