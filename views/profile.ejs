@@ -19,9 +19,11 @@
     <button type="submit" onclick="showEdit()" id="editButton">Edit Bio</button>
     
     <form id="bioForm" method="post" action="/profile/bio/edit" style="display: none;">
-        <textarea name="bio" placeholder="Write something about yourself..."><%= user.bio %></textarea><br><br>
+        <textarea name="bio"><%= user.bio %></textarea><br><br>
+        
         <!-- save button -->
         <button type="submit">Save</button>
+
         <!-- cancel button -->
         <button type="button" onclick="hideEdit()">Cancel</button>
     </form>

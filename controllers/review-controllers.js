@@ -46,12 +46,11 @@ exports.editReview = async(req, res) => {
     try{
         //1. find review with this ID, 
         //2. replace comment + rating
-        await Review.findByIdAndUpdate(req.params.id, {
-            comment, 
-            rating
-        })
+        await Review.findByIdAndUpdate(req.params.id, {comment, rating})
         res.redirect("/myReviews")
+
     }catch(err){
+        console.log(err)
         res.send("Error updating review")
     }
 }
