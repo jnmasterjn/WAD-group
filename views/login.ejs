@@ -1,9 +1,14 @@
 <html>
     <body>
         <h1>Login</h1>
-        <% if (error) { %>
-            <p style="color:red"><%= error %></p>
+        <% if (success) { %>
+            <p style="color:green;">Account created successfully! Please Login</p>
         <% } %>
+        
+        <% if (error) { %>
+            <p style="color:red;"><%= error %></p>
+        <% } %>
+
         <form method="POST" action="/login">
             Username: 
             <input type="text" name="username" placeholder="Enter Username" required>
@@ -17,3 +22,4 @@
         <a href="/register">Don't have an account? Register</a>
     </body>
 </html>
+

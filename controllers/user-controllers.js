@@ -29,6 +29,8 @@ exports.registerLogic = async (req, res) => {
         });
 
         await user.save();
+        
+        req.session.justRegistered = true;
         res.redirect("/login");
 
     } catch (err) {
