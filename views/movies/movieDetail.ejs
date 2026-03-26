@@ -95,6 +95,9 @@
         <% } else { %>
             <!-- loop to render each blog post -->
             <% reviews.forEach(review => { %>
+
+                <!-- javascript formatting string -->
+                <p><%= new Date(review.createdAt).toLocaleString() %></p>
                 <p>Username: <%= review.username %></p>
                 <p>Rating: <%= review.rating %>/5</p>
                 <p>Comment: <%= review.comment %></p>
@@ -103,4 +106,3 @@
         <% } %>
 
 </html>
-
