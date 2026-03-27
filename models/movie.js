@@ -12,7 +12,7 @@ const movieSchema = new mongoose.Schema({
         unique:true
     },
     description:{
-        type:String,
+        type: String,
         required: [true, 'A movie must have a description']
     },
     genre: {
@@ -23,14 +23,20 @@ const movieSchema = new mongoose.Schema({
         type: Number,
         required: [true, 'A movie must have a release year']
     },
-    rating: {
-        type: Number,
-        default: 0.0
-    },
     image: {
         type: String,
         unique:true
+    },
+    averageRating: {
+        type: Number,
+        default: 0.0
+    },
+    ratingsCount: {
+        type: Number,
+        default: 0
     }
+}, {
+    timestamps: true
 });
 
 module.exports = mongoose.model("Movie", movieSchema, "movies")

@@ -9,9 +9,9 @@ const reviewSchema = new mongoose.Schema({
         required: true
     },
     username: {
-        type: String,
+        type: String
     },
-    movie:{
+    movie: {
         type: mongoose.Schema.Types.ObjectId,
         ref:"Movie",
         required: true
@@ -31,5 +31,8 @@ const reviewSchema = new mongoose.Schema({
         timestamps:true
     }
 )
+
+// prevent duplicate reviews
+reviewSchema.index({user: 1, movie: 1}, { unique: true })
 
 module.exports = mongoose.model("Review", reviewSchema, "reviews")
