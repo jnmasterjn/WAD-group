@@ -33,6 +33,6 @@ const reviewSchema = new mongoose.Schema({
 )
 
 // prevent duplicate reviews
-reviewSchema.index({user: 1, movie: 1}, { unique: true })
+reviewSchema.index({user: 1, username: 1, movie: 1}, { unique: true })
 
 module.exports = mongoose.model("Review", reviewSchema, "reviews")
