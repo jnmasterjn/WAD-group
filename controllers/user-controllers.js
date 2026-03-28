@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const User = require("../models/user");
 const Movie = require("../models/movie");
+const Review = require("../models/review");
 
 //register logic
 exports.registerLogic = async (req, res) => {
@@ -70,26 +71,33 @@ exports.loginLogic = async (req, res) => {
 // profile
 exports.profile = async (req, res) => {
     try {
-        const user = await User.findById(req.session.userId);
+        // get user and populate their watchlist with full movie data
+        const user = await User.findById(req.session.userId).populate("watchlist");
 
-        const recentlyIds = req.session.recentlyViewed || [];
-        const recentlyMovies = await Movie.find({
-            _id: { $in: recentlyIds }
-        });
+        // get all reviews by this user, and populate the movie info
+        const userReviews = await Review.find({ user: req.session.userId }).populate("movie");
 
-        let orderedMovies = [];
-        for (let i = 0; i < recentlyIds.length; i++) {
-            for (let j = 0; j < recentlyMovies.length; j++) {
-                if (recentlyMovies[j]._id.toString() === recentlyIds[i].toString()) {
-                    orderedMovies.push(recentlyMovies[j]);
-                }
-            }
+        // recommended movies: get genres from watchlist, find movies NOT in watchlist
+        let recommendedMovies = [];
+        if (user.watchlist.length > 0) {
+            // collect genres from watchlist
+            const genres = [...new Set(user.watchlist.map(movie => movie.genre))];
+
+            // find movies with same genres but NOT already in watchlist
+            const watchlistIds = user.watchlist.map(movie => movie._id);
+            recommendedMovies = await Movie.find({
+                genre: { $in: genres },
+                _id: { $nin: watchlistIds }
+            }).limit(10);
         }
 
         res.render("profile", {
-            user, //so in profile that page can access user. stuff
-            recentlyMovies: orderedMovies
+            user,
+            watchlistMovies: user.watchlist,
+            recommendedMovies,
+            userReviews
         });
+
     } catch (err) {
         console.error(err);
         res.send("Failed to load profile");

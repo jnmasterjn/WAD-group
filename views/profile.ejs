@@ -1,57 +1,118 @@
+<link rel="stylesheet" href="/css/style.css">
 <%- include("./partials/navbar") %>
-<h1>My Profile</h1>
 
-<p><strong>Username:</strong> <%= user.username %></p>
-<p><strong>Joined at:</strong> <%=user.createdAt%></p>
-<p><strong>Movies in Watchlist:</strong> <%= user.watchlist.length %></p>
+<div class="profile-container">
+    <h1>My Profile</h1>
 
-<p><strong>Bio:</strong></p>
-<% if (!user.bio){ %>
-    <form action="/profile/bio" method="POST">
-        <textarea name="bio" placeholder="Write something about yourself..."><%= user.bio %></textarea><br><br>
-        <button type="submit">Save Bio</button>
-    </form>
-<% }else{ %>
+    <!-- BOX 1: Profile Info -->
+    <div class="profile-card">
+        <p><strong>Username:</strong> <%= user.username %></p>
 
-    <!-- display user current bio -->
-    <p id="bioText"><%=user.bio%></p>
+        <hr>
+
+        <div class="profile-bio">
+            <p><strong>Bio:</strong></p>
+            <% if (!user.bio) { %>
+                <form action="/profile/bio" method="POST">
+                    <textarea name="bio" placeholder="Write something about yourself..." class="bio-textarea"></textarea>
+                    <br>
+                    <button type="submit" class="btn">Save Bio</button>
+                </form>
+            <% } else { %>
+                <p id="bioText"><%= user.bio %></p>
+                <button onclick="showEdit()" id="editButton" class="btn">Edit Bio</button>
+
+                <form id="bioForm" method="post" action="/profile/bio/edit" style="display: none;">
+                    <textarea name="bio" class="bio-textarea"><%= user.bio %></textarea>
+                    <br>
+                    <button type="submit" class="btn">Save</button>
+                    <button type="button" onclick="hideEdit()" class="btn">Cancel</button>
+                </form>
+            <% } %>
+        </div>
+    </div>
+
+    <!-- BOX 2: My Watchlist -->
+    <div class="profile-card">
+        <h2>My Watchlist</h2>
+        <% if (watchlistMovies.length > 0) { %>
+            <div class="movie-row">
+                <% watchlistMovies.forEach(movie => { %>
+                    <div class="movie-card">
+                        <a href="/movie/<%= movie._id %>">
+                            <img src="<%= movie.image %>" alt="<%= movie.title %>">
+                        </a>
+                        <span class="movie-title"><%= movie.title %></span>
+                    </div>
+                <% }) %>
+            </div>
+        <% } else { %>
+            <p class="empty-msg">No movies in your watchlist yet.</p>
+        <% } %>
+    </div>
+
+    <!-- BOX 3: Recommended Movies -->
+    <div class="profile-card">
+        <h2>Recommended For You</h2>
+        <% if (recommendedMovies.length > 0) { %>
+            <div class="movie-row">
+                <% recommendedMovies.forEach(movie => { %>
+                    <div class="movie-card">
+                        <a href="/movie/<%= movie._id %>">
+                            <img src="<%= movie.image %>" alt="<%= movie.title %>">
+                        </a>
+                        <span class="movie-title"><%= movie.title %></span>
+                    </div>
+                <% }) %>
+            </div>
+        <% } else { %>
+            <p class="empty-msg">Add movies to your watchlist to get recommendations!</p>
+        <% } %>
+    </div>
+
+    <!-- BOX 4: My Reviews -->
+    <div class="profile-card">
+        <h2>My Reviews</h2>
+        <% if (userReviews.length > 0) { %>
+            <% userReviews.forEach(review => { %>
+                <div class="review-item">
+                    <div class="review-movie">
+                        <a href="/movie/<%= review.movie._id %>">
+                            <img src="<%= review.movie.image %>" alt="<%= review.movie.title %>">
+                        </a>
+                    </div>
+                    <div class="review-content">
+                        <p><strong><%= review.movie.title %></strong></p>
+                        <% if (review.rating) { %>
+                            <p class="review-rating">
+                                <% for (let i = 1; i <= 5; i++) { %>
+                                    <% if (i <= review.rating) { %>★<% } else { %>☆<% } %>
+                                <% } %>
+                                (<%= review.rating %>/5)
+                            </p>
+                        <% } %>
+                        <p><%= review.comment %></p>
+                    </div>
+                </div>
+            <% }) %>
+        <% } else { %>
+            <p class="empty-msg">You haven't written any reviews yet.</p>
+        <% } %>
+    </div>
+
     
-    <button type="submit" onclick="showEdit()" id="editButton">Edit Bio</button>
-    
-    <form id="bioForm" method="post" action="/profile/bio/edit" style="display: none;">
-        <textarea name="bio"><%= user.bio %></textarea><br><br>
-        
-        <!-- save button -->
-        <button type="submit">Save</button>
-
-        <!-- cancel button -->
-        <button type="button" onclick="hideEdit()">Cancel</button>
-    </form>
-<% } %>
+</div>
 
 <script>
-    // show the edit bio form when user wanna edit their bio
-    function showEdit(){
-        document.getElementById("bioText").style.display = "none"
-        document.getElementById("bioForm").style.display = "block"
-        document.getElementById("editButton").style.display = "none"
+    function showEdit() {
+        document.getElementById("bioText").style.display = "none";
+        document.getElementById("bioForm").style.display = "block";
+        document.getElementById("editButton").style.display = "none";
     }
 
-    function hideEdit(){
-        document.getElementById("bioText").style.display = "block"
-        document.getElementById("bioForm").style.display = "none"
-        document.getElementById("editButton").style.display = "block"
+    function hideEdit() {
+        document.getElementById("bioText").style.display = "block";
+        document.getElementById("bioForm").style.display = "none";
+        document.getElementById("editButton").style.display = "block";
     }
 </script>
-
-<p><strong>Recently Viewed:</strong></p>
-<div style="display:flex; flex-wrap:wrap; gap:10px;">
-    <% recentlyMovies.forEach(movie => { %>
-        <div class="movie-card" style="width:120px; margin:10px; text-align:center">
-            <a href="/movie/<%= movie._id %>">
-                <img src="<%= movie.image %>" style="width:140px; object-fit:cover; border-radius:15px;"><br>
-            </a>
-            <span class="movie-title"><%= movie.title %></span>
-        </div>
-    <% }) %>
-</div>
