@@ -45,13 +45,13 @@ exports.loginLogic = async (req, res) => {
         const user = await User.findOne({ username })
 
         if (!user) {
-            return res.render("login", { error: "User not found" })
+            return res.render("login", { error: "User not found", success: false})
         }
 
         const match = await bcrypt.compare(password, user.password)
 
         if (!match) {
-            return res.render("login", { error: "Password does not match" })
+            return res.render("login", { error: "Password does not match", success: false})
         }
 
         //session
@@ -63,7 +63,7 @@ exports.loginLogic = async (req, res) => {
 
     } catch (err) {
         console.log(err)
-        res.render("login", { error: "Something went wrong, please try again." })
+        res.render("login", { error: "Something went wrong, please try again." , success: false})
     }
 };
 

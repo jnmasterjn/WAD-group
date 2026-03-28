@@ -27,7 +27,7 @@ router.post("/login", userController.loginLogic);
 //logout
 router.get("/logout", (req, res) => {
     req.session.destroy(()=>{
-        res.redirect('/login')
+        res.redirect('/')
     })
 }); 
 

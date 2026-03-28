@@ -10,8 +10,13 @@
 
     <!-- RIGHT SIDE -->
     <div>
-        <span>Logged in as: <a href="/profile"><%= username %></a>&nbsp;&nbsp;</span>&nbsp;&nbsp;
-        <a href="/logout" onclick="return confirm('Are you sure you want to logout?')">Logout</a>
+        <% if (username) { %>
+            <span>Logged in as: <a href="/profile"><%= username %></a>&nbsp;&nbsp;</span>&nbsp;&nbsp;
+            <a href="/logout" onclick="return confirm('Are you sure you want to logout?')">Logout</a>
+        <% } else { %>
+            <a href="/login">Login</a>&nbsp;&nbsp;
+            <a href="/register">Register</a>
+        <% } %>
     </div>
 
 </nav>
