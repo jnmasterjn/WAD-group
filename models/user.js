@@ -5,7 +5,7 @@
 // Loads mongoose (the tool that connects node.js to mongodb)
 const mongoose = require("mongoose")
 
-//creates sthe schema
+//creates the schema
 const userSchema = new mongoose.Schema({
     username: {
         type: String,
@@ -21,14 +21,6 @@ const userSchema = new mongoose.Schema({
         type:String,
         default:""
     },
-    watchlist: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Movie"
-    }],
-    watchedMovies: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Movie"
-    }],
     isAdmin: {
         type: Boolean,
         default: false

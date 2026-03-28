@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
-const User = require("../models/user");
 const Movie = require("../models/movie");
+const Watchlist = require("../models/watchlist");
+const Watchedlist = require("../models/watchedlist");
 
 // Controller function to add to watchlist
 
@@ -8,11 +9,19 @@ exports.addMovietoWatchlist = async (req, res) => {
     try {
         const movieId = new mongoose.Types.ObjectId(req.params.id); // convert string to ObjectId
 
-        await User.findByIdAndUpdate(req.session.userId, {
-            $addToSet: { watchlist: movieId }, // now stored as ObjectId
-            $pull: { watchedMovies: movieId }
-        });
-        res.redirect("/watchlist");
+        await Watchlist.findOneAndUpdate(
+            { user: req.session.userId },
+            { $addToSet: {movies: movieId} }
+        );
+
+        //remove watchlist movie
+        await Watchedlist.findOneAndUpdate(
+            { user: req.session.userId },
+            { $pull: {movies: movieId} }
+        );
+
+        res.redirect("/watchlist")
+
     } catch (error) {
         console.error(error);
         res.send("Failed to update watchlist");
@@ -21,8 +30,8 @@ exports.addMovietoWatchlist = async (req, res) => {
 
 exports.viewWatchlist = async (req, res) => {
 try {
-        const user = await User.findById(req.session.userId);
-        const movies = await Movie.find({ _id: { $in: user.watchlist } });
+        const watchlist = await Watchlist.findOne({ user: req.session.userId })
+        const movies = watchlist ? await Movie.find({ _id: { $in: watchlist.movies } }) : [] ; //find all movies that's id is in the watchedMovies list
         res.render("watchlist", { username: req.session.username, movies });
     } catch (error) {
         console.error(error);
@@ -33,21 +42,11 @@ try {
 exports.removeWatchlistMovie = async (req, res) => {
     try {
         const movieId = new mongoose.Types.ObjectId(req.params.id);
-
-        // Fetch the user
-        const user = await User.findById(req.session.userId);
-
-        // Normalize all watchlist items to ObjectId
-        const normalizedWatchlist = user.watchlist.map(id => {
-            // if already objectId, leave it; if string, convert
-            return id instanceof mongoose.Types.ObjectId ? id : new mongoose.Types.ObjectId(id);
-        });
-
-        // update the watchlist with normalized objectIds
-        await User.findByIdAndUpdate(req.session.userId, { $set: { watchlist: normalizedWatchlist } });
-
-        // remove movie
-        await User.findByIdAndUpdate(req.session.userId, { $pull: { watchlist: movieId } });
+        
+        await Watchlist.findOneAndUpdate(
+            { user: req.session.userId }, 
+            { $pull: { movies: movieId } }
+        );
 
         res.redirect("/watchlist");
     } catch (error) {

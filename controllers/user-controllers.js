@@ -2,6 +2,8 @@ const bcrypt = require("bcrypt");
 const User = require("../models/user");
 const Movie = require("../models/movie");
 const Review = require("../models/review");
+const Watchlist = require("../models/watchlist");
+const Watchedlist = require("../models/watchedlist");
 
 //register logic
 exports.registerLogic = async (req, res) => {
@@ -24,12 +26,20 @@ exports.registerLogic = async (req, res) => {
 
         const hashed = await bcrypt.hash(password, 10);
 
-        const user = new User({
-            username,
-            password: hashed
-        });
-
+        // saves user to database
+        const user = new User({ username, password: hashed });
         await user.save();
+
+        // create new empty watchlist for user
+        
+        // create new empty watchedlist for user
+        const watchedlist = new Watchedlist({ user: user._id, movies: [] });
+        await watchedlist.save();
+
+        // create new empty watchlist for user
+        const watchlist = new Watchlist({ user: user._id, movies: [] });
+        await watchlist.save();
+
         return res.render("register", { success: "Account created successfully!", error: null });
 
     } catch (err) {
@@ -71,20 +81,19 @@ exports.loginLogic = async (req, res) => {
 // profile
 exports.profile = async (req, res) => {
     try {
-        // get user and populate their watchlist with full movie data
-        const user = await User.findById(req.session.userId).populate("watchlist");
-
-        // get all reviews by this user, and populate the movie info
+        const user = await User.findById(req.session.userId);
+        
+        // get watchlist document and populate with full movie data
+        const watchlist = await Watchlist.findOne({ user: req.session.userId }).populate("movies");
+        
+        // get all reviews by this user and populate movie info
         const userReviews = await Review.find({ user: req.session.userId }).populate("movie");
 
-        // recommended movies: get genres from watchlist, find movies NOT in watchlist
+        // recommended movies based on watchlist genres
         let recommendedMovies = [];
-        if (user.watchlist.length > 0) {
-            // collect genres from watchlist
-            const genres = [...new Set(user.watchlist.map(movie => movie.genre))];
-
-            // find movies with same genres but NOT already in watchlist
-            const watchlistIds = user.watchlist.map(movie => movie._id);
+        if (watchlist && watchlist.movies.length > 0) {
+            const genres = [...new Set(watchlist.movies.map(movie => movie.genre))];
+            const watchlistIds = watchlist.movies.map(movie => movie._id);
             recommendedMovies = await Movie.find({
                 genre: { $in: genres },
                 _id: { $nin: watchlistIds }
@@ -93,7 +102,7 @@ exports.profile = async (req, res) => {
 
         res.render("profile", {
             user,
-            watchlistMovies: user.watchlist,
+            watchlistMovies: watchlist ? watchlist.movies : [],
             recommendedMovies,
             userReviews
         });

@@ -1,6 +1,8 @@
 const Movie = require("../models/movie");
 const User = require("../models/user");
 const Review = require("../models/review");
+const Watchedlist = require("../models/watchedlist");
+const Watchlist = require("../models/watchlist");
 
 // Controller function to load the individual movie (like when you click on a movie it brings you to the page where you can see it's description and everything, uses ID in searchbar)
 exports.movieDesc = async (req, res) => {
@@ -8,6 +10,8 @@ exports.movieDesc = async (req, res) => {
         //req.params = values from the URL
         const ind_movie = await Movie.findById(req.params.id);
         const user = await User.findById(req.session.userId);
+        const watchedlist = await Watchedlist.findOne({ user: user })
+        const watchlist = await Watchlist.findOne({ user: user })
         const reviews = await Review.find({
             movie: req.params.id
         }).populate("user"); // optional (to show username)
@@ -35,13 +39,13 @@ exports.movieDesc = async (req, res) => {
 
         //some --> check if ANY item matches
         //toString() --> mongo object is different from string
-        const isInWatchlist = user.watchlist.some(id =>
+        const isInWatchlist = watchlist ? watchlist.movies.some(id =>
             id.toString() === ind_movie._id.toString()
-        );
+        ) : false;
 
-        const isInWatchedMovies = user.watchedMovies.some(id =>
+        const isInWatchedMovies = watchedlist ? watchedlist.movies.some(id =>
             id.toString() === ind_movie._id.toString()
-        );
+        ) : false;
 
         res.render("movies/movieDetail", {ind_movie, isInWatchlist, isInWatchedMovies, reviews})
         console.log(req.session.recentlyViewed);
@@ -54,8 +58,8 @@ exports.movieDesc = async (req, res) => {
 // Controller function to load all movies on the website
 exports.displayMovies = async (req, res) => { 
     try {
-        const user = await User.findById(req.session.userId);
-        const watchedMoviesList = user ? user.watchedMovies.map(id => id.toString()) : [];
+        const watchedlist = await Watchedlist.findOne({ user: req.session.userId });
+        const watchedMoviesList = watchedlist ? watchedlist.movies.map(id => id.toString()) : [];
 
         // get selected genre from URL (?genre=Action)
         const genre = req.query.genre;
