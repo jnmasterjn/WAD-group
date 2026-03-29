@@ -25,7 +25,7 @@
 
                             <br><br>
                             <button type="submit">Save</button>
-                            <button type="button" onclick="hideEditButton()">Cancel</button>
+                            <button type="button" onclick="hideEdit('<%= review._id %>')">Cancel</button>
                     </form>
 
                     <script>
@@ -36,6 +36,7 @@
                         
                         function hideEdit(id) {
                             document.getElementById("form-" + id).style.display = "none";
+                            document.getElementById("editButton").style.display = "block";
                         }
                         </script>
                     
