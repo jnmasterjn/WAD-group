@@ -41,7 +41,8 @@ exports.registerLogic = async (req, res) => {
         const watchlist = new Watchlist({ user: user._id, movies: [] });
         await watchlist.save();
 
-        return res.render("register", { success: "Account created successfully!", error: null });
+        req.session.success = "Account created successfully!";
+        res.redirect("/login");
 
     } catch (err) {
         console.log(err)
@@ -83,26 +84,26 @@ exports.loginLogic = async (req, res) => {
 exports.profile = async (req, res) => {
     try {
 
-       const users = await User.findById(req.session.userId);
+        const users = await User.findById(req.session.userId);
 
 
-       // get recently viewed movie ids from session
-       const recentlyIds = req.session.recentlyViewed || [];
-      
-       // get full movie data for recently viewed movies
-       const recentlyMovies = await Movie.find({
-           _id: { $in: recentlyIds }
-       });
-      
-       // reorder movies to match recently viewed order
-       let orderedMovies = [];
-       for (let i = 0; i < recentlyIds.length && orderedMovies.length < 7; i++) {
-           for (let j = 0; j < recentlyMovies.length; j++) {
-               if (recentlyMovies[j]._id.toString() === recentlyIds[i].toString()) {
-                   orderedMovies.push(recentlyMovies[j]);
-               }
-           }
-       }
+        // get recently viewed movie ids from session
+        const recentlyIds = req.session.recentlyViewed || [];
+        
+        // get full movie data for recently viewed movies
+        const recentlyMovies = await Movie.find({
+            _id: { $in: recentlyIds }
+        });
+        
+        // reorder movies to match recently viewed order
+        let orderedMovies = [];
+        for (let i = 0; i < recentlyIds.length && orderedMovies.length < 7; i++) {
+            for (let j = 0; j < recentlyMovies.length; j++) {
+                if (recentlyMovies[j]._id.toString() === recentlyIds[i].toString()) {
+                    orderedMovies.push(recentlyMovies[j]);
+                }
+            }
+        }
 
         const user = await User.findById(req.session.userId);
         

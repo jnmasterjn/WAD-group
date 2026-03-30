@@ -33,21 +33,21 @@
     </div>
 
     <!-- BOX 2: Recently View -->
-   <div class="profile-card">
-       <h2>Recently Viewed</h2>
+    <div class="profile-card">
+        <h2>Recently Viewed</h2>
 
 
-       <div class="movie-row">
-           <% (recentlyMovies || []).forEach(movie => { %>
-               <div class="movie-card">
-                   <a href="/movie/<%= movie._id %>">
-                       <img src="<%= movie.image %>" alt="<%= movie.title %>">
-                   </a>
-                   <span class="movie-title"><%= movie.title %></span>
-               </div>
-           <% }) %>
-       </div>
-   </div>
+        <div class="movie-row">
+            <% (recentlyMovies || []).forEach(movie => { %>
+                <div class="movie-card">
+                    <a href="/movie/<%= movie._id %>">
+                        <img src="<%= movie.image %>" alt="<%= movie.title %>">
+                    </a>
+                    <span class="movie-title"><%= movie.title %></span>
+                </div>
+            <% }) %>
+        </div>
+    </div>
 
     <!-- BOX 3: My Watchlist -->
     <div class="profile-card">

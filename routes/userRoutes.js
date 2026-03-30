@@ -11,9 +11,10 @@ router.get("/register", (req, res) => {
 //login page
 router.get("/login", (req, res) => {
 
-    const success = req.session.justRegistered
+    const success = req.session.success;
 
-    req.session.justRegistered = false
+    //remove after showing once
+    req.session.success = false
     
     res.render("login", { error:null, success})
 })
