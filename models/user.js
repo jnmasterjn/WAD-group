@@ -5,13 +5,24 @@
 // Loads mongoose (the tool that connects node.js to mongodb)
 const mongoose = require("mongoose")
 
+
 //creates the schema
 const userSchema = new mongoose.Schema({
     username: {
         type: String,
-        required: [true, 'A user must have a username'], 
-        unique: [true, 'A username must be unique'],
-        trim: true
+        required: [true, 'A user must have a username'],
+        unique: true,
+        trim: true,
+    
+        minlength: [3, "Username must be at least 3 characters"],
+        maxlength: [20, "Username cannot exceed 20 characters"],
+    
+        match: [
+            /^[a-zA-Z0-9_]+$/,
+            "Username can only contain letters, numbers, and underscores"
+        ],
+    
+        lowercase: true
     },
     password: {
         type: String,

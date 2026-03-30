@@ -19,18 +19,6 @@
             <button type="button" onclick="hideEdit()">Cancel</button>
         </form>
 
-        <script>
-            function showEdit() {
-                document.getElementById("descForm").style.display = "block";
-                document.getElementById("editDescButton").style.display = "none";
-            }
-            
-            function hideEdit() {
-                document.getElementById("descForm").style.display = "none";
-                document.getElementById("editDescButton").style.display = "block";
-            }
-        </script>
-
         <h3>Here are the movies you've watched:</h3>
         <% if (movies.length == 0) { %>
             <p>No movies added here yet!</p>
@@ -50,3 +38,15 @@
         <% } %>
     </body>
 </html>
+
+<script>
+    function showEdit() {
+        document.getElementById("descForm").style.display = "block";
+        document.getElementById("editDescButton").style.display = "none";
+    }
+    
+    function hideEdit() {
+        document.getElementById("descForm").style.display = "none";
+        document.getElementById("editDescButton").style.display = "block";
+    }
+</script>
