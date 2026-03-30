@@ -1,9 +1,10 @@
 const bcrypt = require("bcrypt");
 const User = require("../models/user");
 const Movie = require("../models/movie");
-const Review = require("../models/review");
 const Watchlist = require("../models/watchlist");
 const Watchedlist = require("../models/watchedlist");
+const Review = require("../models/review");
+
 
 //register logic
 exports.registerLogic = async (req, res) => {
