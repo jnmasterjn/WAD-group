@@ -81,6 +81,28 @@ exports.loginLogic = async (req, res) => {
 // profile
 exports.profile = async (req, res) => {
     try {
+
+       const users = await User.findById(req.session.userId);
+
+
+       // get recently viewed movie ids from session
+       const recentlyIds = req.session.recentlyViewed || [];
+      
+       // get full movie data for recently viewed movies
+       const recentlyMovies = await Movie.find({
+           _id: { $in: recentlyIds }
+       });
+      
+       // reorder movies to match recently viewed order
+       let orderedMovies = [];
+       for (let i = 0; i < recentlyIds.length && orderedMovies.length < 7; i++) {
+           for (let j = 0; j < recentlyMovies.length; j++) {
+               if (recentlyMovies[j]._id.toString() === recentlyIds[i].toString()) {
+                   orderedMovies.push(recentlyMovies[j]);
+               }
+           }
+       }
+
         const user = await User.findById(req.session.userId);
         
         // get watchlist document and populate with full movie data
@@ -101,6 +123,8 @@ exports.profile = async (req, res) => {
         }
 
         res.render("profile", {
+            users,
+            recentlyMovies: orderedMovies,
             user,
             watchlistMovies: watchlist ? watchlist.movies : [],
             recommendedMovies,

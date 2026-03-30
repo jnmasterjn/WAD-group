@@ -32,7 +32,24 @@
         </div>
     </div>
 
-    <!-- BOX 2: My Watchlist -->
+    <!-- BOX 2: Recently View -->
+   <div class="profile-card">
+       <h2>Recently Viewed</h2>
+
+
+       <div class="movie-row">
+           <% (recentlyMovies || []).forEach(movie => { %>
+               <div class="movie-card">
+                   <a href="/movie/<%= movie._id %>">
+                       <img src="<%= movie.image %>" alt="<%= movie.title %>">
+                   </a>
+                   <span class="movie-title"><%= movie.title %></span>
+               </div>
+           <% }) %>
+       </div>
+   </div>
+
+    <!-- BOX 3: My Watchlist -->
     <div class="profile-card">
         <h2>My Watchlist</h2>
         <% if (watchlistMovies.length > 0) { %>
@@ -51,7 +68,7 @@
         <% } %>
     </div>
 
-    <!-- BOX 3: Recommended Movies -->
+    <!-- BOX 4: Recommended Movies -->
     <div class="profile-card">
         <h2>Recommended For You</h2>
         <% if (recommendedMovies.length > 0) { %>
@@ -70,7 +87,7 @@
         <% } %>
     </div>
 
-    <!-- BOX 4: My Reviews -->
+    <!-- BOX 5: My Reviews -->
     <div class="profile-card">
         <h2>My Reviews</h2>
         <% if (userReviews.length > 0) { %>

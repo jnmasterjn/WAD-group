@@ -35,7 +35,7 @@ exports.movieDesc = async (req, res) => {
         req.session.recentlyViewed.unshift(currentMovieId);
 
         // limit 5
-        req.session.recentlyViewed = req.session.recentlyViewed.slice(0, 5);
+        req.session.recentlyViewed = req.session.recentlyViewed.slice(0, 10);
 
         //some --> check if ANY item matches
         //toString() --> mongo object is different from string
@@ -48,7 +48,6 @@ exports.movieDesc = async (req, res) => {
         ) : false;
 
         res.render("movies/movieDetail", {ind_movie, isInWatchlist, isInWatchedMovies, reviews})
-        console.log(req.session.recentlyViewed);
     } catch (error) {
         console.error(error);
         res.send("Failed to display movie")
