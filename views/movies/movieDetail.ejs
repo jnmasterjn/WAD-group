@@ -88,9 +88,32 @@
     <br>
     <a href="/movie"> Back</a>
 
-    <h3>Reviews/Ratings:</h3>
+    <h3>Your Review:</h3>
+
+        <% if (userReview) { %>
+            <p><%= new Date(userReview.createdAt).toLocaleString() %></p>
+            <p>Rating: <%= userReview.rating %>/5</p>
+            <p>Comment: <%= userReview.comment %></p>
+
+            <button id="editButton" type="button" onclick="showEdit('<%= userReview._id %>')">Edit Comment</button></a>
+            <form id="form-<%= userReview._id %>" action="/review/edit/<%= userReview._id %>" method="POST" style="display:none;">
+                <textarea name="comment"><%= userReview.comment %></textarea>
+
+                    <br><br>
+                    <button type="submit">Save</button>
+                    <button type="button" onclick="hideEdit('<%= userReview._id %>')">Cancel</button>
+            </form>
             
-        <% if (reviews.length === 0) { %>
+            <form action="/review/delete/<%= userReview._id %>" method="POST" onsubmit="return confirm('Are you sure you want to delete this comment?')">
+                <button type="submit">Delete Comment</button>
+            </form>
+
+        <% }else{ %>
+            <p>You have not reviewed this movie yet.</p>
+        <% } %>
+
+        <h3>Other Reviews</h3>
+        <% if (!reviews || reviews.length === 0) { %>
             <!-- Message when no reviews are given -->
             <p>No Reviews yet.</p>
         <% } else { %>
@@ -107,3 +130,15 @@
         <% } %>
 
 </html>
+
+<script>
+    function showEdit(id) {
+        document.getElementById("form-" + id).style.display = "block";
+        document.getElementById("editButton").style.display = "none";
+    }
+        
+    function hideEdit(id) {
+        document.getElementById("form-" + id).style.display = "none";
+        document.getElementById("editButton").style.display = "block";
+    }
+</script>

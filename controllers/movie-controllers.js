@@ -12,12 +12,22 @@ exports.movieDesc = async (req, res) => {
         const user = await User.findById(req.session.userId);
         const watchedlist = await Watchedlist.findOne({ user: user })
         const watchlist = await Watchlist.findOne({ user: user })
+
         const reviews = await Review.find({
             movie: req.params.id
         }).populate("user"); // optional (to show username)
         
-        //Recently view
+        //find is only finding one thing
+        const userReview = reviews.find(r => {
+            return r.user && r.user._id.toString() === req.session.userId.toString()
+        })
 
+        //filter find all the matches
+        const otherReview = reviews.filter(r => {
+            return r.user && r.user._id.toString() !== req.session.userId.toString()
+        })
+
+        //Recently view
         if (!req.session.recentlyViewed) {
             req.session.recentlyViewed = [];
         }
@@ -47,7 +57,12 @@ exports.movieDesc = async (req, res) => {
             id.toString() === ind_movie._id.toString()
         ) : false;
 
-        res.render("movies/movieDetail", {ind_movie, isInWatchlist, isInWatchedMovies, reviews})
+        res.render("movies/movieDetail", {
+                ind_movie, 
+                isInWatchlist, 
+                isInWatchedMovies, 
+                reviews: otherReview || [], 
+                userReview})
     } catch (error) {
         console.error(error);
         res.send("Failed to display movie")

@@ -73,7 +73,10 @@ exports.editReview = async(req, res) => {
         //recalculate average for this movie
         await updateMovieAverage(review.movie);
 
-        res.redirect("/myReviews")
+        // go back to previous page
+        const back = req.get("referer") || "/myReviews";
+        res.redirect(back)
+
     } catch(err){
         console.log(err)
         res.send("Error updating review")
@@ -89,8 +92,11 @@ exports.deleteReview = async(req, res) => {
             // recalculate average for this movie
             await updateMovieAverage(review.movie);
         }
+        
+        // go back to previous page
+        const back = req.get("referer") || "/myReviews";
+        res.redirect(back)
 
-        res.redirect("/myReviews")
     }catch(err){
         console.log(err)
         res.send("Error deleting review")
