@@ -125,6 +125,21 @@
                 <p>Username: <%= review.username %></p>
                 <p>Rating: <%= review.rating %>/5</p>
                 <p>Comment: <%= review.comment %></p>
+
+                <!-- like count -->
+                <p>👍 <%= likeMap[review._id] || 0 %></p>
+
+                <form action="/like/<%= review._id %>" method="POST" style="display:inline;">
+    
+                    <% if (userLikedMap[review._id]) { %>
+                        <button type="submit">👎 Unlike</button>
+                    <% } else { %>
+                        <button type="submit">👍 Like</button>
+                    <% } %>
+                
+                </form>
+                
+                <br>
                 --------------------------------------------------------<br>
             <% }); %>
         <% } %>

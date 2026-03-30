@@ -41,6 +41,9 @@ app.use("/", reviewRoutes)
 const watchedRoutes = require("./routes/watchedRoutes")
 app.use("/", watchedRoutes);
 
+const likeRoutes = require("./routes/likeRoute");
+app.use("/", likeRoutes);
+
 async function connectDB() {
     try {
         await mongoose.connect(process.env.MONGO_URI);

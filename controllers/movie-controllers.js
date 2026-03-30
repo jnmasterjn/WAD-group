@@ -3,6 +3,8 @@ const User = require("../models/user");
 const Review = require("../models/review");
 const Watchedlist = require("../models/watchedlist");
 const Watchlist = require("../models/watchlist");
+const Like = require("../models/like");
+
 
 // Controller function to load the individual movie (like when you click on a movie it brings you to the page where you can see it's description and everything, uses ID in searchbar)
 exports.movieDesc = async (req, res) => {
@@ -26,6 +28,26 @@ exports.movieDesc = async (req, res) => {
         const otherReview = reviews.filter(r => {
             return r.user && r.user._id.toString() !== req.session.userId.toString()
         })
+
+        //get all the likes for reviews
+        const likes = await Like.find({
+            review: {$in: reviews.map(r => r._id.toString())}
+        })
+
+        //count likes per review
+        const likeMap = {};
+        const userLikedMap = {};
+
+        likes.forEach(like => {
+            const reviewId = like.review.toString();
+
+            likeMap[reviewId] = (likeMap[reviewId] || 0) + 1;
+
+            //check if current user liked
+            if (like.user.toString() === req.session.userId.toString()){
+                userLikedMap[reviewId] = true;
+            }
+        });
 
         //Recently view
         if (!req.session.recentlyViewed) {
@@ -62,7 +84,10 @@ exports.movieDesc = async (req, res) => {
                 isInWatchlist, 
                 isInWatchedMovies, 
                 reviews: otherReview || [], 
-                userReview})
+                userReview,
+                likeMap,
+                userLikedMap
+            })
     } catch (error) {
         console.error(error);
         res.send("Failed to display movie")

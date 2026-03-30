@@ -24,8 +24,6 @@ async function updateMovieAverage(movieId) {
 exports.postReview = async(req, res) => {
     const { comment, rating, movie } = req.body;
 
-    if (!comment) { return res.send("Comment is required!")}
-
     try {
         // Only include rating if user provided it
         const reviewData = { comment, movie, user:req.session.userId, username: req.session.username};
@@ -92,11 +90,10 @@ exports.deleteReview = async(req, res) => {
             // recalculate average for this movie
             await updateMovieAverage(review.movie);
         }
-        
         // go back to previous page
         const back = req.get("referer") || "/myReviews";
         res.redirect(back)
-
+        
     }catch(err){
         console.log(err)
         res.send("Error deleting review")
