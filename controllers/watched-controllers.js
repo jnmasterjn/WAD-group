@@ -21,7 +21,7 @@ exports.addWatchedMovies = async (req, res) => {
             { $pull: {movies: movieId} }
         )
 
-        res.redirect("/watched");
+        res.redirect("/movie");
     } catch (error) {
         console.error(error);
         res.send("Failed to update watched movies list");

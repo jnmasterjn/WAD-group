@@ -20,7 +20,7 @@ exports.addMovietoWatchlist = async (req, res) => {
             { $pull: {movies: movieId} }
         );
 
-        res.redirect("/watchlist")
+        res.redirect("/movie")
 
     } catch (error) {
         console.error(error);
