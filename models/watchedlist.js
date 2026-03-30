@@ -10,6 +10,16 @@ const watchedMoviesSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Movie"
     }],
-});
+    watchedlistDesc: {
+        type: String,
+        default: ""
+    },
+    isArchived: {
+        type: Boolean,
+        default: false
+    }
+}, {
+    timestamps: true
+})
 
 module.exports = mongoose.model("Watchedlist", watchedMoviesSchema, "watchedlists") //model name, schema, the name of the collection in mongodb atlas

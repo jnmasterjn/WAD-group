@@ -31,8 +31,9 @@ exports.addWatchedMovies = async (req, res) => {
 exports.viewWatchedMovies = async (req, res) => {
     try {
         const watchedlist = await Watchedlist.findOne({ user: req.session.userId })
+        const watchedlistdesc = watchedlist.watchedlistDesc
         const movies = watchedlist ? await Movie.find({ _id: { $in: watchedlist.movies } }) : [] ; //find all movies that's id is in the watchedMovies list
-        res.render("watched-movies", { username: req.session.username, movies });
+        res.render("watched-movies", { username: req.session.username, movies, watchedlistdesc });
     } catch (error) {
         console.error(error);
         res.send("Failed to load watched movies list");
@@ -52,5 +53,21 @@ exports.removeWatchedMovies = async (req, res) => {
     } catch (error) {
         console.error(error);
         res.send("Failed to remove movie");
+    }
+};
+
+exports.editWatchedDesc = async(req, res) => {
+    try {
+        const watchedlistdesc = req.body.watchedlistdesc;
+
+        await Watchedlist.findOneAndUpdate(
+            { user: req.session.userId },
+            { watchedlistDesc: watchedlistdesc }
+        );
+
+        res.redirect("/watched")
+    } catch(err){
+        console.log(err)
+        res.send("Error updating watched movies description")
     }
 };

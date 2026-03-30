@@ -1,15 +1,18 @@
 const express = require("express");
 const router = express.Router();
 const { isLoggedIn } = require("../middleware/auth");
-const watchlistController = require("../controllers/watchlist-controllers");
+const watchlistControllers = require("../controllers/watchlist-controllers");
 
 // Add to watchlist
-router.post("/watchlist/add/:id", isLoggedIn, watchlistController.addMovietoWatchlist);
+router.post("/watchlist/add/:id", isLoggedIn, watchlistControllers.addMovietoWatchlist);
 
 // View watchlist
-router.get("/watchlist", isLoggedIn, watchlistController.viewWatchlist);
+router.get("/watchlist", isLoggedIn, watchlistControllers.viewWatchlist);
 
-//Remove
-router.post("/watchlist/remove/:id", isLoggedIn, watchlistController.removeWatchlistMovie);
+// Remove
+router.post("/watchlist/remove/:id", isLoggedIn, watchlistControllers.removeWatchlistMovie);
+
+// edit watchlist desc
+router.post("/watchlist/editdesc", isLoggedIn, watchlistControllers.editWatchlistDesc);
 
 module.exports = router;

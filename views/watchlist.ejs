@@ -3,7 +3,39 @@
     <head><title>My Watchlist</title></head>
     <body>
         <h1>My Watchlist</h1>
-        <p>Here is your watch list:</p>
+        <h3>Watchlist description:</h3>
+        <% if (!watchlistdesc) { %>
+            <p>No description yet.</p>
+        <% } else { %>
+            <p><%= watchlistdesc %></p>
+        <% } %>
+
+        <button id="editDescButton" type="button" onclick="showEdit()">Edit Description</button>
+
+        <form id="descForm" action="/watchlist/editdesc" method="POST" style="display:none;">
+            <textarea name="watchlistdesc"><%= watchlistdesc %></textarea>
+            <br><br>
+            <button type="submit">Save</button>
+            <button type="button" onclick="hideEdit()">Cancel</button>
+        </form>
+
+        <script>
+            function showEdit() {
+                document.getElementById("descForm").style.display = "block";
+                document.getElementById("editDescButton").style.display = "none";
+            }
+            
+            function hideEdit() {
+                document.getElementById("descForm").style.display = "none";
+                document.getElementById("editDescButton").style.display = "block";
+            }
+        </script>
+
+        <h3>Here is your watch list:</h3>
+        <% if (movies.length == 0) { %>
+            <p>No movies added here yet!</p>
+            <a href="/movie">Browse our movie catalogue</a>
+        <% } else { %>
         <div style="display:flex; flex-wrap:wrap;">
             <% movies.forEach(movie => { %>
                 <div style="width:150px; margin:10px; text-align:center">
@@ -15,5 +47,6 @@
                 </div>
             <% }) %>
         </div>
+        <% } %>
     </body>
 </html>
