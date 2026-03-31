@@ -7,7 +7,7 @@
         <% if (!watchedlistdesc) { %>
             <p>No description yet.</p>
         <% } else { %>
-            <p style="width: 1000px;"><%= watchedlistdesc %></p>
+            <p style="width: 1500px;overflow-wrap: break-word;"><%= watchedlistdesc %></p>
         <% } %>
 
         <button id="editDescButton" type="button" onclick="showEdit()">Edit Description</button>

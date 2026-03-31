@@ -21,7 +21,7 @@
                     <!-- edit review button -->
                     <button id="editButton" type="button" onclick="showEdit('<%= review._id %>')">Edit Comment</button></a>
                     <form id="form-<%= review._id %>" action="/review/edit/<%= review._id %>" method="POST" style="display:none;">
-                        <textarea name="comment"><%= review.comment %></textarea>
+                        <textarea name="comment" maxlength="500"><%= review.comment %></textarea>
 
                             <br><br>
                             <button type="submit">Save</button>
