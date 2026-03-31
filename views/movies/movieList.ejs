@@ -49,28 +49,48 @@
 
         <div style="display:flex; flex-wrap:wrap;">
             <% movies.forEach(movie => { %>
-                <div class="movie-card" style="width:150px; margin:10px; text-align:center">
-                    <a href="/movie/<%= movie._id %>">
-                        <img src="<%= movie.image %>" style="width:160px; border-radius: 20px; margin-bottom: 6px;"><br>
-                    </a>
-                    <span class="movie-title"><%= movie.title %></span>
-                
-                    <% if (watchedMoviesList.includes(movie._id.toString())) {%>
-                    <p><span style="size: 5px;background-color: yellow;">Watched</span></p>
-                    
-                    <% } if (isAdmin) { %>
-                    <br>
-                    <a href="/movie/edit/<%= movie._id %>">
-                        <button type="button">Edit</button>
-                    </a>
 
-                    <form action="/movie/delete/<%= movie._id %>" method="POST" onsubmit="return confirm('Are you sure you want to delete this movie?')">
-                        <button type="submit">Delete</button>
-                    </form>
-                <% } %>
-            </div>
-        <% }) %>
-    </div>
+                <div class="movie-card" style="width:150px; margin:10px; text-align:center">
+
+                    <div style="position: relative; display: inline-block;">
+                        <a href="/movie/<%= movie._id %>">
+                            <img src="<%= movie.image %>" 
+                                style="width:160px; border-radius: 20px; margin-bottom: 6px;">
+                        </a>
+                
+                        <% if (watchedMoviesList.includes(movie._id.toString())) { %>
+                            <span style="
+                                position: absolute;
+                                top: 8px;
+                                right: 8px;
+                                background-color: rgba(0, 0, 0, 0.9);
+                                color: white;
+                                padding: 4px 8px;
+                                border-radius: 12px;
+                                font-size: 12px;
+                                font-weight: bold;
+                            ">
+                                ✔
+                            </span>
+                        <% } %>
+                    </div>
+                
+                    <br>
+                    <span class="movie-title"><%= movie.title %></span>
+                    
+                    <% if (isAdmin) { %>
+                        <br>
+                        <a href="/movie/edit/<%= movie._id %>">
+                            <button type="button">Edit</button>
+                        </a>
+
+                        <form action="/movie/delete/<%= movie._id %>" method="POST" onsubmit="return confirm('Are you sure you want to delete this movie?')">
+                            <button type="submit">Delete</button>
+                        </form>
+                    <% } %>
+                </div>
+            <% }) %>
+        </div>
 
     <style>
         .movie-card img {
