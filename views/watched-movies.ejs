@@ -7,13 +7,13 @@
         <% if (!watchedlistdesc) { %>
             <p>No description yet.</p>
         <% } else { %>
-            <p><%= watchedlistdesc %></p>
+            <p style="width: 1000px;"><%= watchedlistdesc %></p>
         <% } %>
 
         <button id="editDescButton" type="button" onclick="showEdit()">Edit Description</button>
 
         <form id="descForm" action="/watched/editdesc" method="POST" style="display:none;">
-            <textarea name="watchedlistdesc"><%= watchedlistdesc %></textarea>
+            <textarea name="watchedlistdesc" rows="6" cols="60" maxlength="3000"><%= watchedlistdesc %></textarea>
             <br><br>
             <button type="submit">Save</button>
             <button type="button" onclick="hideEdit()">Cancel</button>
