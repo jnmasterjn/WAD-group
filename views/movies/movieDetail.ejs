@@ -43,7 +43,9 @@
 
 
     <!-- add review button -->
-    <button id="reviewPopUp"> Write A Review</button>
+    <% if (!userReview) { %>
+        <button id="reviewPopUp">Write A Review</button>
+    <% } %>
     <br>
 
     <div id="reviewstuff" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.5);">
@@ -61,7 +63,7 @@
                 <br> 
 
                 <label>Content:</label><br>
-                <textarea name="comment" rows="5" cols="30"></textarea>
+                <textarea name="comment" rows="5" cols="30" maxlength="500" placeholder="Write your review here (max 500 characters)"></textarea>
                 
                 <br><br>
 
@@ -97,7 +99,7 @@
 
             <button id="editButton" type="button" onclick="showEdit('<%= userReview._id %>')">Edit Comment</button></a>
             <form id="form-<%= userReview._id %>" action="/review/edit/<%= userReview._id %>" method="POST" style="display:none;">
-                <textarea name="comment"><%= userReview.comment %></textarea>
+                <textarea name="comment" maxlength="500"><%= userReview.comment %></textarea>
 
                     <br><br>
                     <button type="submit">Save</button>

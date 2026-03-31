@@ -46,7 +46,7 @@ exports.registerLogic = async (req, res) => {
 
     } catch (err) {
         console.log(err)
-        res.render("register", { error: "Something went wrong, please try again.", success: null });
+        res.render("register", { error: err.message, success: null });
     }
 };
 
@@ -76,7 +76,7 @@ exports.loginLogic = async (req, res) => {
 
     } catch (err) {
         console.log(err)
-        res.render("login", { error: "Something went wrong, please try again." , success: false})
+        res.render("login", { error: err.message , success: false})
     }
 };
 
