@@ -216,18 +216,14 @@ exports.editReview = async (req, res) => {
 exports.deleteReview = async(req, res) => {
 
     try{
-        const review = await Review.findByIdandDelete(req.params.id)
+        const review = await Review.findByIdAndDelete(req.params.id)
 
         if (review) {
             // recalculate average for this movie
             await updateMovieAverage(review.movie);
 
             res.redirect(req.get("referer") || "/myReviews");
-        }
-        // // go back to previous page
-        // const back = req.get("referer") || "/myReviews";
-        // res.redirect(back)
-        
+        }        
     }catch(err){
         console.log(err)
         res.send("Error deleting review")

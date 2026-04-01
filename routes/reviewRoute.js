@@ -11,9 +11,6 @@ router.get("/review/new/:movieId", isLoggedIn, reviewController.viewNewReview);
 // post: handle form submission (create new review)
 router.post("/myReviews", isLoggedIn, reviewController.postReview);
 
-// //route to handle form submission (new review post)
-// router.post("/myReviews", isLoggedIn, reviewController.postReview)
-
 //get: view all reviews by the current user
 router.get("/myReviews", isLoggedIn, reviewController.viewMyReviews)
 
