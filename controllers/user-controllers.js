@@ -6,32 +6,32 @@ const Watchedlist = require("../models/watchedlist");
 const Review = require("../models/review");
 
 
-//register logic
+// Register logic
 exports.registerLogic = async (req, res) => {
     const { username, password } = req.body;
 
+    // check if username and password fields are filled
     if (!username || !password) {
         return res.render("register", { error: "All fields are required", success: null });
     }
-    //password must > 6
+    // password must > 6
     if (password && password.length < 6) {
         return res.render("register", { error: "Password must be at least 6 characters", success: null });
     }
 
     try {
-        //check if username appear in db alr or not
+        // check if username already exists in the database
         const existingUser = await User.findOne({ username });
         if (existingUser) {
             return res.render("register", { error: "Username already exists", success: null })
         }
 
+        // hash the password before saving
         const hashed = await bcrypt.hash(password, 10);
 
         // saves user to database
         const user = new User({ username, password: hashed });
         await user.save();
-
-        // create new empty watchlist for user
 
         // create new empty watchedlist for user
         const watchedlist = new Watchedlist({ user: user._id, movies: [] });
@@ -41,6 +41,7 @@ exports.registerLogic = async (req, res) => {
         const watchlist = new Watchlist({ user: user._id, movies: [] });
         await watchlist.save();
 
+        // redirect to login page with success message
         req.session.success = "Account created successfully!";
         res.redirect("/login");
 
@@ -50,24 +51,26 @@ exports.registerLogic = async (req, res) => {
     }
 };
 
-// login logic
+// Login logic
 exports.loginLogic = async (req, res) => {
     const { username, password } = req.body
 
     try {
+        // check if username exists in the database
         const user = await User.findOne({ username })
 
         if (!user) {
             return res.render("login", { error: "User not found", success: false })
         }
 
+        // compare submitted password with hashed password in database
         const match = await bcrypt.compare(password, user.password)
 
         if (!match) {
             return res.render("login", { error: "Password does not match", success: false })
         }
 
-        //session
+        // session
         req.session.userId = user._id;
         req.session.username = user.username;
         req.session.isAdmin = user.isAdmin;
@@ -80,12 +83,11 @@ exports.loginLogic = async (req, res) => {
     }
 };
 
-// profile
+// Profile
 exports.profile = async (req, res) => {
     try {
 
         const users = await User.findById(req.session.userId);
-
 
         // get recently viewed movie ids from session
         const recentlyIds = req.session.recentlyViewed || [];
@@ -116,14 +118,18 @@ exports.profile = async (req, res) => {
         // recommended movies based on watchlist genres
         let recommendedMovies = [];
         if (watchlist && watchlist.movies.length > 0) {
+            // get unique genres from watchlist movies
             const genres = [...new Set(watchlist.movies.map(movie => movie.genre))];
+            // get ids of movies already in watchlist to exclude them
             const watchlistIds = watchlist.movies.map(movie => movie._id);
+            // find movies matching watchlist genres that aren't already in the watchlist
             recommendedMovies = await Movie.find({
                 genre: { $in: genres },
                 _id: { $nin: watchlistIds }
             }).limit(10);
         }
 
+        // render profile page and pass all relevant data into it
         res.render("profile", {
             users,
             recentlyMovies: orderedMovies,
@@ -139,13 +145,16 @@ exports.profile = async (req, res) => {
     }
 };
 
-//create bio
+// Create bio
 exports.createBio = async (req, res) => {
+    // retrieve the new bio from the form submission
     const bio = req.body.bio
 
     try {
+        // find the current session's user and update their bio
         await User.findByIdAndUpdate(req.session.userId, { bio });
 
+        // redirect back to the profile page
         res.redirect("/profile")
 
     } catch (err) {
@@ -154,11 +163,14 @@ exports.createBio = async (req, res) => {
 }
 
 exports.editBio = async (req, res) => {
+    // retrieve the updated bio from the form submission
     const { bio } = req.body
 
     try {
+        // find the current session's user and update their bio
         await User.findByIdAndUpdate(req.session.userId, { bio });
 
+        // redirect back to the profile page
         res.redirect("/profile");
     } catch (err) {
         res.send("Failed to edit bio")

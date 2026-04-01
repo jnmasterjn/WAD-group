@@ -3,23 +3,24 @@ const Movie = require("../models/movie");
 const Watchedlist = require("../models/watchedlist");
 const Watchlist = require("../models/watchlist");
 
-// Controller function to add watched movies to Watched Movies list
-
+// Controller function to add to watched movies list
 exports.addWatchedMovies = async (req, res) => {
     try {
+        // parse the movie id from the url to a variable called movieId
         const movieId = new mongoose.Types.ObjectId(req.params.id);
         
+        // look into watchedlist schema and find the current session's user and add movieId to their watchedlist movies
         await Watchedlist.findOneAndUpdate(
             { user: req.session.userId },
             { $addToSet: {movies: movieId} }
         )
 
-        //remove watchlist movie
+        //remove that movie from that users watchlist if it exists
         await Watchlist.findOneAndUpdate(
             { user: req.session.userId },
             { $pull: {movies: movieId} }
         )
-
+        // redirect back to the watched movies page
         res.redirect("/movie");
     } catch (error) {
         console.error(error);
@@ -27,11 +28,19 @@ exports.addWatchedMovies = async (req, res) => {
     }
 };
 
+// Controller function to view watched movies
 exports.viewWatchedMovies = async (req, res) => {
     try {
-        const watchedlist = await Watchedlist.findOne({ user: req.session.userId })
-        const watchedlistdesc = watchedlist.watchedlistDesc
-        const movies = watchedlist ? await Movie.find({ _id: { $in: watchedlist.movies } }) : [] ; //find all movies that's id is in the watchedMovies list
+        // query watchedlist schema to find information that belongs to current session's user
+        const watchedlist = await Watchedlist.findOne({ user: req.session.userId });
+
+        // retrieve watchedlistDesc from watchedlist
+        const watchedlistdesc = watchedlist.watchedlistDesc;
+
+        // find all movies that's id is in the watchedMovies list
+        const movies = watchedlist ? await Movie.find({ _id: { $in: watchedlist.movies } }) : [] ;
+
+        // render watched-movies.ejs and pass username, movies, and watchedlist description into it
         res.render("watched-movies", { username: req.session.username, movies, watchedlistdesc });
     } catch (error) {
         console.error(error);
@@ -39,15 +48,18 @@ exports.viewWatchedMovies = async (req, res) => {
     }
 };
 
+// Controller function to remove from watched movies list
 exports.removeWatchedMovies = async (req, res) => {
     try {
-        const movieId = new mongoose.Types.ObjectId(req.params.id); // gets the movie id from the URL and turns it from String into an Object Id to avoid data type error
+        // parse the movie id from the url to a variable called movieId
+        const movieId = new mongoose.Types.ObjectId(req.params.id);
 
+        // look into watchedlist schema and find the current session's user and remove movieId from their watchedlist movies
         await Watchedlist.findOneAndUpdate(
             { user: req.session.userId }, 
             { $pull: { movies: movieId } }
         );
-
+        // redirect back to the watched movies page
         res.redirect("/watched");
     } catch (error) {
         console.error(error);
@@ -55,15 +67,19 @@ exports.removeWatchedMovies = async (req, res) => {
     }
 };
 
+// Controller function to edit watched movies description
 exports.editWatchedDesc = async(req, res) => {
     try {
+        // retrieve the new description from the form submission
         const watchedlistdesc = req.body.watchedlistdesc;
 
+        // find the current session's user's watchedlist and update their description
         await Watchedlist.findOneAndUpdate(
             { user: req.session.userId },
             { watchedlistDesc: watchedlistdesc }
         );
 
+        // redirect back to the watched movies page
         res.redirect("/watched")
     } catch(err){
         console.log(err)
