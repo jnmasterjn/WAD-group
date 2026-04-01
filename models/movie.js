@@ -9,7 +9,6 @@ const movieSchema = new mongoose.Schema({
     title: {
         type: String,
         required: [true, 'A movie must have a title'],
-        unique:true,
         maxlength: [50, "A movie title cannot exceed 50 characters"]
     },
     description:{
@@ -41,6 +40,12 @@ const movieSchema = new mongoose.Schema({
     }
 }, {
     timestamps: true
+    
 });
+
+movieSchema.index(
+  { title: 1, genre: 1, releaseYear: 1 },
+  { unique: true }
+);
 
 module.exports = mongoose.model("Movie", movieSchema, "movies")
