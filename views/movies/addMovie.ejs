@@ -3,8 +3,21 @@
 <h1>Add Movie</h1>
 
 <% if (error) { %>
-    <p style="color:red;"><%= error %></p>
+  <ul style="color: red;">
+    <% (Array.isArray(error) ? error : [error]).forEach(function(err) { %>
+      <li><%= err %></li>
+    <% }) %>
+  </ul>
 <% } %>
+
+<% if (warnings && warnings.length > 0) { %>
+  <ul style="color: orange;">
+    <% warnings.forEach(function(warning) { %>
+      <li><%= warning %></li>
+    <% }) %>
+  </ul>
+<% } %>
+
 
 <%- include("_movieForm", {
     formAction: "/movie/add",

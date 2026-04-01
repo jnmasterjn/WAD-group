@@ -5,6 +5,53 @@ const Watchedlist = require("../models/watchedlist");
 const Watchlist = require("../models/watchlist");
 const Like = require("../models/like");
 
+// Helper function for add movies function below
+
+function normalizeText(text) {
+    return text
+        .toLowerCase()
+        .trim()
+        .replace(/[^\w\s]/g, "")
+        .replace(/\s+/g, " ");
+}
+
+function similarityPercent(a, b) {
+    a = normalizeText(a);
+    b = normalizeText(b);
+
+    let matches = 0;
+    let minLength = Math.min(a.length, b.length);
+    let maxLength = Math.max(a.length, b.length);
+
+    if (maxLength === 0) {
+        return 100;
+    }
+
+    for (let i = 0; i < minLength; i++) {
+        if (a[i] === b[i]) {
+            matches++;
+        }
+    }
+
+    return Number(((matches / maxLength) * 100).toFixed(2));
+}
+
+function checkTitleWarnings(newTitle, movies) {
+    let warnings = [];
+
+    for (let i = 0; i < movies.length; i++) {
+        let oldTitle = movies[i].title;
+        let percent = similarityPercent(newTitle, oldTitle);
+
+        if (percent >= 80 && percent < 100) {
+            warnings.push(
+                `Warning: ${newTitle}" is ${percent} % similar to existing movie title "${oldTitle}.`
+            )
+        }
+    }
+
+    return warnings;
+}
 
 // Controller function to load the individual movie (like when you click on a movie it brings you to the page where you can see it's description and everything, uses ID in searchbar)
 exports.movieDesc = async (req, res) => {
@@ -18,7 +65,7 @@ exports.movieDesc = async (req, res) => {
         const reviews = await Review.find({
             movie: req.params.id
         }).populate("user"); // optional (to show username)
-        
+
         //find is only finding one thing
         const userReview = reviews.find(r => {
             return r.user && r.user._id.toString() === req.session.userId.toString()
@@ -31,7 +78,7 @@ exports.movieDesc = async (req, res) => {
 
         //get all the likes for reviews
         const likes = await Like.find({
-            review: {$in: reviews.map(r => r._id.toString())}
+            review: { $in: reviews.map(r => r._id.toString()) }
         })
 
         //count likes per review
@@ -44,7 +91,7 @@ exports.movieDesc = async (req, res) => {
             likeMap[reviewId] = (likeMap[reviewId] || 0) + 1;
 
             //check if current user liked
-            if (like.user.toString() === req.session.userId.toString()){
+            if (like.user.toString() === req.session.userId.toString()) {
                 userLikedMap[reviewId] = true;
             }
         });
@@ -57,7 +104,7 @@ exports.movieDesc = async (req, res) => {
         const currentMovieId = ind_movie._id.toString();
 
         // remove duplicate
-        const updatedList = req.session.recentlyViewed.filter(function(id) {
+        const updatedList = req.session.recentlyViewed.filter(function (id) {
             return id.toString() !== currentMovieId;
         });
 
@@ -80,14 +127,14 @@ exports.movieDesc = async (req, res) => {
         ) : false;
 
         res.render("movies/movieDetail", {
-                ind_movie, 
-                isInWatchlist, 
-                isInWatchedMovies, 
-                reviews: otherReview || [], 
-                userReview,
-                likeMap,
-                userLikedMap
-            })
+            ind_movie,
+            isInWatchlist,
+            isInWatchedMovies,
+            reviews: otherReview || [],
+            userReview,
+            likeMap,
+            userLikedMap
+        })
     } catch (error) {
         console.error(error);
         res.send("Failed to display movie")
@@ -95,7 +142,7 @@ exports.movieDesc = async (req, res) => {
 };
 
 // Controller function to load all movies on the website
-exports.displayMovies = async (req, res) => { 
+exports.displayMovies = async (req, res) => {
     try {
         const watchedlist = await Watchedlist.findOne({ user: req.session.userId });
         const watchedMoviesList = watchedlist ? watchedlist.movies.map(id => id.toString()) : [];
@@ -109,15 +156,15 @@ exports.displayMovies = async (req, res) => {
         let movies; //define movie first
 
         //if user select a genre --> show movies of that genre, else: show all movie
-        if (genre){
-            movies = await Movie.find({genre:genre});
-        }else{
+        if (genre) {
+            movies = await Movie.find({ genre: genre });
+        } else {
             movies = await Movie.find()
         }
         res.render("movies/movieList", {
             movies, //movie list
             genres, //dropdown options
-            selectedGenre:genre, //whatever the user selected
+            selectedGenre: genre, //whatever the user selected
             watchedMoviesList,
             isAdmin: req.session.isAdmin || false
         })
@@ -126,18 +173,62 @@ exports.displayMovies = async (req, res) => {
         console.error(error);
         res.send("Failed to display movies")
     }
-    
+
 };
 
-// function to handle movie form submission 
+// function to handle movie form submission (add movie)
 exports.movieAdd = async (req, res) => {
-    try { 
-        const { title, description, genre, releaseYear, image } = req.body; // Take values from the submitted form and store them in variables
+    try {
+        const { title, description, releaseYear, genre, image } = req.body; // Take values from the submitted form and store them in variables
 
+        const errors = [];
+        let warnings = [];
+
+        if (title && title.trim().length > 50) {
+            errors.push("Title must not exceed 50 characters.");
+        }
+
+        // Check if releaseYear is exactly 4 digits
+        if (!releaseYear || !/^\d{4}$/.test(String(releaseYear).trim())) {
+            errors.push("Release year must be exactly 4 digits.");
+        }
+
+        // Validate image URL extension
+        const validImageExtensions = /\.(jpg|jpeg|png|gif|webp)$/i;
+        if (!image || !validImageExtensions.test(image)) {
+            errors.push("Image URL must end with a valid image format (jpg, jpeg, png, gif, webp).");
+        }
+
+        // Description limit (max 3000 words)
+        if (description) {
+            const wordCount = description.trim().split(/\s+/).length;
+            if (wordCount > 3000) {
+                errors.push("Description must not exceed 3000 words.");
+            }
+        }
+
+        // Genre limit (max 20 characters)
+        if (genre && genre.trim().length > 20) {
+            errors.push("Genre must not exceed 20 characters.");
+        }
+
+        // Exact duplicate check 
         const existingMovie = await Movie.findOne({ title, genre, releaseYear });
-        if (existingMovie){
+        if (existingMovie) {
+            errors.push("Movie with this title, genre, and release year already exists.");
+        }
+
+        // Warning check
+        const allMovies = await Movie.find({}, "title");
+        warnings = checkTitleWarnings(title, allMovies);
+
+        // If there are errors, show all of them at once
+        if (errors.length > 0) {
             return res.render("movies/addMovie", {
-                error:"Movie with this title already exists."})
+                error: errors,
+                warnings,
+                success: null
+            });
         }
 
         // create a movie object
@@ -151,13 +242,24 @@ exports.movieAdd = async (req, res) => {
 
         await newMovie.save(); // Save the new movie into MongoDB
 
+        // Show warning if exists
+        if (warnings.length > 0) {
+            return res.render("movies/addMovie", {
+                success: "Movie added successfully.",
+                error: [],
+                warnings: warnings
+            });
+        }
+
         res.redirect("/movie"); // After saving, send the user back to movie list page to immediately see the updated list
     } catch (error) { // if anything inside try fails, this will run instead, for example invalid date or save error
-        
-        console.log(error); 
+        console.log(error);
 
         return res.render("movies/addMovie", {
-            error:"Error adding movie."})
+            error: "Error adding movie.",
+            warnings: [],
+            success: null
+        });
     }
 };
 

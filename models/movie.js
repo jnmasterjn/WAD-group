@@ -13,7 +13,9 @@ const movieSchema = new mongoose.Schema({
     },
     description:{
         type: String,
-        required: [true, 'A movie must have a description']
+        default: "",
+        required: [true, 'A movie must have a description'],
+        maxlength: [3000, "A movie description cannot exceed 3000 characters"]
     },
     genre: {
         type: String,
