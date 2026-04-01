@@ -175,11 +175,10 @@ exports.displayMovies = async (req, res) => {
     }
 
 };
-
-// function to handle movie form submission (add movie)
+// function to add movie
 exports.movieAdd = async (req, res) => {
     try {
-        const { title, description, releaseYear, genre, image } = req.body; // Take values from the submitted form and store them in variables
+        const { title, description, releaseYear, genre, image, confirmWarning } = req.body;
 
         const errors = [];
         let warnings = [];
@@ -188,47 +187,49 @@ exports.movieAdd = async (req, res) => {
             errors.push("Title must not exceed 50 characters.");
         }
 
-        // Check if releaseYear is exactly 4 digits
         if (!releaseYear || !/^\d{4}$/.test(String(releaseYear).trim())) {
             errors.push("Release year must be exactly 4 digits.");
         }
 
-        // Validate image URL extension
         const validImageExtensions = /\.(jpg|jpeg|png|gif|webp)$/i;
         if (!image || !validImageExtensions.test(image)) {
             errors.push("Image URL must end with a valid image format (jpg, jpeg, png, gif, webp).");
         }
 
-        // Description limit (max 3000 words)
         if (description && description.trim().length > 3000) {
             errors.push("Description must not exceed 3000 characters.");
         }
 
-        // Genre limit (max 20 characters)
         if (genre && genre.trim().length > 20) {
             errors.push("Genre must not exceed 20 characters.");
         }
 
-        // Exact duplicate check 
         const existingMovie = await Movie.findOne({ title, genre, releaseYear });
         if (existingMovie) {
             errors.push("Movie with this title, genre, and release year already exists.");
         }
 
-        // Warning check
         const allMovies = await Movie.find({}, "title");
         warnings = checkTitleWarnings(title, allMovies);
 
-        // If there are errors, show all of them at once
         if (errors.length > 0) {
             return res.render("movies/addMovie", {
+                movie: { title, description, releaseYear, genre, image },
                 error: errors,
                 warnings,
                 success: null
             });
         }
 
-        // create a movie object
+        if (warnings.length > 0 && confirmWarning !== "true") {
+            return res.render("movies/addMovie", {
+                movie: { title, description, releaseYear, genre, image },
+                error: [],
+                warnings,
+                success: null
+            });
+        }
+
         const newMovie = new Movie({
             title,
             description,
@@ -237,23 +238,18 @@ exports.movieAdd = async (req, res) => {
             image
         });
 
-        await newMovie.save(); // Save the new movie into MongoDB
+        await newMovie.save();
 
-        // Show warning if exists
-        if (warnings.length > 0) {
-            return res.render("movies/addMovie", {
-                success: "Movie added successfully.",
-                error: [],
-                warnings: warnings
-            });
-        }
-
-        res.redirect("/movie"); // After saving, send the user back to movie list page to immediately see the updated list
-    } catch (error) { // if anything inside try fails, this will run instead, for example invalid date or save error
-        console.log(error);
+        return res.redirect("/movie");
+    } catch (error) {
+        console.error("=== movieAdd error ===");
+        console.error(error);
+        console.error("message:", error.message);
+        console.error("stack:", error.stack);
 
         return res.render("movies/addMovie", {
-            error: "Error adding movie.",
+            movie: req.body,
+            error: [error.message],
             warnings: [],
             success: null
         });
@@ -275,33 +271,122 @@ exports.movieRemove = async (req, res) => {
 exports.movieEdit = async (req, res) => {
     try {
         const movie = await Movie.findById(req.params.id);
-        res.render("movies/editMovie", { movie });
+
+        res.render("movies/editMovie", {
+            movie,
+            error: [],
+            warnings: [],
+            success: null
+        });
     } catch (error) {
         console.log(error);
         res.send("Error loading edit page.");
     }
 };
 
-// function to check all fills 
-exports.movieCheck = async (req, res) => {
+// handle submitted edit form
+exports.movieUpdate = async (req, res) => {
     try {
-        const { title, description, genre, releaseYear, image } = req.body;
+        const { id } = req.params;
+        let { title, description, genre, releaseYear, image } = req.body;
+
+        const errors = [];
+        const warnings = [];
+
+        // Trim inputs
+        title = title?.trim();
+        description = description?.trim();
+        genre = genre?.trim();
+        releaseYear = releaseYear?.trim();
+        image = image?.trim();
 
         if (!title || !description || !genre || !releaseYear) {
-            return res.send("Please fill in all required fields.");
+            errors.push("Please fill in all required fields.");
         }
 
-        await Movie.findByIdAndUpdate(req.params.id, {
+        if (title && title.length > 50) {
+            errors.push("Title must not exceed 50 characters.");
+        }
+
+        if (releaseYear && !/^\d{4}$/.test(releaseYear)) {
+            errors.push("Release year must be exactly 4 digits.");
+        }
+
+        const validImageExtensions = /\.(jpg|jpeg|png|gif|webp)(\?.*)?$/i;
+        if (image && !validImageExtensions.test(image)) {
+            errors.push("Image URL must end with a valid image format (jpg, jpeg, png, gif, webp).");
+        }
+
+        if (description && description.length > 3000) {
+            errors.push("Description must not exceed 3000 characters.");
+        }
+
+        if (genre && genre.length > 20) {
+            errors.push("Genre must not exceed 20 characters.");
+        }
+
+        // Exact duplicate check, excluding current movie
+        if (title && genre && releaseYear) {
+            const existingMovie = await Movie.findOne({
+                _id: { $ne: id },
+                title,
+                genre,
+                releaseYear
+            });
+
+            if (existingMovie) {
+                errors.push("Movie with same title, genre and year already exists.");
+            }
+        }
+
+        // Similar title warnings, excluding current movie
+        const movies = await Movie.find({ _id: { $ne: id } });
+        warnings.push(...checkTitleWarnings(title, movies));
+
+        // show errors first
+        if (errors.length > 0) {
+            return res.render("movies/editMovie", {
+                movie: { _id: id, title, description, genre, releaseYear, image },
+                error: errors,
+                warnings,
+                success: null
+            });
+        }
+
+        // Show warnings only on first submit
+        if (warnings.length > 0 && confirmWarning !== "true") {
+            return res.render("movies/editMovie", {
+                movie: { _id: id, title, description, genre, releaseYear, image },
+                error: [],
+                warnings,
+                success: null
+            });
+        }
+
+        const updateData = {
             title,
             description,
             genre,
             releaseYear,
             image
+        };
+
+        await Movie.findByIdAndUpdate(id, updateData, {
+            runValidators: true,
+            new: true
         });
 
-        res.redirect("/movie");
+        return res.redirect("/movie");
     } catch (error) {
-        console.log(error);
-        res.send("Error updating movie.");
+    console.error("Full error:", error);
+    console.error("Message:", error.message);
+    console.error("Stack:", error.stack);
+
+    return res.render("movies/editMovie", {
+        movie: { _id: req.params.id, ...req.body },
+        error: [error.message || "Error updating movie."],
+        warnings: [],
+        success: null
+        });
     }
 };
