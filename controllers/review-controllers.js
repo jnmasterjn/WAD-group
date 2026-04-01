@@ -1,5 +1,6 @@
 const Movie = require("../models/movie");
 const Review = require("../models/review");
+const { movieEdit } = require("./movie-controllers");
 
 // helper function to recalculate movie average
 async function updateMovieAverage(movieId) {
@@ -19,47 +20,91 @@ async function updateMovieAverage(movieId) {
     });
 }
 
-// post review
-exports.postReview = async(req, res) => {
+
+// post: save review
+exports.postReview = async (req, res) => {
     const { comment, rating, movie } = req.body;
 
-    //user cannot enter empty comment or comment > 50 words
-    const trimmedComment = comment.trim();
-
-    if (!trimmedComment) {
-        return res.send("Comment cannot be empty");
-    }
-
-    const wordCount = trimmedComment.split(/\s+/).length;
-
-    if (wordCount > 50) {
-        return res.send("Comment cannot exceed 50 words");
-    }
-
     try {
-        // Only include rating if user provided it
-        const reviewData = { comment, movie, user:req.session.userId, username: req.session.username};
-        if (rating) reviewData.rating = Number(rating); 
+        // fetch data for rendering the page
+        const ind_movie = await Movie.findById(movie);
+        const reviews = await Review.find({ movie });
+        const userReview = await Review.findOne({ movie, user: req.session.userId });
 
-        const newReview = new Review(reviewData)
-        await newReview.save();
+        // default values for template 
+        const likeMap = {};
+        const userLikedMap = {};
+        const isInWatchlist = false; 
+        const isInWatchedMovies = false;
 
-        // recalculate movie average rating
-        await updateMovieAverage(movie);
-
-        res.redirect(`/movie/${movie}`);
-    } catch (err) {
-        // handle duplicate review error
-        if (err.code === 11000) {
-            return res.send("You already reviewed this movie!")
+        //Validation: comment cannot be empty
+        const trimmedComment = comment.trim();
+        if (!trimmedComment) {
+            return res.render("movies/movieDetail", {
+                ind_movie,
+                reviews,
+                userReview,
+                isInWatchlist,
+                isInWatchedMovies,
+                likeMap,
+                userLikedMap,
+                error: "Comment cannot be empty"
+            });
         }
 
-        console.error("Error saving review:", err);
+        // Validation: comment cannot exceed 50 words
+        const wordCount = trimmedComment.split(/\s+/).length;
+        if (wordCount > 50) {
+            return res.render("movies/movieDetail", {
+                ind_movie,
+                reviews,
+                userReview,
+                isInWatchlist,
+                isInWatchedMovies,
+                likeMap,
+                userLikedMap,
+                error: "Comment cannot exceed 50 words"
+            });
+        }
+
+        // check if user already reviewed
+        if (userReview) {
+            return res.render("movies/movieDetail", {
+                ind_movie,
+                reviews,
+                userReview,
+                isInWatchlist,
+                isInWatchedMovies,
+                likeMap,
+                userLikedMap,
+                error: "You already reviewed this movie! You can edit your review below."
+            });
+        }
+
+    // save review 
+    const newReview = new Review({
+        comment, 
+        rating: rating ? Number(rating) : undefined, 
+        movie,
+        user: req.session.userId,
+        username: req.session.username
+    });
+
+    await newReview.save();
+
+    // update average
+    await updateMovieAverage(movie);
+
+    //redirect back to movie page
+    res.redirect(`/movie/${movie}`);
+
+    } catch (err) {
+        console.log("Error saving review:", err);
         res.send("Error saving your review");
     }
 };
 
-//route to get the my review page (all comments current user left)
+// get: show all reviews by user
 exports.viewMyReviews = async (req, res) => {
     try {
         //get all reviews
@@ -71,94 +116,120 @@ exports.viewMyReviews = async (req, res) => {
         console.error(err);
         res.send("Error loading reviews");
     }
-}
+};
 
-//edit review
-exports.editReview = async(req, res) => {
-    
-    //get updated values from form
-    const {comment, rating} = req.body
+// get: show form to create a new review
+exports.viewNewReview = async (req, res) => {
+    try {
+        const movieId = req.params.movieId;
+        const movie = await Movie.findById(movieId);
 
-    //user cannot enter empty comment or comment > 50 words
-    const trimmedComment = comment.trim();
-
-    //prevent empty comment (including only spaces)
-    if (!trimmedComment) {
-        return res.send("Comment cannot be empty");
+        const existingReview = await Review.findOne({ user: req.session.userId, movie: movieId });
+        if (existingReview) {
+            return res.redirect(`/movie/${movieId}`); // already reviewed
+        }
+        res.render("newReview", { movie });
+    } catch (err) {
+        console.error(err);
+        res.send("You already made a review. One review allowed only.")
     }
+};
 
-    //count number of words (split by spaces)
-    const wordCount = trimmedComment.split(/\s+/).length;
-
-    //enforce max 50 words
-    if (wordCount > 50) {
-        return res.send("Comment cannot exceed 50 words");
+// get: show form to edit existing review
+exports.viewEditReview = async(req, res) => {
+    try {
+        const review = await Review.findById(req.params.id)
+        res.render("editReview", {review})
+    } catch (err) {
+        console.error(err);
+        res.send("Error loading edit form");
     }
+};
+
+// post: edit existing review
+exports.editReview = async (req, res) => {
+    const { comment, rating } = req.body;
 
     try {
+        const review = await Review.findById(req.params.id);
+        const movieId = review.movie;
 
-        //update review in DB using review ID from URL
-        const review = await Review.findByIdAndUpdate(
-            req.params.id, 
+        // fetch data for rendering the page
+        const ind_movie = await Movie.findById(movieId);
+        const reviews = await Review.find({ movie: movieId });
+        const userReview = await Review.findOne({ movie: movieId, user: req.session.userId });
 
-            //use cleaned comment
-            {comment:trimmedComment, rating}, 
+        // default values for template 
+        const likeMap = {};
+        const userLikedMap = {};
+        const isInWatchlist = false; 
+        const isInWatchedMovies = false;
 
-            //returns updated document instead of old one
-            {new: true}
+        //Validation: comment cannot be empty
+        const trimmedComment = comment.trim();
+        if (!trimmedComment) {
+            return res.render("movies/movieDetail", {
+                ind_movie,
+                reviews,
+                userReview,
+                isInWatchlist,
+                isInWatchedMovies,
+                likeMap,
+                userLikedMap,
+                error: "Comment cannot be empty"
+            });
+        }
+
+        // Validation: comment cannot exceed 50 words
+        const wordCount = trimmedComment.split(/\s+/).length;
+        if (wordCount > 50) {
+            return res.render("movies/movieDetail", {
+                ind_movie,
+                reviews,
+                userReview,
+                isInWatchlist,
+                isInWatchedMovies,
+                likeMap,
+                userLikedMap,
+                error: "Comment cannot exceed 50 words"
+            });
+        }
+
+        //update review
+        const updatedReview = await Review.findByIdAndUpdate(
+            req.params.id,
+            { comment, rating: Number(rating) },
+            { new: true }
         );
 
-        //recalculate average for this movie
-        await updateMovieAverage(review.movie);
+        await updateMovieAverage(updatedReview.movie);
 
-        //redirect user back to the page they came from,
-        //fallback to /myReviews if referer is missing
-        const back = req.get("referer") || "/myReviews";
-        res.redirect(back)
+        res.redirect(`/movie/${updatedReview.movie}`);
 
-    } catch(err){
-        console.log(err)
-        //handle unexpected errors
-        res.send("Error updating review")
+    } catch (err) {
+        console.log(err);
+        res.send("Error updating review");
     }
-}
+};  
 
-// delete review
+// post: delete review
 exports.deleteReview = async(req, res) => {
 
     try{
-        
-        //find the review first, do not delete yet
-        const review = await Review.findById(req.params.id)
+        const review = await Review.findByIdandDelete(req.params.id)
 
-        if (!review) {
-            return res.send("Review not found");
+        if (review) {
+            // recalculate average for this movie
+            await updateMovieAverage(review.movie);
+
+            res.redirect(req.get("referer") || "/myReviews");
         }
-
-        //authentication check, can only delete self comment
-        if (review.user.toString() !== req.session.userId.toString()){
-            return res.status(403).send("Not authorized");
-        }
-
-        //now safe to delete review
-        await Review.findByIdAndDelete(req.params.id);
-
-        // recalculate average for this movie
-        await updateMovieAverage(review.movie);
-
-        // go back to previous page
-        const back = req.get("referer") || "/myReviews";
-        res.redirect(back)
+        // // go back to previous page
+        // const back = req.get("referer") || "/myReviews";
+        // res.redirect(back)
         
     }catch(err){
         console.log(err)
         res.send("Error deleting review")
     }
-}
-
-// view edit review
-exports.viewEditReview = async(req, res) => {
-    const review = await Review.findById(req.params.id)
-
-    res.render("editReview", {review})
-}
+};
