@@ -13,10 +13,7 @@
                 <!-- loop to render each movie -->
                 <% reviews.forEach(review => { %>
                     <p><%= review.movie.title %></p>
-                    <a href="/movie/<%= review.movie._id %>">
-                        <img src="<%= review.movie.image %>" 
-                            style="width:160px; border-radius: 20px;">
-                    </a>
+                    <img src="<%= review.movie.image %>" style="width:160px; border-radius: 20px;">
                     
                     <strong><p>Rating:</strong> <%= review.rating %>/5</p>
                     <strong><p>Comment:</strong> <%= review.comment %></p>

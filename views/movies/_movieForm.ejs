@@ -11,7 +11,7 @@
             id="description" 
             rows="50" 
             cols="70"
-            maxlength="3000"
+            //maxlength="3000"
             required><%= movie ? movie.description : '' %></textarea>
     </div>
 
@@ -27,17 +27,14 @@
         name="releaseYear" 
         id="releaseYear"
         maxlength="4"
-        value="<%= movie ? movie.releaseYear : '' %>"
         required
         >
     </div>
+
     <div>
         <label for="image">Image URL</label>
         <input type="text" name="image" id="image" value="<%= movie ? movie.image : '' %>">
     </div>
-    <% if (warnings && warnings.length > 0) { %>
-        <input type="hidden" name="confirmWarning" value="true">
-        <button type="submit">Add Anyway</button>
-    <% } else { %>
-        <button type="submit"><%= buttonText %></button>
-    <% } %>
+
+    <button type="submit"><%= buttonText %></button>
+</form>

@@ -107,9 +107,9 @@ exports.postReview = async (req, res) => {
 // get: show all reviews by user
 exports.viewMyReviews = async (req, res) => {
     try {
-        //get all reviews
+        // get all reviews
         //user and movie come from movie review schema
-        //populate = convert ID -> full object from another collection
+        //populate = convert ID → full object from another collection
         const reviews = await Review.find({ user: req.session.userId }).populate("user").populate("movie"); 
         res.render("myReviews", { reviews });
     } catch (err) {
@@ -214,9 +214,8 @@ exports.editReview = async (req, res) => {
 
 // post: delete review
 exports.deleteReview = async(req, res) => {
-
     try{
-        const review = await Review.findByIdandDelete(req.params.id)
+        const review = await Review.findByIdAndDelete(req.params.id);
 
         if (review) {
             // recalculate average for this movie
