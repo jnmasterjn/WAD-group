@@ -5,19 +5,25 @@ const router = express.Router();
 const { isLoggedIn } = require("../middleware/auth");
 const reviewController = require("../controllers/review-controllers")
 
-//route to handle form submission (new review post)
-router.post("/myReviews", isLoggedIn, reviewController.postReview)
+// get: show form to create a new review
+router.get("/review/new/:movieId", isLoggedIn, reviewController.viewNewReview);
 
-//route to get the reviews page
+// post: handle form submission (create new review)
+router.post("/myReviews", isLoggedIn, reviewController.postReview);
+
+// //route to handle form submission (new review post)
+// router.post("/myReviews", isLoggedIn, reviewController.postReview)
+
+//get: view all reviews by the current user
 router.get("/myReviews", isLoggedIn, reviewController.viewMyReviews)
 
-//edit review (show the current review page)
-router.get("/review/edit/:id", isLoggedIn,reviewController.viewEditReview)
+// get: show edit form for a review
+router.get("/review/edit/:id", isLoggedIn, reviewController.viewEditReview)
 
-//edit review
+//post: submit edited review
 router.post("/review/edit/:id", isLoggedIn,reviewController.editReview)
 
-//delete review
+//post: delete review
 router.post("/review/delete/:id", isLoggedIn, reviewController.deleteReview)
 
 module.exports = router;
