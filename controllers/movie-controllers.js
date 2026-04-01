@@ -196,7 +196,7 @@ exports.movieAdd = async (req, res) => {
             errors.push("Image URL must end with a valid image format (jpg, jpeg, png, gif, webp).");
         }
 
-        if (description && description.length > 3000) {
+        if (description && description.trim().length > 3000) {
             errors.push("Description must not exceed 3000 characters.");
         }
 
