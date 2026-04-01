@@ -18,14 +18,13 @@
                             style="width:160px; border-radius: 20px;">
                     </a>
                     
-                    <strong><p>Rating:</strong> <%= review.rating %>/5</p>
-                    <strong><p>Comment:</strong> <%= review.comment %></p>
+                    <p><strong>Rating:</strong> <%= review.rating %>/5</p>
+                    <p><strong>Comment:</strong> <%= review.comment %></p>
 
                     <!-- edit review button -->
-                    <button id="editButton" type="button" onclick="showEdit('<%= review._id %>')">Edit Comment</button></a>
+                    <button id="editButton-<%= review._id %>" type="button" onclick="showEdit('<%= review._id %>')">Edit Comment</button>
                     <form id="form-<%= review._id %>" action="/review/edit/<%= review._id %>" method="POST" style="display:none;">
-                        <textarea name="comment" maxlength="500"><%= review.comment %></textarea>
-
+                        <textarea name="comment" maxlength="500"><%= review.comment %></textarea> 
                             <br><br>
                             <button type="submit">Save</button>
                             <button type="button" onclick="hideEdit('<%= review._id %>')">Cancel</button>
@@ -44,11 +43,11 @@
 <script>
     function showEdit(id) {
         document.getElementById("form-" + id).style.display = "block";
-        document.getElementById("editButton").style.display = "none";
+        document.getElementById("editButton-" + id).style.display = "none";
     }
         
     function hideEdit(id) {
         document.getElementById("form-" + id).style.display = "none";
-        document.getElementById("editButton").style.display = "block";
+        document.getElementById("editButton-" + id).style.display = "block";
     }
 </script>
