@@ -9,7 +9,7 @@
         <p>Overview: <%= ind_movie.description %></p>
         <p>Genre: <%= ind_movie.genre %></p>
         <p>Release Year: <%= ind_movie.releaseYear %></p>
-        <p>Average Rating: <%= ind_movie.averageRating %>/5 (<%= ind_movie.ratingsCount %>)</p>
+        <p>Average Rating: <%= ind_movie.averageRating.toFixed(1) %>/5 (<%= ind_movie.ratingsCount %>)</p>
 
     </div>
 
@@ -63,7 +63,7 @@
                 <br> 
 
                 <label>Content:</label><br>
-                <textarea name="comment" rows="5" cols="30" maxlength="500" placeholder="Write your review here (max 500 characters)"></textarea>
+                <textarea name="comment" rows="5" cols="30" maxlength="500" placeholder="Write your review here (max 50 words)"></textarea>
                 
                 <br><br>
 

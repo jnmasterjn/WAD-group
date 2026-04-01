@@ -24,6 +24,19 @@ async function updateMovieAverage(movieId) {
 exports.postReview = async(req, res) => {
     const { comment, rating, movie } = req.body;
 
+    //user cannot enter empty comment or comment > 50 words
+    const trimmedComment = comment.trim();
+
+    if (!trimmedComment) {
+        return res.send("Comment cannot be empty");
+    }
+
+    const wordCount = trimmedComment.split(/\s+/).length;
+
+    if (wordCount > 50) {
+        return res.send("Comment cannot exceed 50 words");
+    }
+
     try {
         // Only include rating if user provided it
         const reviewData = { comment, movie, user:req.session.userId, username: req.session.username};
@@ -64,6 +77,19 @@ exports.viewMyReviews = async (req, res) => {
 //edit review
 exports.editReview = async(req, res) => {
     const {comment, rating} = req.body
+
+    //user cannot enter empty comment or comment > 50 words
+    const trimmedComment = comment.trim();
+
+    if (!trimmedComment) {
+        return res.send("Comment cannot be empty");
+    }
+
+    const wordCount = trimmedComment.split(/\s+/).length;
+
+    if (wordCount > 50) {
+        return res.send("Comment cannot exceed 50 words");
+    }
 
     try {
         const review = await Review.findByIdAndUpdate(req.params.id, {comment, rating}, {new: true});
