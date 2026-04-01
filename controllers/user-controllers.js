@@ -60,14 +60,14 @@ exports.loginLogic = async (req, res) => {
         const user = await User.findOne({ username })
 
         if (!user) {
-            return res.render("login", { error: "User not found", success: false })
+            return res.render("login", { error: "Username or password is incorrect", success: false })
         }
 
         // compare submitted password with hashed password in database
         const match = await bcrypt.compare(password, user.password)
 
         if (!match) {
-            return res.render("login", { error: "Password does not match", success: false })
+            return res.render("login", { error: "Username or password is incorrect", success: false })
         }
 
         // session
