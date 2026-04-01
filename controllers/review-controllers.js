@@ -62,9 +62,9 @@ exports.postReview = async(req, res) => {
 //route to get the my review page (all comments current user left)
 exports.viewMyReviews = async (req, res) => {
     try {
-        // get all reviews
+        //get all reviews
         //user and movie come from movie review schema
-        //populate = convert ID → full object from another collection
+        //populate = convert ID -> full object from another collection
         const reviews = await Review.find({ user: req.session.userId }).populate("user").populate("movie"); 
         res.render("myReviews", { reviews });
     } catch (err) {
@@ -75,46 +75,77 @@ exports.viewMyReviews = async (req, res) => {
 
 //edit review
 exports.editReview = async(req, res) => {
+    
+    //get updated values from form
     const {comment, rating} = req.body
 
     //user cannot enter empty comment or comment > 50 words
     const trimmedComment = comment.trim();
 
+    //prevent empty comment (including only spaces)
     if (!trimmedComment) {
         return res.send("Comment cannot be empty");
     }
 
+    //count number of words (split by spaces)
     const wordCount = trimmedComment.split(/\s+/).length;
 
+    //enforce max 50 words
     if (wordCount > 50) {
         return res.send("Comment cannot exceed 50 words");
     }
 
     try {
-        const review = await Review.findByIdAndUpdate(req.params.id, {comment, rating}, {new: true});
+
+        //update review in DB using review ID from URL
+        const review = await Review.findByIdAndUpdate(
+            req.params.id, 
+
+            //use cleaned comment
+            {comment:trimmedComment, rating}, 
+
+            //returns updated document instead of old one
+            {new: true}
+        );
 
         //recalculate average for this movie
         await updateMovieAverage(review.movie);
 
-        // go back to previous page
+        //redirect user back to the page they came from,
+        //fallback to /myReviews if referer is missing
         const back = req.get("referer") || "/myReviews";
         res.redirect(back)
 
     } catch(err){
         console.log(err)
+        //handle unexpected errors
         res.send("Error updating review")
     }
 }
 
 // delete review
 exports.deleteReview = async(req, res) => {
-    try{
-        const review = await Review.findByIdAndDelete(req.params.id);
 
-        if (review) {
-            // recalculate average for this movie
-            await updateMovieAverage(review.movie);
+    try{
+        
+        //find the review first, do not delete yet
+        const review = await Review.findById(req.params.id)
+
+        if (!review) {
+            return res.send("Review not found");
         }
+
+        //authentication check, can only delete self comment
+        if (review.user.toString() !== req.session.userId.toString()){
+            return res.status(403).send("Not authorized");
+        }
+
+        //now safe to delete review
+        await Review.findByIdAndDelete(req.params.id);
+
+        // recalculate average for this movie
+        await updateMovieAverage(review.movie);
+
         // go back to previous page
         const back = req.get("referer") || "/myReviews";
         res.redirect(back)
