@@ -11,7 +11,7 @@
             id="description" 
             rows="50" 
             cols="70"
-            maxlength="3000"
+            //maxlength="3000"
             required><%= movie ? movie.description : '' %></textarea>
     </div>
 
@@ -19,9 +19,6 @@
         <label for="genre">Genre (Example: Sci-Fi, Action)</label>
         <input type="text" name="genre" id="genre" value="<%= movie ? movie.genre : '' %>" maxlength="20" required>
     </div>
-
-
-<!-- input year -->
 
     <div>
         <label for="releaseYear">Release Year</label>

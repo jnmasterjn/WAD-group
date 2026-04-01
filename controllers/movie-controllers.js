@@ -200,11 +200,8 @@ exports.movieAdd = async (req, res) => {
         }
 
         // Description limit (max 3000 words)
-        if (description) {
-            const wordCount = description.trim().split(/\s+/).length;
-            if (wordCount > 3000) {
-                errors.push("Description must not exceed 3000 words.");
-            }
+        if (description && description.trim().length > 3000) {
+            errors.push("Description must not exceed 3000 characters.");
         }
 
         // Genre limit (max 20 characters)
