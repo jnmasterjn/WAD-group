@@ -43,9 +43,9 @@ function checkTitleWarnings(newTitle, movies) {
         let oldTitle = movies[i].title;
         let percent = similarityPercent(newTitle, oldTitle);
 
-        if (percent >= 80 && percent < 100) {
+        if (percent >= 60 && percent < 100) {
             warnings.push(
-                `Warning: ${newTitle}" is ${percent} % similar to existing movie title "${oldTitle}.`
+                `Warning: ${newTitle}" is ${percent} % similar to existing movie title "${oldTitle}".`
             )
         }
     }
@@ -288,7 +288,7 @@ exports.movieEdit = async (req, res) => {
 exports.movieUpdate = async (req, res) => {
     try {
         const { id } = req.params;
-        let { title, description, genre, releaseYear, image } = req.body;
+        let { title, description, genre, releaseYear, image, confirmWarning} = req.body;
 
         const errors = [];
         const warnings = [];
