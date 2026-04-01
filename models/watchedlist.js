@@ -14,10 +14,6 @@ const watchedMoviesSchema = new mongoose.Schema({
         type: String,
         default: "",
         maxlength: [3000, "watched movies description cannot exceed 3000 characters"],
-    },
-    isArchived: {
-        type: Boolean,
-        default: false
     }
 }, {
     timestamps: true
