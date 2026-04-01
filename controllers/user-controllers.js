@@ -32,7 +32,7 @@ exports.registerLogic = async (req, res) => {
         await user.save();
 
         // create new empty watchlist for user
-        
+
         // create new empty watchedlist for user
         const watchedlist = new Watchedlist({ user: user._id, movies: [] });
         await watchedlist.save();
@@ -58,13 +58,13 @@ exports.loginLogic = async (req, res) => {
         const user = await User.findOne({ username })
 
         if (!user) {
-            return res.render("login", { error: "User not found", success: false})
+            return res.render("login", { error: "User not found", success: false })
         }
 
         const match = await bcrypt.compare(password, user.password)
 
         if (!match) {
-            return res.render("login", { error: "Password does not match", success: false})
+            return res.render("login", { error: "Password does not match", success: false })
         }
 
         //session
@@ -76,7 +76,7 @@ exports.loginLogic = async (req, res) => {
 
     } catch (err) {
         console.log(err)
-        res.render("login", { error: err.message , success: false})
+        res.render("login", { error: err.message, success: false })
     }
 };
 
@@ -89,12 +89,12 @@ exports.profile = async (req, res) => {
 
         // get recently viewed movie ids from session
         const recentlyIds = req.session.recentlyViewed || [];
-        
+
         // get full movie data for recently viewed movies
         const recentlyMovies = await Movie.find({
             _id: { $in: recentlyIds }
         });
-        
+
         // reorder movies to match recently viewed order
         let orderedMovies = [];
         for (let i = 0; i < recentlyIds.length && orderedMovies.length < 7; i++) {
@@ -106,10 +106,10 @@ exports.profile = async (req, res) => {
         }
 
         const user = await User.findById(req.session.userId);
-        
+
         // get watchlist document and populate with full movie data
         const watchlist = await Watchlist.findOne({ user: req.session.userId }).populate("movies");
-        
+
         // get all reviews by this user and populate movie info
         const userReviews = await Review.find({ user: req.session.userId }).populate("movie");
 
@@ -143,24 +143,24 @@ exports.profile = async (req, res) => {
 exports.createBio = async (req, res) => {
     const bio = req.body.bio
 
-    try{
-        await User.findByIdAndUpdate(req.session.userId, {bio});
+    try {
+        await User.findByIdAndUpdate(req.session.userId, { bio });
 
         res.redirect("/profile")
 
-    }catch(err){
+    } catch (err) {
         res.send("Failed to update bio")
     }
 }
 
-exports.editBio = async(req, res) => {
-    const {bio} = req.body
+exports.editBio = async (req, res) => {
+    const { bio } = req.body
 
-    try{
+    try {
         await User.findByIdAndUpdate(req.session.userId, { bio });
 
         res.redirect("/profile");
-    }catch(err){
+    } catch (err) {
         res.send("Failed to edit bio")
     }
 }

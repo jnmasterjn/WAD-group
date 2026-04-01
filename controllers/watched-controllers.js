@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const User = require("../models/user");
 const Movie = require("../models/movie");
 const Watchedlist = require("../models/watchedlist");
 const Watchlist = require("../models/watchlist");

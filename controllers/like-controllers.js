@@ -1,8 +1,3 @@
-const Movie = require("../models/movie");
-const User = require("../models/user");
-const Review = require("../models/review");
-const Watchedlist = require("../models/watchedlist");
-const Watchlist = require("../models/watchlist");
 const Like = require("../models/like");
 
 exports.toggleLike = async(req, res) => {
