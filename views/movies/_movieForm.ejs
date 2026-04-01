@@ -1,7 +1,7 @@
 <form action="<%= formAction %>" method="POST">
     <div>
         <label for="title">Title</label>
-        <input type="text" name="title" id="title" value="<%= movie ? movie.title : '' %>" //maxlength="50" required>
+        <input type="text" name="title" id="title" value="<%= movie ? movie.title : '' %>" maxlength="50" required>
     </div>
 
     <div>
@@ -11,13 +11,13 @@
             id="description" 
             rows="50" 
             cols="70"
-            //maxlength="3000"
+            maxlength="3000"
             required><%= movie ? movie.description : '' %></textarea>
     </div>
 
     <div>
         <label for="genre">Genre (Example: Sci-Fi, Action)</label>
-        <input type="text" name="genre" id="genre" value="<%= movie ? movie.genre : '' %>" //maxlength="20" required>
+        <input type="text" name="genre" id="genre" value="<%= movie ? movie.genre : '' %>" maxlength="20" required>
     </div>
 
     <div>
@@ -31,11 +31,13 @@
         required
         >
     </div>
-
     <div>
         <label for="image">Image URL</label>
         <input type="text" name="image" id="image" value="<%= movie ? movie.image : '' %>">
     </div>
-
-    <button type="submit"><%= buttonText %></button>
-</form>
+    <% if (warnings && warnings.length > 0) { %>
+        <input type="hidden" name="confirmWarning" value="true">
+        <button type="submit">Add Anyway</button>
+    <% } else { %>
+        <button type="submit"><%= buttonText %></button>
+    <% } %>

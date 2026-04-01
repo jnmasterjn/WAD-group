@@ -9,6 +9,7 @@ router.get("/movie", movieController.displayMovies);
 // show add movie form (needs to be above because :id is a catch-all parameter, it will match anything after /movie/ and store it in req.params.id. So instead of opening your add-movie page, it may try to find a movie whose id is "add".) 
 router.get("/movie/add", isLoggedIn, isAdmin, (req, res) => {
     res.render("movies/addMovie", {
+    movie: null,
     error: [],
     warnings: [],
     success: null
