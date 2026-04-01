@@ -9,7 +9,8 @@ const movieSchema = new mongoose.Schema({
     title: {
         type: String,
         required: [true, 'A movie must have a title'],
-        unique:true
+        unique:true,
+        maxlength: [50, "A movie title cannot exceed 50 characters"]
     },
     description:{
         type: String,
@@ -19,7 +20,8 @@ const movieSchema = new mongoose.Schema({
     },
     genre: {
         type: String,
-        required: [true, 'A movie must need a genre']
+        required: [true, 'A movie must need a genre'],
+        maxlength: [20, "A movie genre cannot exceed 20 characters"]
     },
     releaseYear: {
         type: Number,
