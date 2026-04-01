@@ -5,16 +5,18 @@ const Watchedlist = require("../models/watchedlist");
 const Watchlist = require("../models/watchlist");
 const Like = require("../models/like");
 
-// Helper function for add movies function below
+// Helper function for movieAdd and movieEdit function below
 
+// Clean and standardize the title so it’s easier to compare and search
 function normalizeText(text) {
     return text
         .toLowerCase()
         .trim()
-        .replace(/[^\w\s]/g, "")
-        .replace(/\s+/g, " ");
+        .replace(/[^\w\s]/g, "") // removes all characters that are not letters, numbers, or spaces
+        .replace(/\s+/g, " "); // replaces multiple spaces with a single space
 }
 
+// Measure how similar two pieces of text are base on the index and return a percentage score (0–100%)
 function similarityPercent(a, b) {
     a = normalizeText(a);
     b = normalizeText(b);
@@ -23,22 +25,26 @@ function similarityPercent(a, b) {
     let minLength = Math.min(a.length, b.length);
     let maxLength = Math.max(a.length, b.length);
 
+    // handle empty input
     if (maxLength === 0) {
         return 100;
     }
 
+    // loop through and compare each character one by one
     for (let i = 0; i < minLength; i++) {
         if (a[i] === b[i]) {
             matches++;
         }
     }
-
+    // calculate similarity percentage, rounded to 2 decimal place
     return Number(((matches / maxLength) * 100).toFixed(2));
 }
 
+// Return warning messages if similarity between new and existing title(s) ≥ 60%
 function checkTitleWarnings(newTitle, movies) {
+    // store all the warnings in a array to display all the similar titles at the end
     let warnings = [];
-
+    // loop through all existing movies and compare similarity benchmark of 60%
     for (let i = 0; i < movies.length; i++) {
         let oldTitle = movies[i].title;
         let percent = similarityPercent(newTitle, oldTitle);
@@ -175,43 +181,52 @@ exports.displayMovies = async (req, res) => {
     }
 
 };
-// function to add movie
+// Handles adding a new movie to the database. With validation, duplicate checks, and similarity warnings
 exports.movieAdd = async (req, res) => {
     try {
         const { title, description, releaseYear, genre, image, confirmWarning } = req.body;
 
+        // array to collate errors and warnings
         const errors = [];
         let warnings = [];
 
+        // title must be ≤ 50 characters
         if (title && title.trim().length > 50) {
             errors.push("Title must not exceed 50 characters.");
         }
 
+        // length of Years must be 4 digits
         if (!releaseYear || !/^\d{4}$/.test(String(releaseYear).trim())) {
             errors.push("Release year must be exactly 4 digits.");
         }
 
+        // image URL validation, only allows image URLs ending with: jpg, jpeg, png, gif, webp
         const validImageExtensions = /\.(jpg|jpeg|png|gif|webp)$/i;
         if (!image || !validImageExtensions.test(image)) {
             errors.push("Image URL must end with a valid image format (jpg, jpeg, png, gif, webp).");
         }
 
+        // description must be ≤ 3000 characters
         if (description && description.trim().length > 3000) {
             errors.push("Description must not exceed 3000 characters.");
         }
 
+        // genre must be ≤ 20 characters
         if (genre && genre.trim().length > 20) {
             errors.push("Genre must not exceed 20 characters.");
         }
 
+        // movies are considered duplicated if they have the same title, genre and release year
         const existingMovie = await Movie.findOne({ title, genre, releaseYear });
         if (existingMovie) {
             errors.push("Movie with this title, genre, and release year already exists.");
         }
 
+        // check for similar titles improve data quality through preventing cases like duplicate entries due to mispelling
         const allMovies = await Movie.find({}, "title");
         warnings = checkTitleWarnings(title, allMovies);
 
+        // if there are errors, re-renders the form to show user input, error messages and warnings (if any)
         if (errors.length > 0) {
             return res.render("movies/addMovie", {
                 movie: { title, description, releaseYear, genre, image },
@@ -221,6 +236,7 @@ exports.movieAdd = async (req, res) => {
             });
         }
 
+        // shows warnings to the user, requires user confirmation before proceeding
         if (warnings.length > 0 && confirmWarning !== "true") {
             return res.render("movies/addMovie", {
                 movie: { title, description, releaseYear, genre, image },
@@ -230,6 +246,7 @@ exports.movieAdd = async (req, res) => {
             });
         }
 
+        // create and save the movie
         const newMovie = new Movie({
             title,
             description,
@@ -237,10 +254,10 @@ exports.movieAdd = async (req, res) => {
             releaseYear,
             image
         });
-
         await newMovie.save();
-
+        // Redirect after success
         return res.redirect("/movie");
+    // error handling (catch block)
     } catch (error) {
         console.error("=== movieAdd error ===");
         console.error(error);
