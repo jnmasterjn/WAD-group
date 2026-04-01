@@ -21,7 +21,7 @@ router.post("/movie/delete/:id", isLoggedIn, isAdmin, movieController.movieRemov
 
 router.get("/movie/edit/:id", isLoggedIn, isAdmin, movieController.movieEdit)
 
-router.post("/movie/edit/:id", isLoggedIn, isAdmin, movieController.movieCheck)
+router.post("/movie/edit/:id", isLoggedIn, isAdmin, movieController.movieUpdate);
 
 router.get("/movie/:id", isLoggedIn, movieController.movieDesc);
 

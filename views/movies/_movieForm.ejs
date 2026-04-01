@@ -1,7 +1,7 @@
 <form action="<%= formAction %>" method="POST">
     <div>
         <label for="title">Title</label>
-        <input type="text" name="title" id="title" value="<%= movie ? movie.title : '' %>" maxlength="50" required>
+        <input type="text" name="title" id="title" value="<%= movie ? movie.title : '' %>" //maxlength="50" required>
     </div>
 
     <div>
@@ -17,7 +17,7 @@
 
     <div>
         <label for="genre">Genre (Example: Sci-Fi, Action)</label>
-        <input type="text" name="genre" id="genre" value="<%= movie ? movie.genre : '' %>" maxlength="20" required>
+        <input type="text" name="genre" id="genre" value="<%= movie ? movie.genre : '' %>" //maxlength="20" required>
     </div>
 
     <div>
@@ -27,6 +27,7 @@
         name="releaseYear" 
         id="releaseYear"
         maxlength="4"
+        value="<%= movie ? movie.releaseYear : '' %>"
         required
         >
     </div>
