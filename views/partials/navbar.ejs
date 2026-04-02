@@ -14,11 +14,11 @@
     ">
 
         <!-- LEFT -->
-        <div style="display:flex; gap:20px;">
-            <a href="/movie">All Movies</a>
-            <a href="/watchlist">My Watchlist</a>
-            <a href="/watched">Watched Movies</a>
-            <a href="/myReviews">My Reviews</a>
+        <div style="display:flex; gap:25px; font-weight:500;">
+            <a href="/movie" style="text-decoration:none; color:#333;">All Movies</a>
+            <a href="/watchlist" style="text-decoration:none; color:#333;">My Watchlist</a>
+            <a href="/watched" style="text-decoration:none; color:#333;">Watched Movies</a>
+            <a href="/myReviews" style="text-decoration:none; color:#333;">My Reviews</a>
         </div>
 
         <!-- RIGHT -->
@@ -29,11 +29,42 @@
             margin-left:auto;
         ">
             <% if (username) { %>
-                <span>Logged in as <a href="/profile"><%= username %></a></span>
-                <a href="/logout">Logout</a>
+                <span style="color:#555;">
+                    Logged in as 
+                    <a href="/profile" style="text-decoration:none; color:#000; font-weight:500;">
+                        <%= username %>
+                    </a>
+                </span>
+
+                <a href="/logout" 
+                    style="
+                        text-decoration:none;
+                        color:white;
+                        background:#333;
+                        padding:6px 12px;
+                        border-radius:6px;
+                ">
+                    Logout
+                </a>
+
             <% } else { %>
-                <a href="/login">Login</a>
-                <a href="/register">Register</a>
+
+                <a href="/login" 
+                    style="text-decoration:none; color:#333;">
+                    Login
+                </a>
+
+                <a href="/register" 
+                    style="
+                        text-decoration:none;
+                        color:white;
+                        background:#333;
+                        padding:6px 12px;
+                        border-radius:6px;
+                ">
+                    Register
+                </a>
+
             <% } %>
         </div>
 
