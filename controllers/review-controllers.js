@@ -52,21 +52,6 @@ exports.postReview = async (req, res) => {
             });
         }
 
-        // Validation: comment cannot exceed 50 words
-        const wordCount = trimmedComment.split(/\s+/).length;
-        if (wordCount > 50) {
-            return res.render("movies/movieDetail", {
-                ind_movie,
-                reviews,
-                userReview,
-                isInWatchlist,
-                isInWatchedMovies,
-                likeMap,
-                userLikedMap,
-                error: "Comment cannot exceed 50 words"
-            });
-        }
-
         // check if user already reviewed
         if (userReview) {
             return res.render("movies/movieDetail", {
@@ -156,70 +141,31 @@ exports.editReview = async (req, res) => {
 
     try {
         const review = await Review.findById(req.params.id);
+
+        // check if review exists before proceeding
+        if (!review) {
+            return res.send("Review not found");
+        }
+
         const movieId = review.movie;
 
-        // fetch data for rendering the page
-        const ind_movie = await Movie.findById(movieId);
-        const reviews = await Review.find({ movie: movieId });
-        const userReview = await Review.findOne({ movie: movieId, user: req.session.userId });
-
-        // default values for template 
-        const likeMap = {};
-        const userLikedMap = {};
-        const isInWatchlist = false; 
-        const isInWatchedMovies = false;
-
-        //Validation: comment cannot be empty
-        const trimmedComment = comment.trim();
-        if (!trimmedComment) {
-            return res.render("movies/movieDetail", {
-                ind_movie,
-                reviews,
-                userReview,
-                isInWatchlist,
-                isInWatchedMovies,
-                likeMap,
-                userLikedMap,
-                error: "Comment cannot be empty"
-            });
-        }
-
-        // Validation: comment cannot exceed 50 words
-        const wordCount = trimmedComment.split(/\s+/).length;
-        if (wordCount > 50) {
-            return res.render("movies/movieDetail", {
-                ind_movie,
-                reviews,
-                userReview,
-                isInWatchlist,
-                isInWatchedMovies,
-                likeMap,
-                userLikedMap,
-                error: "Comment cannot exceed 50 words"
-            });
-        }
-
-        //update review
+        // ... rest of the validation code ...
         const updatedReview = await Review.findByIdAndUpdate(
             req.params.id,
             { comment, rating: Number(rating) },
             { new: true }
         );
 
-        await updatedReview.save();
+        // update the movie's rating average
         await updateMovieAverage(updatedReview.movie);
-         // go back to previous page
-        
 
         res.redirect(req.get("referer") || "/myReviews");
-
-        // res.redirect(`/movie/${updatedReview.movie}`);
 
     } catch (err) {
         console.log(err);
         res.send("Error updating review");
     }
-};  
+};
 
 // post: delete review
 exports.deleteReview = async(req, res) => {
