@@ -123,7 +123,7 @@ exports.movieDesc = async (req, res) => {
         // add to front
         req.session.recentlyViewed.unshift(currentMovieId);
 
-        // limit 5
+        // limit 10
         req.session.recentlyViewed = req.session.recentlyViewed.slice(0, 10);
 
         //some --> check if ANY item matches
