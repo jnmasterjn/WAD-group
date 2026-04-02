@@ -1,11 +1,14 @@
 <form action="<%= formAction %>" method="POST">
+
+    <!-- Title input (50 characters limit) -->
     <div>
-        <label for="title">Title</label>
+        <label for="title">Title (50 characters limit)</label>
         <input type="text" name="title" id="title" value="<%= movie ? movie.title : '' %>" maxlength="50" required>
     </div>
 
+    <!-- Description textarea input (3000 characters limit) -->
     <div>
-        <label for="description">Description</label>
+        <label for="description">Description (3000 characters limit)</label>
         <textarea 
             name="description" 
             id="description" 
@@ -15,13 +18,15 @@
             required><%= movie ? movie.description : '' %></textarea>
     </div>
 
+    <!-- Genre input (20 characters limit) -->
     <div>
-        <label for="genre">Genre (Example: Sci-Fi, Action)</label>
+        <label for="genre">Genre (Example: Sci-Fi, Action, 20 characters limit)</label>
         <input type="text" name="genre" id="genre" value="<%= movie ? movie.genre : '' %>" maxlength="20" required>
     </div>
 
+    <!-- Release year input (only 4 digits) -->
     <div>
-        <label for="releaseYear">Release Year</label>
+        <label for="releaseYear">Release Year (YYYY format)</label>
         <input 
         type="number" 
         name="releaseYear" 
@@ -32,13 +37,20 @@
         required
         >
     </div>
+
+    <!-- Image input (URLs ending with: jpg, jpeg, png, gif, webp)-->
     <div>
-        <label for="image">Image URL</label>
+        <label for="image">Image URL (URLs ending with: jpg, jpeg, png, gif, webp. Recommended to use pictures from TMDB)</label>
         <input type="text" name="image" id="image" value="<%= movie ? movie.image : '' %>">
     </div>
+
+    <!-- Warning handling-->
     <% if (warnings && warnings.length > 0) { %>
+        <!-- hidden input to tell backend that admin confirmed, proceed anyway-->
         <input type="hidden" name="confirmWarning" value="true">
+        <!-- changes button text to warn sdmin -->
         <button type="submit">Add Anyway</button>
     <% } else { %>
+        <!-- used when no warning(s) -->
         <button type="submit"><%= buttonText %></button>
     <% } %>

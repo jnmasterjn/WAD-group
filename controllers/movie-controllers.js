@@ -190,6 +190,13 @@ exports.movieAdd = async (req, res) => {
         const errors = [];
         let warnings = [];
 
+        // Clean inputs
+        title = title?.trim();
+        description = description?.trim();
+        genre = genre?.trim();
+        releaseYear = releaseYear?.trim();
+        image = image?.trim();
+
         // title must be ≤ 50 characters
         if (title && title.trim().length > 50) {
             errors.push("Title must not exceed 50 characters.");
@@ -226,7 +233,7 @@ exports.movieAdd = async (req, res) => {
         const allMovies = await Movie.find({}, "title");
         warnings = checkTitleWarnings(title, allMovies);
 
-        // if there are errors, re-renders the form to show user input, error messages and warnings (if any)
+        // if there are errors, re-renders the form to show admin inputs, error message(s) and warning(s) (if any)
         if (errors.length > 0) {
             return res.render("movies/addMovie", {
                 movie: { title, description, releaseYear, genre, image },
@@ -236,7 +243,7 @@ exports.movieAdd = async (req, res) => {
             });
         }
 
-        // shows warnings to the user, requires user confirmation before proceeding
+        // shows warnings to the admin, requires user confirmation before proceeding
         if (warnings.length > 0 && confirmWarning !== "true") {
             return res.render("movies/addMovie", {
                 movie: { title, description, releaseYear, genre, image },
@@ -255,9 +262,9 @@ exports.movieAdd = async (req, res) => {
             image
         });
         await newMovie.save();
-        // Redirect after success
+        // redirect after success
         return res.redirect("/movie");
-    // error handling (catch block)
+    // other error handling (catch block)
     } catch (error) {
         console.error("=== movieAdd error ===");
         console.error(error);
@@ -273,7 +280,7 @@ exports.movieAdd = async (req, res) => {
     }
 };
 
-// function to remove movie
+// Allows admin to delete movie from the website and database
 exports.movieRemove = async (req, res) => {
     try {
         await Movie.findByIdAndDelete(req.params.id);
@@ -284,7 +291,7 @@ exports.movieRemove = async (req, res) => {
     }
 };
 
-// function to edit
+// Loads the edit page for a specific movie so the admin can update the movie details
 exports.movieEdit = async (req, res) => {
     try {
         const movie = await Movie.findById(req.params.id);
@@ -301,50 +308,58 @@ exports.movieEdit = async (req, res) => {
     }
 };
 
-// handle submitted edit form
+// Processes the edit form submission when the admin updates a movie
 exports.movieUpdate = async (req, res) => {
     try {
         const { id } = req.params;
         let { title, description, genre, releaseYear, image, confirmWarning} = req.body;
 
+        // array to collate errors and warnings
         const errors = [];
         const warnings = [];
 
-        // Trim inputs
+        // clean inputs
         title = title?.trim();
         description = description?.trim();
         genre = genre?.trim();
         releaseYear = releaseYear?.trim();
         image = image?.trim();
 
+        // required field validation
         if (!title || !description || !genre || !releaseYear) {
             errors.push("Please fill in all required fields.");
         }
 
+        // title must be ≤ 50 characters
         if (title && title.length > 50) {
             errors.push("Title must not exceed 50 characters.");
         }
 
+        // length of Years must be 4 digits
         if (releaseYear && !/^\d{4}$/.test(releaseYear)) {
             errors.push("Release year must be exactly 4 digits.");
         }
 
+        // image URL validation, only allows image URLs ending with: jpg, jpeg, png, gif, webp
         const validImageExtensions = /\.(jpg|jpeg|png|gif|webp)(\?.*)?$/i;
         if (image && !validImageExtensions.test(image)) {
             errors.push("Image URL must end with a valid image format (jpg, jpeg, png, gif, webp).");
         }
 
+        // description must be ≤ 3000 characters
         if (description && description.length > 3000) {
             errors.push("Description must not exceed 3000 characters.");
         }
 
+        // genre must be ≤ 20 characters
         if (genre && genre.length > 20) {
             errors.push("Genre must not exceed 20 characters.");
         }
 
-        // Exact duplicate check, excluding current movie
+        // check if there is another movie with the same title, genre and release year
         if (title && genre && releaseYear) {
             const existingMovie = await Movie.findOne({
+                // find a movie that is NOT the one we are currently editing and meet these values
                 _id: { $ne: id },
                 title,
                 genre,
@@ -356,11 +371,11 @@ exports.movieUpdate = async (req, res) => {
             }
         }
 
-        // Similar title warnings, excluding current movie
+        // similar title warning(s), excluding current movie
         const movies = await Movie.find({ _id: { $ne: id } });
         warnings.push(...checkTitleWarnings(title, movies));
 
-        // show errors first
+        // if there are error(s), re-renders the form to show admin inputs, error message(s) and warning(s) (if any)
         if (errors.length > 0) {
             return res.render("movies/editMovie", {
                 movie: { _id: id, title, description, genre, releaseYear, image },
@@ -370,7 +385,7 @@ exports.movieUpdate = async (req, res) => {
             });
         }
 
-        // Show warnings only on first submit
+        // shows warning(s) to the admin, requires user confirmation before proceeding
         if (warnings.length > 0 && confirmWarning !== "true") {
             return res.render("movies/editMovie", {
                 movie: { _id: id, title, description, genre, releaseYear, image },
@@ -379,7 +394,7 @@ exports.movieUpdate = async (req, res) => {
                 success: null
             });
         }
-
+        // update and save the movie details
         const updateData = {
             title,
             description,
@@ -387,19 +402,19 @@ exports.movieUpdate = async (req, res) => {
             releaseYear,
             image
         };
-
         await Movie.findByIdAndUpdate(id, updateData, {
             runValidators: true,
             new: true
         });
-
         return res.redirect("/movie");
+    // other error handling (catch block)
     } catch (error) {
     console.error("Full error:", error);
     console.error("Message:", error.message);
     console.error("Stack:", error.stack);
 
     return res.render("movies/editMovie", {
+        // included here and not in add movie as form needs the movie ID as the backend knows which movie to update
         movie: { _id: req.params.id, ...req.body },
         error: [error.message || "Error updating movie."],
         warnings: [],
