@@ -90,7 +90,22 @@
             <% if (userReview) { %>
                 <h3>Your Review</h3>
 
-                <p><strong>Rating:</strong> <%= userReview.rating %>/5</p>
+                <p>
+                    <strong>Rating:</strong> 
+                
+                    <span style="color:#f5a623; font-size:18px;">
+                        <% for (let i = 1; i <= 5; i++) { %>
+                            <% if (i <= userReview.rating) { %>
+                                ★
+                            <% } else { %>
+                                <span style="color:#ccc;">★</span>
+                            <% } %>
+                        <% } %>
+                    </span>
+                
+                    (<%= userReview.rating %>/5)
+                </p>
+
                 <p style="width: 600px;overflow-wrap: break-word;"><strong>Comment:</strong> <%= userReview.comment %></p>
 
                 <!-- Button to show edit form-->
@@ -158,17 +173,31 @@
                     </p>
 
                     <p><strong><%= review.username %></strong></p>
-                    <p>Rating: <%= review.rating %>/5</p>
-                    <p>Comment: <%= review.comment %></p>
+                    <p>
+                        <strong>Rating:</strong> 
+                    
+                        <span style="color:#f5a623; font-size:18px;">
+                            <% for (let i = 1; i <= 5; i++) { %>
+                                <% if (i <= review.rating) { %>
+                                    ★
+                                <% } else { %>
+                                    <span style="color:#ccc;">★</span>
+                                <% } %>
+                            <% } %>
+                        </span>
+                    
+                        (<%= review.rating %>/5)
+                    </p>
+                    <p><strong>Comment:</strong> <%= review.comment %></p>
 
                     <!-- like count -->
-                    <p>👍 <%= likeMap[review._id] || 0 %></p>
+                    <p>❤️ <%= likeMap[review._id] || 0 %></p>
 
                     <form action="/like/<%= review._id %>" method="POST">
                         <% if (userLikedMap[review._id]) { %>
-                            <button type="submit">👎 Unlike</button>
+                            <button type="submit">Unlike</button>
                         <% } else { %>
-                            <button type="submit">👍 Like</button>
+                            <button type="submit">Like</button>
                         <% } %>
                     </form>
 

@@ -161,6 +161,7 @@ exports.editReview = async (req, res) => {
             return res.send("Rating must be between 1 and 5");
         }
 
+
         const updatedReview = await Review.findByIdAndUpdate(
             req.params.id,
             { comment, rating: Number(rating) },

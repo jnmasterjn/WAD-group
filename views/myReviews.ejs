@@ -53,7 +53,22 @@
 
                 <% } %>
 
-                <p><strong>Rating:</strong> <%= review.rating %>/5</p>
+                <p>
+                    <strong>Rating:</strong> 
+                
+                    <span style="color:#f5a623; font-size:18px;">
+                        <% for (let i = 1; i <= 5; i++) { %>
+                            <% if (i <= review.rating) { %>
+                                ★
+                            <% } else { %>
+                                <span style="color:#ccc;">★</span>
+                            <% } %>
+                        <% } %>
+                    </span>
+                
+                    (<%= review.rating %>/5)
+                </p>
+                
                 <p><strong>Comment:</strong> <%= review.comment %></p>
 
                 <div style="display:flex; gap:10px; margin-top:10px;">
