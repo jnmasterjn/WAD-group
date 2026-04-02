@@ -96,7 +96,11 @@ exports.postReview = async (req, res) => {
     await updateMovieAverage(movie);
 
     //redirect back to movie page
-    res.redirect(`/movie/${movie}`);
+    // res.redirect(`/movie/${movie}`);
+
+     // go back to previous page
+    const back = req.get("referer") || "/myReviews";
+    res.redirect(back)
 
     } catch (err) {
         console.log("Error saving review:", err);
@@ -202,9 +206,14 @@ exports.editReview = async (req, res) => {
             { new: true }
         );
 
+        await updatedReview.save();
         await updateMovieAverage(updatedReview.movie);
+         // go back to previous page
+        
 
-        res.redirect(`/movie/${updatedReview.movie}`);
+        res.redirect(req.get("referer") || "/myReviews");
+
+        // res.redirect(`/movie/${updatedReview.movie}`);
 
     } catch (err) {
         console.log(err);
@@ -221,9 +230,8 @@ exports.deleteReview = async(req, res) => {
         if (review) {
             // recalculate average for this movie
             await updateMovieAverage(review.movie);
-
-            res.redirect(req.get("referer") || "/myReviews");
-        }        
+        }
+            res.redirect(req.get("referer") || "/myReviews");  
     }catch(err){
         console.log(err)
         res.send("Error deleting review")
