@@ -28,7 +28,8 @@
             <img src="<%= ind_movie.image %>" style="width:160px; border-radius:20px;">
         </div>
 
-        <p style="text-align:center;width:600px;overflow-wrap:break-word;"><strong>Overview:</strong> <%= ind_movie.description %></p>
+        <p style="text-align:center;width:600px;overflow-wrap:break-word;">
+        <%= ind_movie.description %></p>
         <p><strong>Genre:</strong> <%= ind_movie.genre %></p>
         <p><strong>Release Year:</strong> <%= ind_movie.releaseYear %></p>
         <p><strong>Average Rating:</strong> <%= ind_movie.averageRating.toFixed(1) %>/5 (<%= ind_movie.ratingsCount %>)</p>
