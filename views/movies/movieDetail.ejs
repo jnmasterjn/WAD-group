@@ -1,151 +1,180 @@
 <!-- movie details (one movie only), showing rating, review, comments...etc -->
 <!DOCTYPE html>
 <html>
-<head>
-      <%- include("../partials/navbar") %>
-</head>
-<body>
-     <div>
-        <h1><%= ind_movie.title %></h1>
-        <img src="<%= ind_movie.image %>" style="width:160px; border-radius: 20px;" >
 
-        <p>Overview: <%= ind_movie.description %></p>
-        <p>Genre: <%= ind_movie.genre %></p>
-        <p>Release Year: <%= ind_movie.releaseYear %></p>
-        <p>Average Rating: <%= ind_movie.averageRating.toFixed(1) %>/5 (<%= ind_movie.ratingsCount %>)</p>
-    </div>
-   
-    <!--  Add to watchlist button, also check if it's in watchlist alr-->
-    <% if (isInWatchlist) { %>
-        <form action="/watchlist/remove/<%= ind_movie._id %>" method="POST">
-            <button>Remove from Watchlist</button>
-        </form>
+<body style="margin:0;">
 
-    <% }else{ %>
-        <form action="/watchlist/add/<%= ind_movie._id %>" method="POST">
-            <button>Add to Watchlist</button>
-        </form>
-    <%}%>
+    <!-- navbar (full width, not inside flex) -->
+    <%- include("../partials/navbar") %>
 
+    <!-- center ONLY the card -->
+    <div style="
+        display:flex;
+        justify-content:center;
+        padding:40px 0;
+    ">
 
-    <!-- add mark as watched button and check if it's marked as watched or not -->
-    <% if (isInWatchedMovies) { %>
-        <!-- <button disabled>Already Marked as Watched</button> -->
+    <div style="
+        width:600px;
+        padding:30px;
+        border:1px solid #ddd;
+        border-radius:10px;
+    ">
 
-        <form action="/watched/remove/<%= ind_movie._id %>" method="POST">
-            <button>Unmark Movie as Watched</button>
-        </form>
+        <!-- movie info -->
+        <h1 style="text-align:center;"><%= ind_movie.title %></h1>
 
-    <% }else{ %>
-        <form action="/watched/add/<%= ind_movie._id %>" method="POST">
-            <button>Mark as Watched</button>
-        </form>
-    <%}%>
+        <div style="text-align:center;"> 
+            <img src="<%= ind_movie.image %>" style="width:160px; border-radius:20px;">
+        </div>
 
-    <hr>
+        <p><strong>Overview:</strong> <%= ind_movie.description %></p>
+        <p><strong>Genre:</strong> <%= ind_movie.genre %></p>
+        <p><strong>Release Year:</strong> <%= ind_movie.releaseYear %></p>
+        <p><strong>Average Rating:</strong> <%= ind_movie.averageRating.toFixed(1) %>/5 (<%= ind_movie.ratingsCount %>)</p>
 
-    <!-- add review button -->
-     <% if (!userReview) { %>
-        <h3>Leave a review for <%= ind_movie.title %>:</h3>
-            <form action="/myReviews" method="post">
-                <!--Input for the review title-->
-                <input type="hidden" name="movie" value="<%= ind_movie._id %>">
-                <input type="hidden" name="movieName" value="<%= ind_movie.title %>">
-                
-                <label>Rating:</label><br>
-                <input type="number" name="rating" min="1" max="5" required> 
-                <br> 
+        <hr>
 
-                <label>Content:</label><br>
-                <textarea name="comment" rows="5" cols="30" maxlength="500" placeholder="Write your review here (max 50 words)" required></textarea>
-                
-                <br><br>
-                <button type="submit">Post</button>
-            </form>
-
-            <!-- Display validation error -->
-            <% if (typeof error !== 'undefined' && error) { %> 
-                <p style="color:red;"><%= error %></p>
+        <!-- Add to watchlist / watched buttons -->
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            
+            <!-- Add to watchlist button, also check if it's in watchlist alr-->
+            <% if (isInWatchlist) { %>
+                <form action="/watchlist/remove/<%= ind_movie._id %>" method="POST">
+                    <button>Remove from Watchlist</button>
+                </form>
+            <% } else { %>
+                <form action="/watchlist/add/<%= ind_movie._id %>" method="POST">
+                    <button>Add to Watchlist</button>
+                </form>
             <% } %>
+
+            <!-- add mark as watched button and check if it's marked as watched or not -->
+            <% if (isInWatchedMovies) { %>
+                <form action="/watched/remove/<%= ind_movie._id %>" method="POST">
+                    <button>Unmark Watched</button>
+                </form>
+            <% } else { %>
+                <form action="/watched/add/<%= ind_movie._id %>" method="POST">
+                    <button>Mark as Watched</button>
+                </form>
+            <% } %>
+
+        </div>
+
+        <hr>
+
+        <!-- add review section -->
+        <% if (!userReview) { %>
+            <h3>Leave a review</h3>
+
+            <form action="/myReviews" method="post" style="
+                display:flex;
+                flex-direction:column;
+                gap:10px;
+            ">
+                <!--Input for the review-->
+                <input type="hidden" name="movie" value="<%= ind_movie._id %>">
+
+                <input type="number" name="rating" min="1" max="5" placeholder="Rating (1–5)" required>
+
+                <textarea name="comment" rows="4" placeholder="Write your review (max 50 words)" required></textarea>
+
+                <button type="submit">Post Review</button>
+            </form>
         <% } %>
 
         <!-- show current user's review -->
-<% if (userReview) { %>
-    <h3>Your Review</h3>
-    <p>Rating: <%= userReview.rating %>/5</p>
-    <p>Comment: <%= userReview.comment %></p>
-    
-    <!-- Button to show edit form-->
-    <button id="editButton" onclick="showEditForm()">Edit Review</button>
+        <% if (userReview) { %>
+            <h3>Your Review</h3>
 
-    <!-- Edit form, hidden by default -->
-    <form id="editForm" action="/review/edit/<%= userReview._id %>" method="post" style="display:none; margin-top:10px;">
-         <label>Rating:</label><br>
-                <input type="number" name="rating" min="1" max="5" value="<%= userReview.rating %>"> 
-                <br> 
-                <label>Content:</label><br>
-                <textarea name="comment" rows="5" cols="30" maxlength="500"><%= userReview.comment %></textarea>
-                <br><br>
-                <button type="submit">Update Review</button>
+            <p><strong>Rating:</strong> <%= userReview.rating %>/5</p>
+            <p><strong>Comment:</strong> <%= userReview.comment %></p>
+
+            <!-- Button to show edit form-->
+            <button id="editButton" onclick="showEditForm()">Edit</button>
+
+            <!-- Edit form, hidden by default -->
+            <form id="editForm" action="/review/edit/<%= userReview._id %>" method="post" style="
+                display:none;
+                margin-top:10px;
+                flex-direction:column;
+                gap:10px;
+            ">
+                <input type="number" name="rating" min="1" max="5" value="<%= userReview.rating %>">
+                <textarea name="comment" rows="4"><%= userReview.comment %></textarea>
+
+                <button type="submit">Update</button>
                 <button type="button" onclick="hideEditForm()">Cancel</button>
             </form>
 
-            <% if (typeof error !== 'undefined' && error) { %> 
-                <p style="color:red;"><%= error %></p>
-            <% } %>
-
             <!-- Delete Review Button -->
-            <form action="/review/delete/<%= userReview._id %>" method="POST" style="display:inline;">
-                <button type="submit" onclick="return confirm('Are you sure you want to delete this review?')">Delete</button>
+            <form action="/review/delete/<%= userReview._id %>" method="POST">
+                <button type="submit" onclick="return confirm('Delete this review?')">Delete</button>
             </form>
         <% } %>
 
-        <script>
-            function showEditForm() {
-                document.getElementById("editForm").style.display = "block";
-                document.getElementById("editButton").style.display = "none";
-            }
+        <hr> 
 
-            function hideEditForm() {
-                document.getElementById("editForm").style.display = "none";
-                document.getElementById("editButton").style.display = "inline-block";
-            }
-        </script>
-<hr> 
-
+        <!-- Other Reviews -->
         <h3>Other Reviews</h3>
+
         <% if (!reviews || reviews.length === 0) { %>
             <!-- Message when no reviews are given -->
             <p>No Reviews yet.</p>
         <% } else { %>
-            <!-- loop to render each blog post -->
+
             <% reviews.forEach(review => { %>
 
-                <!-- javascript formatting string -->
-                <p><%= new Date(review.createdAt).toLocaleString() %></p>
-                <p>Username: <%= review.username %></p>
+            <div style="
+                border-bottom:1px solid #eee;
+                padding:10px 0;
+            ">
+
+                <!-- date -->
+                <p style="font-size:12px; color:gray;">
+                    <%= new Date(review.createdAt).toLocaleString() %>
+                </p>
+
+                <p><strong><%= review.username %></strong></p>
                 <p>Rating: <%= review.rating %>/5</p>
                 <p>Comment: <%= review.comment %></p>
 
                 <!-- like count -->
                 <p>👍 <%= likeMap[review._id] || 0 %></p>
 
-                <form action="/like/<%= review._id %>" method="POST" style="display:inline;">
-    
+                <form action="/like/<%= review._id %>" method="POST">
                     <% if (userLikedMap[review._id]) { %>
                         <button type="submit">👎 Unlike</button>
                     <% } else { %>
                         <button type="submit">👍 Like</button>
                     <% } %>
-                
                 </form>
-                
-                <br>
-                --------------------------------------------------------<br>
+
+            </div>
+
             <% }); %>
+
         <% } %>
 
         <br> 
-        <a href="/movie">Back to Movies</a>
+        <a href="/movie">← Back to Movies</a>
+
+    </div>
+    </div>
+
+    <!-- for showing/hiding edit form -->
+    <script>
+        function showEditForm() {
+            document.getElementById("editForm").style.display = "flex";
+            document.getElementById("editButton").style.display = "none";
+        }
+
+        function hideEditForm() {
+            document.getElementById("editForm").style.display = "none";
+            document.getElementById("editButton").style.display = "inline-block";
+        }
+    </script>
+
 </body>
 </html>

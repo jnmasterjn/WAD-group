@@ -66,11 +66,7 @@ exports.loginLogic = async (req, res) => {
         const match = await bcrypt.compare(password, user.password)
 
         if (!match) {
-<<<<<<< HEAD
             return res.render("login", { error: "Username and password does not match", success: false })
-=======
-            return res.render("login", { error: "Username or password is incorrect", success: false })
->>>>>>> 192f88d1850dce7d685a1be97dde0575d1a24436
         }
 
         // session
