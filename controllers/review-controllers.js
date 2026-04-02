@@ -2,7 +2,7 @@ const Movie = require("../models/movie");
 const Review = require("../models/review");
 const { movieEdit } = require("./movie-controllers");
 
-// helper function to recalculate movie average
+// Helper function to recalculate movie average
 async function updateMovieAverage(movieId) {
     const allReviews = await Review.find({ movie: movieId });
     const reviewsWithRating = allReviews.filter(r => r.rating !== null);
