@@ -51,7 +51,7 @@ function checkTitleWarnings(newTitle, movies) {
 
         if (percent >= 60) {
             warnings.push(
-                `Warning: ${newTitle}" is ${percent} % similar to existing movie title "${oldTitle}".`
+                `Warning: "${newTitle}" is ${percent} % similar to existing movie title "${oldTitle}".`
             )
         }
     }
@@ -65,6 +65,10 @@ exports.movieDesc = async (req, res) => {
         //req.params = values from the URL
         const ind_movie = await Movie.findById(req.params.id);
         const user = await User.findById(req.session.userId);
+
+        // redirect to login if user session is invalid or expired
+        if (!user) return res.redirect("/login");
+
         const watchedlist = await Watchedlist.findOne({ user: user })
         const watchlist = await Watchlist.findOne({ user: user })
 
@@ -119,7 +123,7 @@ exports.movieDesc = async (req, res) => {
         // add to front
         req.session.recentlyViewed.unshift(currentMovieId);
 
-        // limit 5
+        // limit 10
         req.session.recentlyViewed = req.session.recentlyViewed.slice(0, 10);
 
         //some --> check if ANY item matches
@@ -181,6 +185,7 @@ exports.displayMovies = async (req, res) => {
     }
 
 };
+
 // Handles adding a new movie to the database. With validation, duplicate checks, and similarity warnings
 exports.movieAdd = async (req, res) => {
     try {
@@ -190,7 +195,7 @@ exports.movieAdd = async (req, res) => {
         const errors = [];
         let warnings = [];
 
-        // Clean inputs
+        // clean inputs
         title = title?.trim();
         description = description?.trim();
         genre = genre?.trim();

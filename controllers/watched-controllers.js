@@ -34,11 +34,14 @@ exports.viewWatchedMovies = async (req, res) => {
         // query watchedlist schema to find information that belongs to current session's user
         const watchedlist = await Watchedlist.findOne({ user: req.session.userId });
 
+        // redirect to login if watchedlist is not found
+        if (!watchedlist) return res.redirect("/login");
+
         // retrieve watchedlistDesc from watchedlist
         const watchedlistdesc = watchedlist.watchedlistDesc;
 
         // find all movies that's id is in the watchedMovies list
-        const movies = watchedlist ? await Movie.find({ _id: { $in: watchedlist.movies } }) : [] ;
+        const movies = await Movie.find({ _id: { $in: watchedlist.movies } });
 
         // render watched-movies.ejs and pass username, movies, and watchedlist description into it
         res.render("watched-movies", { username: req.session.username, movies, watchedlistdesc });
