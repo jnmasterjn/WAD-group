@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <%- include("./partials/navbar") %>
     <title>Reviews</title>
 </head>
 <body>
+    <%- include("./partials/navbar") %>
+    
     <h1>My Reviews</h1>    
     <!-- Message when no reviews are given -->
     <% if (reviews.length === 0) { %>
@@ -46,12 +47,12 @@
 <script>
     function showEdit(id) {
         document.getElementById("form-" + id).style.display = "block";
-        document.getElementById("UsereditButton-" + id).style.display = "none";
+        document.getElementById("UserEditButton-" + id).style.display = "none";
     }
         
     function hideEdit(id) {
         document.getElementById("form-" + id).style.display = "none";
-        document.getElementById("UsereditButton-" + id).style.display = "block";
+        document.getElementById("UserEditButton-" + id).style.display = "block";
     }
 </script>        
 

@@ -283,7 +283,15 @@ exports.movieAdd = async (req, res) => {
 // Allows admin to delete movie from the website and database
 exports.movieRemove = async (req, res) => {
     try {
-        await Movie.findByIdAndDelete(req.params.id);
+        // parse the movie id from the url
+        const movieId = req.params.id;
+
+        // delete all reviews associated with the movie
+        await Review.deleteMany({ movie: movieId });
+
+        // delete the movie
+        await Movie.findByIdAndDelete(movieId);
+
         res.redirect("/movie");
     } catch (error) {
         console.log(error);

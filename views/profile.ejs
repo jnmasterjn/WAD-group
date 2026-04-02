@@ -1,135 +1,161 @@
-<link rel="stylesheet" href="/css/style.css">
-<%- include("./partials/navbar") %>
+<!DOCTYPE html>
+<html>
 
-<div class="profile-container">
-    <h1>My Profile</h1>
+<head>
+    <title>Profile</title>
+</head>
 
-    <!-- BOX 1: Profile Info -->
-    <div class="profile-card">
-        <p><strong>Username:</strong> <%= user.username %></p>
+<body>
+    <link rel="stylesheet" href="/css/style.css">
+    <%- include("./partials/navbar") %>
 
-        <hr>
+        <div class="profile-container">
+            <h1>My Profile</h1>
 
-        <div class="profile-bio">
-            <p><strong>Bio:</strong></p>
-            <% if (!user.bio) { %>
-                <form action="/profile/bio" method="POST">
-                    <textarea name="bio" placeholder="Write something about yourself..." class="bio-textarea"></textarea>
-                    <br>
-                    <button type="submit" class="btn">Save Bio</button>
-                </form>
-            <% } else { %>
-                <p id="bioText"><%= user.bio %></p>
-                <button onclick="showEdit()" id="editButton" class="btn">Edit Bio</button>
+            <!-- BOX 1: Profile Info -->
+            <div class="profile-card">
+                <p><strong>Username:</strong>
+                    <%= user.username %>
+                </p>
 
-                <form id="bioForm" method="post" action="/profile/bio/edit" style="display: none;">
-                    <textarea name="bio" class="bio-textarea"><%= user.bio %></textarea>
-                    <br>
-                    <button type="submit" class="btn">Save</button>
-                    <button type="button" onclick="hideEdit()" class="btn">Cancel</button>
-                </form>
-            <% } %>
-        </div>
-    </div>
+                <hr>
 
-    <!-- BOX 2: Recently View -->
-    <div class="profile-card">
-        <h2>Recently Viewed</h2>
-
-
-        <div class="movie-row">
-            <% (recentlyMovies || []).forEach(movie => { %>
-                <div class="movie-card">
-                    <a href="/movie/<%= movie._id %>">
-                        <img src="<%= movie.image %>" alt="<%= movie.title %>">
-                    </a>
-                    <span class="movie-title"><%= movie.title %></span>
-                </div>
-            <% }) %>
-        </div>
-    </div>
-
-    <!-- BOX 3: My Watchlist -->
-    <div class="profile-card">
-        <h2>My Watchlist</h2>
-        <% if (watchlistMovies.length > 0) { %>
-            <div class="movie-row">
-                <% watchlistMovies.forEach(movie => { %>
-                    <div class="movie-card">
-                        <a href="/movie/<%= movie._id %>">
-                            <img src="<%= movie.image %>" alt="<%= movie.title %>">
-                        </a>
-                        <span class="movie-title"><%= movie.title %></span>
-                    </div>
-                <% }) %>
-            </div>
-        <% } else { %>
-            <p class="empty-msg">No movies in your watchlist yet.</p>
-        <% } %>
-    </div>
-
-    <!-- BOX 4: Recommended Movies -->
-    <div class="profile-card">
-        <h2>Recommended For You</h2>
-        <% if (recommendedMovies.length > 0) { %>
-            <div class="movie-row">
-                <% recommendedMovies.forEach(movie => { %>
-                    <div class="movie-card">
-                        <a href="/movie/<%= movie._id %>">
-                            <img src="<%= movie.image %>" alt="<%= movie.title %>">
-                        </a>
-                        <span class="movie-title"><%= movie.title %></span>
-                    </div>
-                <% }) %>
-            </div>
-        <% } else { %>
-            <p class="empty-msg">Add movies to your watchlist to get recommendations!</p>
-        <% } %>
-    </div>
-
-    <!-- BOX 5: My Reviews -->
-    <div class="profile-card">
-        <h2>My Reviews</h2>
-        <% if (userReviews.length > 0) { %>
-            <% userReviews.forEach(review => { %>
-                <div class="review-item">
-                    <div class="review-movie">
-                        <a href="/movie/<%= review.movie._id %>">
-                            <img src="<%= review.movie.image %>" alt="<%= review.movie.title %>">
-                        </a>
-                    </div>
-                    <div class="review-content">
-                        <p><strong><%= review.movie.title %></strong></p>
-                        <% if (review.rating) { %>
-                            <p class="review-rating">
-                                <% for (let i = 1; i <= 5; i++) { %>
-                                    <% if (i <= review.rating) { %>★<% } else { %>☆<% } %>
-                                <% } %>
-                                (<%= review.rating %>/5)
+                <div class="profile-bio">
+                    <p><strong>Bio:</strong></p>
+                    <% if (!user.bio) { %>
+                        <form action="/profile/bio" method="POST">
+                            <textarea name="bio" placeholder="Write something about yourself..."
+                                class="bio-textarea"></textarea>
+                            <br>
+                            <button type="submit" class="btn">Save Bio</button>
+                        </form>
+                        <% } else { %>
+                            <p id="bioText">
+                                <%= user.bio %>
                             </p>
-                        <% } %>
-                        <p><%= review.comment %></p>
-                    </div>
+                            <button onclick="showEdit()" id="editButton" class="btn">Edit Bio</button>
+
+                            <form id="bioForm" method="post" action="/profile/bio/edit" style="display: none;">
+                                <textarea name="bio" class="bio-textarea"><%= user.bio %></textarea>
+                                <br>
+                                <button type="submit" class="btn">Save</button>
+                                <button type="button" onclick="hideEdit()" class="btn">Cancel</button>
+                            </form>
+                            <% } %>
                 </div>
-            <% }) %>
-        <% } else { %>
-            <p class="empty-msg">You haven't written any reviews yet.</p>
-        <% } %>
-    </div>
+            </div>
 
-    
-</div>
+            <!-- BOX 2: Recently View -->
+            <div class="profile-card">
+                <h2>Recently Viewed</h2>
 
-<script>
-    function showEdit() {
-        document.getElementById("bioText").style.display = "none";
-        document.getElementById("bioForm").style.display = "block";
-        document.getElementById("editButton").style.display = "none";
-    }
 
-    function hideEdit() {
-        document.getElementById("bioText").style.display = "block";
-        document.getElementById("bioForm").style.display = "none";
-        document.getElementById("editButton").style.display = "block";
-    }
-</script>
+                <div class="movie-row">
+                    <% (recentlyMovies || []).forEach(movie=> { %>
+                        <div class="movie-card">
+                            <a href="/movie/<%= movie._id %>">
+                                <img src="<%= movie.image %>" alt="<%= movie.title %>">
+                            </a>
+                            <span class="movie-title">
+                                <%= movie.title %>
+                            </span>
+                        </div>
+                        <% }) %>
+                </div>
+            </div>
+
+            <!-- BOX 3: My Watchlist -->
+            <div class="profile-card">
+                <h2>My Watchlist</h2>
+                <% if (watchlistMovies.length> 0) { %>
+                    <div class="movie-row">
+                        <% watchlistMovies.forEach(movie=> { %>
+                            <div class="movie-card">
+                                <a href="/movie/<%= movie._id %>">
+                                    <img src="<%= movie.image %>" alt="<%= movie.title %>">
+                                </a>
+                                <span class="movie-title">
+                                    <%= movie.title %>
+                                </span>
+                            </div>
+                            <% }) %>
+                    </div>
+                    <% } else { %>
+                        <p class="empty-msg">No movies in your watchlist yet.</p>
+                        <% } %>
+            </div>
+
+            <!-- BOX 4: Recommended Movies -->
+            <div class="profile-card">
+                <h2>Recommended For You</h2>
+                <% if (recommendedMovies.length> 0) { %>
+                    <div class="movie-row">
+                        <% recommendedMovies.forEach(movie=> { %>
+                            <div class="movie-card">
+                                <a href="/movie/<%= movie._id %>">
+                                    <img src="<%= movie.image %>" alt="<%= movie.title %>">
+                                </a>
+                                <span class="movie-title">
+                                    <%= movie.title %>
+                                </span>
+                            </div>
+                            <% }) %>
+                    </div>
+                    <% } else { %>
+                        <p class="empty-msg">Add movies to your watchlist to get recommendations!</p>
+                        <% } %>
+            </div>
+
+            <!-- BOX 5: My Reviews -->
+            <div class="profile-card">
+                <h2>My Reviews</h2>
+                <% if (userReviews.length> 0) { %>
+                    <% userReviews.forEach(review=> { %>
+                        <div class="review-item">
+                            <div class="review-movie">
+                                <a href="/movie/<%= review.movie._id %>">
+                                    <img src="<%= review.movie.image %>" alt="<%= review.movie.title %>">
+                                </a>
+                            </div>
+                            <div class="review-content">
+                                <p><strong>
+                                        <%= review.movie.title %>
+                                    </strong></p>
+                                <% if (review.rating) { %>
+                                    <p class="review-rating">
+                                        <% for (let i=1; i <=5; i++) { %>
+                                            <% if (i <=review.rating) { %>★<% } else { %>☆<% } %>
+                                                        <% } %>
+                                                            (<%= review.rating %>/5)
+                                    </p>
+                                    <% } %>
+                                        <p>
+                                            <%= review.comment %>
+                                        </p>
+                            </div>
+                        </div>
+                        <% }) %>
+                            <% } else { %>
+                                <p class="empty-msg">You haven't written any reviews yet.</p>
+                                <% } %>
+            </div>
+
+
+        </div>
+
+        <script>
+            function showEdit() {
+                document.getElementById("bioText").style.display = "none";
+                document.getElementById("bioForm").style.display = "block";
+                document.getElementById("editButton").style.display = "none";
+            }
+
+            function hideEdit() {
+                document.getElementById("bioText").style.display = "block";
+                document.getElementById("bioForm").style.display = "none";
+                document.getElementById("editButton").style.display = "block";
+            }
+        </script>
+</body>
+
+</html>

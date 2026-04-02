@@ -95,8 +95,12 @@ exports.viewMyReviews = async (req, res) => {
         //get all reviews
         //user and movie come from movie review schema
         //populate = convert ID -> full object from another collection
-        const reviews = await Review.find({ user: req.session.userId }).populate("user").populate("movie"); 
-        res.render("myReviews", { reviews });
+        const reviews = await Review.find({ user: req.session.userId }).populate("user").populate("movie");
+
+        // filter out reviews whose movie has been deleted
+        const validReviews = reviews.filter(review => review.movie !== null);
+
+        res.render("myReviews", { reviews: validReviews });
     } catch (err) {
         console.error(err);
         res.send("Error loading reviews");
