@@ -35,6 +35,9 @@ exports.viewWatchlist = async (req, res) => {
         // query watchlist schema to find information that belongs to current session's user
         const watchlist = await Watchlist.findOne({ user: req.session.userId })
 
+        // redirect to login if watchedlist is not found
+        if (!watchlist) return res.redirect("/login");
+
         // retrieve watchlistDesc from watchlist
         const watchlistdesc = watchlist.watchlistDesc
 

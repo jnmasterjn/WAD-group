@@ -85,8 +85,11 @@ exports.loginLogic = async (req, res) => {
 // Profile
 exports.profile = async (req, res) => {
     try {
+        // retrieve user id
+        const user = await User.findById(req.session.userId);
 
-        const users = await User.findById(req.session.userId);
+        // redirect to login if user session is invalid or expired
+        if (!user) return res.redirect("/login");
 
         // get recently viewed movie ids from session
         const recentlyIds = req.session.recentlyViewed || [];
@@ -105,8 +108,6 @@ exports.profile = async (req, res) => {
                 }
             }
         }
-
-        const user = await User.findById(req.session.userId);
 
         // get watchlist document and populate with full movie data
         const watchlist = await Watchlist.findOne({ user: req.session.userId }).populate("movies");
@@ -133,9 +134,8 @@ exports.profile = async (req, res) => {
 
         // render profile page and pass all relevant data into it
         res.render("profile", {
-            users,
-            recentlyMovies: orderedMovies,
             user,
+            recentlyMovies: orderedMovies,
             watchlistMovies: watchlist ? watchlist.movies : [],
             recommendedMovies,
             userReviews: validUserReviews

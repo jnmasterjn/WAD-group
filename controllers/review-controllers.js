@@ -21,7 +21,7 @@ async function updateMovieAverage(movieId) {
 }
 
 
-// post: save review
+// Save review
 exports.postReview = async (req, res) => {
     const { comment, rating, movie } = req.body;
 
@@ -80,7 +80,7 @@ exports.postReview = async (req, res) => {
     // update average
     await updateMovieAverage(movie);
 
-    //redirect back to movie page
+    // redirect back to movie page
     res.redirect(`/movie/${movie}`);
 
     } catch (err) {
@@ -89,12 +89,12 @@ exports.postReview = async (req, res) => {
     }
 };
 
-// get: show all reviews by user
+// Show all reviews by user
 exports.viewMyReviews = async (req, res) => {
     try {
-        //get all reviews
-        //user and movie come from movie review schema
-        //populate = convert ID -> full object from another collection
+        // get all reviews
+        // user and movie come from movie review schema
+        // populate = convert ID -> full object from another collection
         const reviews = await Review.find({ user: req.session.userId }).populate("user").populate("movie");
 
         // filter out reviews whose movie has been deleted
@@ -107,7 +107,7 @@ exports.viewMyReviews = async (req, res) => {
     }
 };
 
-// get: show form to create a new review
+// Show form to create a new review
 exports.viewNewReview = async (req, res) => {
     try {
         const movieId = req.params.movieId;
@@ -124,7 +124,7 @@ exports.viewNewReview = async (req, res) => {
     }
 };
 
-// get: show form to edit existing review
+// Show form to edit existing review
 exports.viewEditReview = async(req, res) => {
     try {
         const review = await Review.findById(req.params.id)
@@ -135,7 +135,7 @@ exports.viewEditReview = async(req, res) => {
     }
 };
 
-// post: edit existing review
+// Edit existing review
 exports.editReview = async (req, res) => {
     const { comment, rating } = req.body;
 
@@ -146,8 +146,6 @@ exports.editReview = async (req, res) => {
         if (!review) {
             return res.send("Review not found");
         }
-
-        const movieId = review.movie;
 
         // ... rest of the validation code ...
         const updatedReview = await Review.findByIdAndUpdate(
@@ -167,7 +165,7 @@ exports.editReview = async (req, res) => {
     }
 };
 
-// post: delete review
+// Delete review
 exports.deleteReview = async(req, res) => {
 
     try{

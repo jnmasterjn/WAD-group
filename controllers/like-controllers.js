@@ -14,7 +14,7 @@ exports.toggleLike = async(req, res) => {
         })
 
         if (existingLike){
-            //delete ONE document from Like collection
+            // delete ONE document from Like collection
             await Like.deleteOne({ _id: existingLike._id });
         }else {
             // otherwise create a new like document in the Like collection
