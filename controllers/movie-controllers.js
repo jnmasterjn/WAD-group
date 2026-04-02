@@ -49,7 +49,7 @@ function checkTitleWarnings(newTitle, movies) {
         let oldTitle = movies[i].title;
         let percent = similarityPercent(newTitle, oldTitle);
 
-        if (percent >= 60 && percent < 100) {
+        if (percent >= 60) {
             warnings.push(
                 `Warning: ${newTitle}" is ${percent} % similar to existing movie title "${oldTitle}".`
             )
