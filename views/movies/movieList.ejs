@@ -2,42 +2,56 @@
 <!DOCTYPE html>
 <html>
     <body>
+
+        <!-- ================= NAVBAR ================= -->
         <%- include("../partials/navbar") %>
+
+        <!-- ================= TITLE ================= -->
         <h1>Browse Movies</h1>
 
-    <!-- add movie button for admin -->
-    <% if (isAdmin) { %>
-        <a href="/movie/add">
-            <button type="button">Add Movie</button>
-        </a>
-    <% } %>
+        <!-- add movie button for admin -->
+        <% if (isAdmin) { %>
+            <a href="/movie/add">
+                <button type="button">Add Movie</button>
+            </a>
+        <% } %>
 
-    <!-- searching movie -->
-    <div style="display:flex; 
-    justify-content:center;">
-        <input  type="text" 
-                id="searchBar" 
-                placeholder="Search movies..." 
-                onkeyup="filterMovies()" 
-                style="width: 400px; padding: 12px; font-size: 16px; border-radius:10px">
-    </div>
-    <script>
+        <!-- searching movie -->
+        <div style="display:flex; justify-content:center;">
+            <input  type="text" 
+                    id="searchBar" 
+                    placeholder="Search movies..." 
+                    onkeyup="filterMovies()" 
+                    style="width: 400px; padding: 12px; font-size: 16px; border-radius:10px">
+        </div>
+
+        <!-- Search script -->
+        <script>
             function filterMovies() {
+                // Get user input
                 const query = document.getElementById("searchBar").value.toLowerCase();
+                
+                // Get all movie cards
                 const movies = document.querySelectorAll(".movie-card");
+                
+                // Loop through each movie
                 movies.forEach(movie => {
                     const title = movie.querySelector(".movie-title").textContent.toLowerCase();
+                    
+                    // Show or hide movie
                     movie.style.display = title.includes(query) ? "block" : "none";
                 });
             }
-    </script>
+        </script>
 
         <!-- filtering movie by genre -->
         <br><br>
         <form method="GET" action="/movie">
             <!-- onchange is when user select something the form auto submit -->
-            Sort movie by genre: <select name="genre" onchange="this.form.submit()">
+            Sort movie by genre: 
+            <select name="genre" onchange="this.form.submit()">
                 <option value="">All Genres</option>
+                
                 <% genres.forEach(g => { %>
                     <option value="<%=g%>"
                         <%=selectedGenre === g? "selected": ""%>>
@@ -47,17 +61,23 @@
             </select>
         </form>
 
+
+        <!-- ================= MOVIE LIST ================= -->
         <div style="display:flex; flex-wrap:wrap;">
+            
             <% movies.forEach(movie => { %>
 
                 <div class="movie-card" style="width:150px; margin:10px; text-align:center">
 
+                    <!-- ================= IMAGE + WATCHED BADGE ================= -->
                     <div style="position: relative; display: inline-block;">
+                        
+                        <!-- Clickable image -->
                         <a href="/movie/<%= movie._id %>">
-                            <img src="<%= movie.image %>" 
-                                style="width:160px; border-radius: 20px; margin-bottom: 6px;">
+                            <img src="<%= movie.image %>" style="width:160px; border-radius: 20px; margin-bottom: 6px;">
                         </a>
                 
+                        <!-- Show checkmark if watched -->
                         <% if (watchedMoviesList.includes(movie._id.toString())) { %>
                             <span style="
                                 position: absolute;
@@ -74,16 +94,23 @@
                             </span>
                         <% } %>
                     </div>
-                
+                    
+
+                    <!-- ================= TITLE ================= -->
                     <br>
                     <span class="movie-title" style="width: 1500px;overflow-wrap: break-word;"><%= movie.title %></span>
                     
+
+                    <!-- ================= ADMIN ACTIONS ================= -->
                     <% if (isAdmin) { %>
                         <br>
+
+                        <!-- Edit -->
                         <a href="/movie/edit/<%= movie._id %>">
                             <button type="button">Edit</button>
                         </a>
 
+                        <!-- Delete -->
                         <form action="/movie/delete/<%= movie._id %>" method="POST" onsubmit="return confirm('Are you sure you want to delete this movie?')">
                             <button type="submit">Delete</button>
                         </form>
@@ -92,14 +119,16 @@
             <% }) %>
         </div>
 
-    <style>
-        .movie-card img {
-            transition: transform 0.3s ease; /* smooth animation */
-        }
-        
-        .movie-card img:hover {
-            transform: scale(1.1); /* zoom in */
-        }
+
+        <!-- ================= HOVER EFFECT ================= -->
+        <style>
+            .movie-card img {
+                transition: transform 0.3s ease; /* smooth animation */
+            }
+            
+            .movie-card img:hover {
+                transform: scale(1.1); /* zoom in */
+            }
         </style>
 
     </body>
