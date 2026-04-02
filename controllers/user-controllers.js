@@ -59,7 +59,6 @@ exports.loginLogic = async (req, res) => {
         const user = await User.findOne({ username }).select("+password");
 
         if (!user) {
-            return res.render("login", { error: "User not found", success: false })
             return res.render("login", { error: "Username or password is incorrect", success: false })
         }
 
