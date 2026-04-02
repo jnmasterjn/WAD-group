@@ -1,3 +1,4 @@
+//server.js
 const dotenv = require("dotenv");
 const express = require("express");
 const mongoose = require("mongoose");
@@ -14,7 +15,8 @@ app.use(express.static("public"));
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
 app.use(session({
-    secret: "secret",
+    //use environment variables to secure session secrets instead of hardcoding them
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false
 }));

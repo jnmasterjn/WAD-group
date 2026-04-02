@@ -26,11 +26,15 @@ const userSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: [true, 'A user must have a password']
+        required: [true, 'A user must have a password'],
+        minlength: [6, "Password must be at least 6 characters"],
+        //MongoDB will NOT return password when you query user
+        select: false
     },
     bio:{
         type:String,
-        default:""
+        default:"",
+        maxlength: [200, "Bio too long"]
     },
     isAdmin: {
         type: Boolean,

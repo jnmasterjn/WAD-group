@@ -10,7 +10,7 @@ function isLoggedIn(req, res, next) {
 }
 
 function isAdmin(req, res, next) {
-    if (!req.session.isAdmin) {
+    if (!req.session.isAdmin === true) {
         return res.status(403).send("Admins only.");
     }
     next();

@@ -47,8 +47,7 @@ exports.registerLogic = async (req, res) => {
 
     } catch (err) {
         console.log(err)
-        res.render("register", { error: err.message, success: null });
-    }
+        res.render("register", { error: "Registration failed. Please try again.", success: null });    }
 };
 
 // Login logic
@@ -56,8 +55,8 @@ exports.loginLogic = async (req, res) => {
     const { username, password } = req.body
 
     try {
-        // check if username exists in the database
-        const user = await User.findOne({ username })
+        // check if username exists in the database, only include "password" here
+        const user = await User.findOne({ username }).select("+password");
 
         if (!user) {
             return res.render("login", { error: "User not found", success: false })
@@ -67,7 +66,7 @@ exports.loginLogic = async (req, res) => {
         const match = await bcrypt.compare(password, user.password)
 
         if (!match) {
-            return res.render("login", { error: "Password does not match", success: false })
+            return res.render("login", { error: "Username and password does not match", success: false })
         }
 
         // session

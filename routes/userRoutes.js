@@ -11,10 +11,15 @@ router.get("/register", (req, res) => {
 //login page
 router.get("/login", (req, res) => {
 
+    //logged in user cannot access /login again
+    if (req.session.userId) {
+        return res.redirect("/movie");
+    }
+
     const success = req.session.success;
 
     //remove after showing once
-    req.session.success = false
+    req.session.success = null
     
     res.render("login", { error:null, success})
 })
@@ -26,7 +31,7 @@ router.post("/register", userController.registerLogic);
 router.post("/login", userController.loginLogic);
 
 //logout
-router.get("/logout", (req, res) => {
+router.get("/logout", isLoggedIn, (req, res) => {
     req.session.destroy(()=>{
         res.redirect('/')
     })
