@@ -184,7 +184,7 @@ exports.displayMovies = async (req, res) => {
 // Handles adding a new movie to the database. With validation, duplicate checks, and similarity warnings
 exports.movieAdd = async (req, res) => {
     try {
-        const { title, description, releaseYear, genre, image, confirmWarning } = req.body;
+        let { title, description, releaseYear, genre, image, confirmWarning } = req.body;
 
         // array to collate errors and warnings
         const errors = [];

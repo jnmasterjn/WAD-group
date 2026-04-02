@@ -3,31 +3,37 @@
 
     <!-- Title input (50 characters limit) -->
     <div>
-        <label for="title">Title (50 characters limit)</label>
+        <label for="title">Title (50 characters limit):</label><br>
         <input type="text" name="title" id="title" value="<%= movie ? movie.title : '' %>" maxlength="50" required>
     </div>
 
+    <br>
+
     <!-- Description textarea input (3000 characters limit) -->
     <div>
-        <label for="description">Description (3000 characters limit)</label>
+        <label for="description">Description (3000 characters limit):</label><br>
         <textarea 
             name="description" 
             id="description" 
-            rows="50" 
-            cols="70"
+            rows="40" 
+            cols="90"
             maxlength="3000"
             required><%= movie ? movie.description : '' %></textarea>
     </div>
 
+    <br>
+
     <!-- Genre input (20 characters limit) -->
     <div>
-        <label for="genre">Genre (Example: Sci-Fi, Action, 20 characters limit)</label>
+        <label for="genre">Genre (Example: Sci-Fi, Action, 20 characters limit):</label><br>
         <input type="text" name="genre" id="genre" value="<%= movie ? movie.genre : '' %>" maxlength="20" required>
     </div>
 
+    <br>
+
     <!-- Release year input (only 4 digits) -->
     <div>
-        <label for="releaseYear">Release Year (YYYY format)</label>
+        <label for="releaseYear">Release Year (YYYY format):</label><br>
         <input 
         type="number" 
         name="releaseYear" 
@@ -39,11 +45,15 @@
         >
     </div>
 
+    <br>
+
     <!-- Image input (URLs ending with: jpg, jpeg, png, gif, webp)-->
     <div>
-        <label for="image">Image URL (URLs ending with: jpg, jpeg, png, gif, webp. Recommended to use pictures from TMDB)</label>
-        <input type="text" name="image" id="image" value="<%= movie ? movie.image : '' %>">
+        <label for="image">Image URL (URLs ending with: jpg, jpeg, png, gif, webp. Recommended to use picture from TMDB)</label><br>
+        <input type="text" name="image" id="image" value="<%= movie ? movie.image : '' %>" size="90"> 
     </div>
+
+     <br>
 
     <!-- Warning handling-->
     <% if (warnings && warnings.length > 0) { %>
