@@ -114,6 +114,9 @@ exports.profile = async (req, res) => {
         // get all reviews by this user and populate movie info
         const userReviews = await Review.find({ user: req.session.userId }).populate("movie");
 
+        // filter out reviews whose movie has been deleted
+        const validUserReviews = userReviews.filter(review => review.movie !== null);
+
         // recommended movies based on watchlist genres
         let recommendedMovies = [];
         if (watchlist && watchlist.movies.length > 0) {
@@ -135,7 +138,7 @@ exports.profile = async (req, res) => {
             user,
             watchlistMovies: watchlist ? watchlist.movies : [],
             recommendedMovies,
-            userReviews
+            userReviews: validUserReviews
         });
 
     } catch (err) {
