@@ -24,19 +24,19 @@
                     <p><strong>Bio:</strong></p>
                     <% if (!user.bio) { %>
                         <form action="/profile/bio" method="POST">
-                            <textarea name="bio" placeholder="Write something about yourself..."
+                            <textarea name="bio" placeholder="Write something about yourself..." maxlength="500"
                                 class="bio-textarea"></textarea>
                             <br>
                             <button type="submit" class="btn">Save Bio</button>
                         </form>
                         <% } else { %>
-                            <p id="bioText">
+                            <p id="bioText" style="width: 1500px;overflow-wrap: break-word;">
                                 <%= user.bio %>
                             </p>
                             <button onclick="showEdit()" id="editButton" class="btn">Edit Bio</button>
 
                             <form id="bioForm" method="post" action="/profile/bio/edit" style="display: none;">
-                                <textarea name="bio" class="bio-textarea"><%= user.bio %></textarea>
+                                <textarea name="bio" class="bio-textarea" maxlength="500"><%= user.bio %></textarea>
                                 <br>
                                 <button type="submit" class="btn">Save</button>
                                 <button type="button" onclick="hideEdit()" class="btn">Cancel</button>
@@ -56,7 +56,7 @@
                             <a href="/movie/<%= movie._id %>">
                                 <img src="<%= movie.image %>" alt="<%= movie.title %>">
                             </a>
-                            <span class="movie-title">
+                            <span class="movie-title" style="overflow-wrap: break-word;">
                                 <%= movie.title %>
                             </span>
                         </div>

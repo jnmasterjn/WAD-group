@@ -5,7 +5,7 @@
 </head>
 <body>
     <%- include("./partials/navbar") %>
-    
+
     <h1>My Reviews</h1>    
     <!-- Message when no reviews are given -->
     <% if (reviews.length === 0) { %>
@@ -18,7 +18,7 @@
             <img src="<%= review.movie.image %>" style="width:160px; border-radius: 20px;">
         </a>
         <p><strong>Rating:</strong><%= review.rating %>/5</p>
-        <p><strong>Comment:</strong><%= review.comment %></p>
+        <p style="width: 1500px;overflow-wrap: break-word;"><strong>Comment:</strong><%= review.comment %></p>
 
         <!-- edit review button -->
         <button id="UserEditButton-<%= review._id %>" type="button" onclick="showEdit('<%= review._id %>')">Edit Review</button>

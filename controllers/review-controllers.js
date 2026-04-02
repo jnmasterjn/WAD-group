@@ -23,6 +23,9 @@ async function updateMovieAverage(movieId) {
 
 // Save review
 exports.postReview = async (req, res) => {
+    // redirect to login if session is invalid or expired
+    if (!req.session.userId) return res.redirect("/login");
+
     const { comment, rating, movie } = req.body;
 
     try {
