@@ -111,21 +111,21 @@ exports.viewMyReviews = async (req, res) => {
 };
 
 // Show form to create a new review
-exports.viewNewReview = async (req, res) => {
-    try {
-        const movieId = req.params.movieId;
-        const movie = await Movie.findById(movieId);
+// exports.viewNewReview = async (req, res) => {
+//     try {
+//         const movieId = req.params.movieId;
+//         const movie = await Movie.findById(movieId);
 
-        const existingReview = await Review.findOne({ user: req.session.userId, movie: movieId });
-        if (existingReview) {
-            return res.redirect(`/movie/${movieId}`); // already reviewed
-        }
-        res.render("newReview", { movie });
-    } catch (err) {
-        console.error(err);
-        res.send("You already made a review. One review allowed only.")
-    }
-};
+//         const existingReview = await Review.findOne({ user: req.session.userId, movie: movieId });
+//         if (existingReview) {
+//             return res.redirect(`/movie/${movieId}`); // already reviewed
+//         }
+//         res.render("newReview", { movie });
+//     } catch (err) {
+//         console.error(err);
+//         res.send("You already made a review. One review allowed only.")
+//     }
+// };
 
 // Show form to edit existing review
 exports.viewEditReview = async(req, res) => {
@@ -150,7 +150,17 @@ exports.editReview = async (req, res) => {
             return res.send("Review not found");
         }
 
-        // ... rest of the validation code ...
+        //trimm the new comment
+        const trimmedComment = comment.trim();
+
+        if (!trimmedComment) {
+            return res.send("Comment cannot be empty");
+        }
+
+        if (!rating || isNaN(rating) || rating < 1 || rating > 5) {
+            return res.send("Rating must be between 1 and 5");
+        }
+
         const updatedReview = await Review.findByIdAndUpdate(
             req.params.id,
             { comment, rating: Number(rating) },

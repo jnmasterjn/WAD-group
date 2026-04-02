@@ -128,7 +128,7 @@
                         gap:10px;
                 ">
                     <input type="number" name="rating" min="1" max="5" value="<%= userReview.rating %>">
-                    <textarea name="comment" rows="4" maxlength="500"><%= userReview.comment %></textarea>
+                    <textarea name="comment" rows="4" maxlength="500" required><%= userReview.comment %></textarea>
 
                     <button type="submit">Update</button>
                     <button type="button" onclick="hideEditForm('<%= userReview._id %>')">Cancel</button>

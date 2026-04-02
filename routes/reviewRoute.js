@@ -5,7 +5,7 @@ const { isLoggedIn } = require("../middleware/auth");
 const reviewController = require("../controllers/review-controllers")
 
 // get: show form to create a new review
-router.get("/review/new/:movieId", isLoggedIn, reviewController.viewNewReview);
+// router.get("/review/new/:movieId", isLoggedIn, reviewController.viewNewReview);
 
 // post: handle form submission (create new review)
 router.post("/myReviews", isLoggedIn, reviewController.postReview);
