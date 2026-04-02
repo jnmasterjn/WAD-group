@@ -93,25 +93,28 @@
             <p style="width: 600px;overflow-wrap: break-word;"><strong>Comment:</strong> <%= userReview.comment %></p>
 
             <!-- Button to show edit form-->
-            <button id="editButton" onclick="showEditForm()">Edit</button>
+            <button id="editButton<%= userReview._id %>" onclick="showEditForm('<%= userReview._id %>')">Edit</button>
 
             <!-- Edit form, hidden by default -->
-            <form id="editForm" action="/review/edit/<%= userReview._id %>" method="post" style="
-                display:none;
-                margin-top:10px;
-                flex-direction:column;
-                gap:10px;
+            <form id="editForm<%= userReview._id %>"
+                    action="/review/edit/<%= userReview._id %>" 
+                    method="post"
+                    style="
+                    display:none;
+                    margin-top:10px;
+                    flex-direction:column;
+                    gap:10px;
             ">
                 <input type="number" name="rating" min="1" max="5" value="<%= userReview.rating %>">
                 <textarea name="comment" rows="4" maxlength="500"><%= userReview.comment %></textarea>
 
                 <button type="submit">Update</button>
-                <button type="button" onclick="hideEditForm()">Cancel</button>
+                <button type="button" onclick="hideEditForm('<%= userReview._id %>')">Cancel</button>
             </form>
 
             <!-- Delete Review Button -->
             <form action="/review/delete/<%= userReview._id %>" method="POST">
-                <button type="submit" onclick="return confirm('Delete this review?')">Delete</button>
+                <button id="deleteButton<%= userReview._id %>" type="submit" onclick="return confirm('Delete this review?')">Delete</button>
             </form>
         <% } %>
 
@@ -166,14 +169,17 @@
 
     <!-- for showing/hiding edit form -->
     <script>
-        function showEditForm() {
-            document.getElementById("editForm").style.display = "flex";
-            document.getElementById("editButton").style.display = "none";
+        
+        function showEditForm(id) {
+            document.getElementById("editForm"+id).style.display = "flex";
+            document.getElementById("editButton"+id).style.display = "none";
+            document.getElementById("deleteButton"+id).style.display = "none";
         }
 
-        function hideEditForm() {
-            document.getElementById("editForm").style.display = "none";
-            document.getElementById("editButton").style.display = "inline-block";
+        function hideEditForm(id) {
+            document.getElementById("editForm"+id).style.display = "none";
+            document.getElementById("editButton"+id).style.display = "inline-block";
+            document.getElementById("deleteButton"+id).style.display = "inline-block";
         }
     </script>
 
