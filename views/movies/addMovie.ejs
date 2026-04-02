@@ -2,22 +2,28 @@
 
 <h1>Add Movie</h1>
 
+<!-- Show errors -->
 <% if (error) { %>
   <ul style="color: red;">
+    <!-- if error is a string, convert to array. Use it if it is already array. Loop through the errors for display -->
     <% (Array.isArray(error) ? error : [error]).forEach(function(err) { %>
       <li><%= err %></li>
+    <!-- escapes HTML (safe output) -->
     <% }) %>
   </ul>
 <% } %>
 
+<!-- Show warnings -->
 <% if (warnings && warnings.length > 0) { %>
   <ul style="color: orange;">
+    <!-- Show and loop through warnings -->
     <% warnings.forEach(function(warning) { %>
       <li><%= warning %></li>
     <% }) %>
   </ul>
 <% } %>
 
+<!-- Include reusable form -->
 <%- include("_movieForm", {
     formAction: "/movie/add",
     buttonText: "Add Movie",
