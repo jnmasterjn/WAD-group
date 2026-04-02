@@ -1,3 +1,4 @@
+// ===================== IMPORT =====================
 const express = require("express");
 const router = express.Router();
 const { isLoggedIn } = require("../middleware/auth");
@@ -52,4 +53,6 @@ router.post("/profile/bio", isLoggedIn, userController.createBio)
 //user edit bio
 router.post("/profile/bio/edit", isLoggedIn, userController.editBio)
 
+
+// ===================== EXPORT =====================
 module.exports = router;

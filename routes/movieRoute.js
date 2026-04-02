@@ -34,4 +34,6 @@ router.post("/movie/edit/:id", isLoggedIn, isAdmin, movieController.movieUpdate)
 // Get movie details by id  
 router.get("/movie/:id", isLoggedIn, movieController.movieDesc);
 
+
+// ===================== EXPORT =====================
 module.exports = router;

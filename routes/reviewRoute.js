@@ -23,4 +23,6 @@ router.post("/review/edit/:id", isLoggedIn,reviewController.editReview)
 //post: delete review
 router.post("/review/delete/:id", isLoggedIn, reviewController.deleteReview)
 
+
+// ===================== EXPORT =====================
 module.exports = router;

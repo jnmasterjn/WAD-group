@@ -1,3 +1,4 @@
+// ===================== IMPORT =====================
 const express = require("express");
 const router = express.Router();
 const { isLoggedIn } = require("../middleware/auth");
@@ -15,4 +16,5 @@ router.post("/watched/remove/:id", isLoggedIn, watchedControllers.removeWatchedM
 //edit watched desc
 router.post("/watched/editdesc", isLoggedIn, watchedControllers.editWatchedDesc);
 
+// ===================== EXPORT =====================
 module.exports = router;
