@@ -1,22 +1,41 @@
-<nav style="display:flex; justify-content:space-between; align-items:center;">
+<div style="
+    width:100%;
+    border-bottom:1px solid #ddd;
+    padding:12px 30px;
+    box-sizing:border-box;
+    background:white;
+">
 
-    <!-- LEFT SIDE -->
-    <div>
-        <a href="/movie">All Movies</a>&nbsp;&nbsp;
-        <a href="/watchlist">My Watchlist</a>&nbsp;&nbsp;
-        <a href="/watched">Watched Movies</a>&nbsp;&nbsp;
-        <a href="/myReviews">My Reviews</a>&nbsp;&nbsp;
-    </div>
+    <nav style="
+        display:flex;
+        align-items:center;
+        max-width:1000px;
+        margin:0 auto;
+    ">
 
-    <!-- RIGHT SIDE -->
-    <div>
-        <% if (username) { %>
-            <span>Logged in as: <a href="/profile"><%= username %></a>&nbsp;&nbsp;</span>&nbsp;&nbsp;
-            <a href="/logout" onclick="return confirm('Are you sure you want to logout?')">Logout</a>
-        <% } else { %>
-            <a href="/login">Login</a>&nbsp;&nbsp;
-            <a href="/register">Register</a>
-        <% } %>
-    </div>
+        <!-- LEFT -->
+        <div style="display:flex; gap:20px;">
+            <a href="/movie">All Movies</a>
+            <a href="/watchlist">My Watchlist</a>
+            <a href="/watched">Watched Movies</a>
+            <a href="/myReviews">My Reviews</a>
+        </div>
 
-</nav>
+        <!-- RIGHT -->
+        <div style="
+            display:flex;
+            gap:15px;
+            align-items:center;
+            margin-left:auto;
+        ">
+            <% if (username) { %>
+                <span>Logged in as <a href="/profile"><%= username %></a></span>
+                <a href="/logout">Logout</a>
+            <% } else { %>
+                <a href="/login">Login</a>
+                <a href="/register">Register</a>
+            <% } %>
+        </div>
+
+    </nav>
+</div>
