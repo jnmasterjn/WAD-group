@@ -28,6 +28,12 @@ A full-stack web application that allows users to browse movies, manage watchlis
 - Mark/unmark movies as Watched
 - Track viewing history
 
+### 🔐 Admin Features
+- Add new movies
+- Edit existing movie details
+- Delete movies from the database
+- Access restricted admin-only functionalities
+
 ### 👤 Profile Page
 - Edit personal bio
 - View:
@@ -132,8 +138,10 @@ movie-watchlist/
 ## ⚙️ Installation
 
 1. Clone the repository:
-`git clone `
-`cd movie-watchlist`
+```
+git clone 
+cd movie-watchlist
+```
 
 2. Install dependencies:
 `npm install`
@@ -146,3 +154,48 @@ movie-watchlist/
 
 5. Open in browser:
 `http://localhost:3000`
+
+
+## 🛢️ Database Schema
+
+- Like
+  - user: ObjectId
+  - review: ObjectId
+  - createdAt: Date
+
+- Movie
+  - title: String
+  - description: String
+  - genre: String
+  - releaseYear: Number
+  - image: String
+  - averageRating: Number
+  - ratingCount: Number
+  - timestamps
+ 
+- Review
+  - user: ObjectId
+  - username: String
+  - movie: ObjectId
+  - comment: String
+  - rating: Number
+  - timestamps
+ 
+- User
+  - username: String
+  - password: String
+  - bio: String
+  - isAdmin: Boolean
+  - timestamps
+ 
+- Watchedlist
+  - user: ObjectId
+  - movies: ObjectId
+  - watchedlistDesc: String
+  - timestamps
+
+- Watchlist
+  - user: ObjectId
+  - movies: ObjectId
+  - watchlistDesc: String
+  - timestamps
