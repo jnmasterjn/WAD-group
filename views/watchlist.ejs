@@ -1,82 +1,82 @@
 <%- include("./partials/navbar") %>
 <html>
-    <head>
-        <title>My Watchlist</title>
-    </head>
+<head>
+    <title>My Watchlist</title>
+</head>
 
-    <body style="margin: 8px;">
-        <!-- ===================== HEADER ===================== -->
-        <h1>My Watchlist</h1>
+<body style="margin: 8px;">
+    <!-- ===================== HEADER ===================== -->
+    <h1>My Watchlist</h1>
 
-        <!-- ===================== WATCHLIST DESCRIPTION ===================== -->
-        <h3>Watchlist description:</h3>
+    <!-- ===================== WATCHLIST DESCRIPTION ===================== -->
+    <h3>Watchlist description:</h3>
 
-        <% if (!watchlistdesc || watchlistdesc.trim() === "") { %>
-            <p>No description yet.</p>
-        <% } else { %>
-            <p style="width: 1500px;overflow-wrap: break-word;"><%= watchlistdesc %></p>
-        <% } %>
+    <% if (!watchlistdesc || watchlistdesc.trim() === "") { %>
+        <p>No description yet.</p>
+    <% } else { %>
+        <p style="width: 1500px;overflow-wrap: break-word;"><%= watchlistdesc %></p>
+    <% } %>
 
-        <!-- Button to show edit form -->
-        <button id="editDescButton" type="button" onclick="showEdit()">Edit Description</button>
+    <!-- Button to show edit form -->
+    <button id="editDescButton" type="button" onclick="showEdit()">Edit Description</button>
 
-        <!-- Hidden form to edit description -->
-        <form id="descForm" action="/watchlist/editdesc" method="POST" style="display:none;">
-            <textarea name="watchlistdesc" rows="6" cols="60" maxlength="3000"><%= watchlistdesc %></textarea>
-            
-            <br><br>
+    <!-- Hidden form to edit description -->
+    <form id="descForm" action="/watchlist/editdesc" method="POST" style="display:none;">
+        <textarea name="watchlistdesc" rows="6" cols="60" maxlength="3000"><%= watchlistdesc %></textarea>
+        
+        <br><br>
 
-            <button type="submit">Save</button>
-            <button type="button" onclick="hideEdit()">Cancel</button>
-        </form>
+        <button type="submit">Save</button>
+        <button type="button" onclick="hideEdit()">Cancel</button>
+    </form>
 
-        <!-- ===================== MOVIE LIST ===================== -->
-        <h3>Here is your watch list:</h3>
+    <!-- ===================== MOVIE LIST ===================== -->
+    <h3>Here is your watch list:</h3>
 
-        <% if (movies.length == 0) { %>
+    <% if (movies.length == 0) { %>
 
-            <p>No movies added here yet!</p>
-            <a href="/movie">Browse our movie catalogue</a>
+        <p>No movies added here yet!</p>
+        <a href="/movie">Browse our movie catalogue</a>
 
-        <% } else { %>
+    <% } else { %>
 
-            <div style="display:flex; flex-wrap:wrap;">
+        <div style="display:flex; flex-wrap:wrap;">
 
-                <% movies.forEach(movie => { %>
+            <% movies.forEach(movie => { %>
 
-                    <div style="width:150px; margin:10px; text-align:center">
+                <div style="width:150px; margin:10px; text-align:center">
 
-                        <!-- Movie link -->
-                        <a href="/movie/<%= movie._id %>">
-                            <img src="<%= movie.image %>" 
-                                style="width:160px; border-radius:20px;"><br>
-                        </a>
+                    <!-- Movie link -->
+                    <a href="/movie/<%= movie._id %>">
+                        <img src="<%= movie.image %>" 
+                            style="width:160px; border-radius:20px;"><br>
+                    </a>
 
-                        <!-- Movie title -->
-                        <%= movie.title %>
+                    <!-- Movie title -->
+                    <%= movie.title %>
 
-                    </div>
+                </div>
 
-                <% }) %>
+            <% }) %>
 
-            </div>
+        </div>
 
-        <% } %>
+    <% } %>
 
-    </body>
+    <!-- ===================== CLIENT-SIDE JS ===================== -->
+    <script>
+        // Show edit description form
+        function showEdit() {
+            document.getElementById("descForm").style.display = "block";
+            document.getElementById("editDescButton").style.display = "none";
+        }
+        
+        // Hide edit description form
+        function hideEdit() {
+            document.getElementById("descForm").style.display = "none";
+            document.getElementById("editDescButton").style.display = "block";
+        }
+    </script>
+
+</body>
 </html>
-
-<!-- ===================== CLIENT-SIDE JS ===================== -->
-<script>
-    // Show edit description form
-    function showEdit() {
-        document.getElementById("descForm").style.display = "block";
-        document.getElementById("editDescButton").style.display = "none";
-    }
-    
-    // Hide edit description form
-    function hideEdit() {
-        document.getElementById("descForm").style.display = "none";
-        document.getElementById("editDescButton").style.display = "block";
-    }
-</script>

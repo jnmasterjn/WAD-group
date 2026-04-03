@@ -1,54 +1,60 @@
 <%- include("./partials/navbar") %>
 <html>
-    <head><title>My Watched Movies</title></head>
+<head>
+    <title>My Watched Movies</title>
+</head>
+
+<body style="margin: 8px;">
+
+    <h1>My Watched Movies</h1>
+
+    <!-- ===================== WATCHED MOVIES DESCRIPTION ===================== -->
+    <h3>Watched movies description:</h3>
+    <% if (!watchedlistdesc || watchedlistdesc.trim() === "") { %>
+        <p>No description yet.</p>
+    <% } else { %>
+        <p style="width: 1500px;overflow-wrap: break-word;"><%= watchedlistdesc %></p>
+    <% } %>
+
+    <button id="editDescButton" type="button" onclick="showEdit()">Edit Description</button>
+
+    <form id="descForm" action="/watched/editdesc" method="POST" style="display:none;">
+        <textarea name="watchedlistdesc" rows="6" cols="60" maxlength="3000"><%= watchedlistdesc %></textarea>
+        <br><br>
+        <button type="submit">Save</button>
+        <button type="button" onclick="hideEdit()">Cancel</button>
+    </form>
+
+    <!-- ===================== MOVIE LIST ===================== -->
+    <h3>Here are the movies you've watched:</h3>
+    <% if (movies.length == 0) { %>
+        <p>No movies added here yet!</p>
+        <a href="/movie">Browse our movie catalogue</a>
+    <% } else { %>
+        <div style="display:flex; flex-wrap:wrap;">
+            <% movies.forEach(movie => { %>
+                <div style="width:150px; margin:10px; text-align:center">
+                    <a href="/movie/<%= movie._id %>">
+                        <img src="<%= movie.image %>" style="width:160px; border-radius:20px;"><br>
+                    </a>
+                    <%= movie.title %>
+                </div>
+            <% }) %>
+        </div>
+    <% } %>
+
+    <!-- ===================== CLIENT-SIDE JS ===================== -->
+    <script>
+        function showEdit() {
+            document.getElementById("descForm").style.display = "block";
+            document.getElementById("editDescButton").style.display = "none";
+        }
+
+        function hideEdit() {
+            document.getElementById("descForm").style.display = "none";
+            document.getElementById("editDescButton").style.display = "block";
+        }
+    </script>
     
-    <body style="margin: 8px;">
-
-        <h1>My Watched Movies</h1>
-        <h3>Watched movies description:</h3>
-        <% if (!watchedlistdesc || watchedlistdesc.trim() === "") { %>
-            <p>No description yet.</p>
-        <% } else { %>
-            <p style="width: 1500px;overflow-wrap: break-word;"><%= watchedlistdesc %></p>
-        <% } %>
-
-        <button id="editDescButton" type="button" onclick="showEdit()">Edit Description</button>
-
-        <form id="descForm" action="/watched/editdesc" method="POST" style="display:none;">
-            <textarea name="watchedlistdesc" rows="6" cols="60" maxlength="3000"><%= watchedlistdesc %></textarea>
-            <br><br>
-            <button type="submit">Save</button>
-            <button type="button" onclick="hideEdit()">Cancel</button>
-        </form>
-
-        <h3>Here are the movies you've watched:</h3>
-        <% if (movies.length == 0) { %>
-            <p>No movies added here yet!</p>
-            <a href="/movie">Browse our movie catalogue</a>
-        <% } else { %>
-            <div style="display:flex; flex-wrap:wrap;">
-                <% movies.forEach(movie => { %>
-                    <div style="width:150px; margin:10px; text-align:center">
-                        <a href="/movie/<%= movie._id %>">
-                        <img src="<%= movie.image %>" 
-                            style="width:160px; border-radius:20px;"><br>
-                        </a>  
-                        <%= movie.title %>
-                    </div>
-                <% }) %>
-            </div>
-        <% } %>
-    </body>
+</body>
 </html>
- 
-<script>
-    function showEdit() {
-        document.getElementById("descForm").style.display = "block";
-        document.getElementById("editDescButton").style.display = "none";
-    }
-    
-    function hideEdit() {
-        document.getElementById("descForm").style.display = "none";
-        document.getElementById("editDescButton").style.display = "block";
-    }
-</script>
