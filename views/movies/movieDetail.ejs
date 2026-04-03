@@ -70,6 +70,10 @@
             <% if (!userReview) { %>
                 <h3>Leave a review</h3>
 
+                <% if (error) { %>
+                    <p style="color:red;"><%= error %></p>
+                <% } %>
+                
                 <form action="/myReviews" method="post" style="
                     display:flex;
                     flex-direction:column;
@@ -82,7 +86,7 @@
 
                     <textarea name="comment" rows="4" placeholder="Write your review (max 500 characters)" maxlength="500" required></textarea>
 
-                    <button type="submit">Post Review</button>
+                    <button type="submit" onclick="if (!this.form.checkValidity()) return;this.disabled=true; this.form.submit()">Post Review</button>
                 </form>
             <% } %>
 
@@ -142,7 +146,7 @@
                         flex-direction:column;
                         gap:10px;
                 ">
-                    <input type="number" name="rating" min="1" max="5" value="<%= userReview.rating %>">
+                    <input type="number" name="rating" min="1" max="5" value="<%= userReview.rating %>" required>
                     <textarea name="comment" rows="4" maxlength="500" required><%= userReview.comment %></textarea>
 
                     <button type="submit">Update</button>

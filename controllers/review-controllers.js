@@ -103,7 +103,7 @@ exports.viewMyReviews = async (req, res) => {
         // filter out reviews whose movie has been deleted
         const validReviews = reviews.filter(review => review.movie !== null);
 
-        res.render("myReviews", { reviews: validReviews });
+        res.render("myReviews", { reviews: validReviews, error: null });
     } catch (err) {
         console.error(err);
         res.send("Error loading reviews");
@@ -127,17 +127,6 @@ exports.viewMyReviews = async (req, res) => {
 //     }
 // };
 
-// Show form to edit existing review
-exports.viewEditReview = async(req, res) => {
-    try {
-        const review = await Review.findById(req.params.id)
-        res.render("editReview", {review})
-    } catch (err) {
-        console.error(err);
-        res.send("Error loading edit form");
-    }
-};
-
 // Edit existing review
 exports.editReview = async (req, res) => {
     const { comment, rating } = req.body;
@@ -145,22 +134,19 @@ exports.editReview = async (req, res) => {
     try {
         const review = await Review.findById(req.params.id);
 
-        // check if review exists before proceeding
-        if (!review) {
-            return res.send("Review not found");
-        }
+        if (!review) return res.send("Review not found");
 
-        //trimm the new comment
+        // trim the new comment
         const trimmedComment = comment.trim();
 
         if (!trimmedComment) {
-            return res.send("Comment cannot be empty");
+            const reviews = await Review.find({ user: req.session.userId }).populate("user").populate("movie");
+            const validReviews = reviews.filter(review => review.movie !== null);
+            return res.render("myReviews", {
+                reviews: validReviews,
+                error: "Comment cannot be empty"
+            });
         }
-
-        if (!rating || isNaN(rating) || rating < 1 || rating > 5) {
-            return res.send("Rating must be between 1 and 5");
-        }
-
 
         const updatedReview = await Review.findByIdAndUpdate(
             req.params.id,
@@ -168,9 +154,7 @@ exports.editReview = async (req, res) => {
             { new: true }
         );
 
-        // update the movie's rating average
         await updateMovieAverage(updatedReview.movie);
-
         res.redirect(req.get("referer") || "/myReviews");
 
     } catch (err) {

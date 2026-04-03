@@ -13,9 +13,6 @@ router.post("/myReviews", isLoggedIn, reviewController.postReview);
 //get: view all reviews by the current user
 router.get("/myReviews", isLoggedIn, reviewController.viewMyReviews)
 
-// get: show edit form for a review
-router.get("/review/edit/:id", isLoggedIn, reviewController.viewEditReview)
-
 //post: submit edited review
 router.post("/review/edit/:id", isLoggedIn,reviewController.editReview)
 

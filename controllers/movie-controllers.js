@@ -143,7 +143,8 @@ exports.movieDesc = async (req, res) => {
             reviews: otherReview || [],
             userReview,
             likeMap,
-            userLikedMap
+            userLikedMap,
+            error: null
         })
     } catch (error) {
         console.error(error);

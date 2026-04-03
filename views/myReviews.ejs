@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
-
+<head>
+    <title>My Reviews</title>
+</head>
 <body style="margin: 8px;">
 
 
@@ -30,6 +32,11 @@
 
         <% } else { %>
 
+        <!-- error handling -->
+        <% if (typeof error !== 'undefined' && error) { %> 
+            <p style="color:red;"><%= error %></p>
+        <% } %>
+
         <!-- loop to render each movie -->
         <% reviews.forEach(review => { %>
 
@@ -52,7 +59,7 @@
                     <p style="color:red;">[Movie deleted]</p>
 
                 <% } %>
-
+                
                 <p>
                     <strong>Rating:</strong> 
                 
@@ -69,7 +76,7 @@
                     (<%= review.rating %>/5)
                 </p>
                 
-                <p><strong>Comment:</strong> <%= review.comment %></p>
+                <p style="overflow-wrap: break-word;"><strong>Comment:</strong> <%= review.comment %></p>
 
                 <div style="display:flex; gap:10px; margin-top:10px;">
 
@@ -96,7 +103,7 @@
                     style="display:none; margin-top:10px;">
 
                     <label>Rating:</label><br>
-                    <input type="number" name="rating" min="1" max="5" value="<%= review.rating %>"> 
+                    <input type="number" name="rating" min="1" max="5" value="<%= review.rating %>" required> 
                     
                     <br> 
 
@@ -108,12 +115,6 @@
                     <button type="submit">Save</button>
                     <button type="button" onclick="hideEdit('<%= review._id %>')">Cancel</button>
                 </form>
-
-                <!-- error handling -->
-                <% if (typeof error !== 'undefined' && error) { %> 
-                    <p style="color:red;"><%= error %></p>
-                <% } %>
-
             </div>
 
         <% }); %>
