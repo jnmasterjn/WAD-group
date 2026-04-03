@@ -75,7 +75,7 @@ A web application that allows users to browse movies, manage watchlists, track w
 ## 📂 Project Structure
 
 ```
-movie-watchlist/
+WAD-group/
 │
 ├── controllers/        # MVC Controllers, Business logic
 │   ├── like-controllers.js
@@ -139,8 +139,8 @@ movie-watchlist/
 
 1. Clone the repository:
 ```
-git clone 
-cd movie-watchlist
+git clone <your-repo-url>
+cd WAD-group
 ```
 
 2. Install dependencies:
@@ -148,17 +148,21 @@ cd movie-watchlist
 npm install
 ```
 
-4. Create a `.env` file:
+3. Set up MongoDB:
+   
+- Install MongoDB locally or use MongoDB Atlas
+
+4. Create a `.env` file in the root directory:
 ```
 MONGO_URI=your_mongodb_connection_string
 ```
 
-6. Run the server
+5. Start the server
 ```
 node server.js
 ```
 
-8. Open in browser:
+6. Open in browser:
 ```
 http://localhost:3000
 ```
