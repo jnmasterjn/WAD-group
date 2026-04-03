@@ -16,7 +16,8 @@ const watchlistSchema = new mongoose.Schema({
         maxlength: [3000, "watched movies description cannot exceed 3000 characters"]
     }
 }, {
-    timestamps: true
+    timestamps: true,
+    versionKey: false
 })
 
 module.exports = mongoose.model("Watchlist", watchlistSchema, "watchlists")

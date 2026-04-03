@@ -41,7 +41,8 @@ const userSchema = new mongoose.Schema({
         default: false
     }
 }, {
-    timestamps: true
+    timestamps: true,
+    versionKey: false
 })
 // the timestamps thing will auto add createdAt (when user registered), updatedAt
 

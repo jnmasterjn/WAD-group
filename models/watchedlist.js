@@ -16,7 +16,8 @@ const watchedMoviesSchema = new mongoose.Schema({
         maxlength: [3000, "watched movies description cannot exceed 3000 characters"],
     }
 }, {
-    timestamps: true
+    timestamps: true,
+    versionKey: false
 })
 
 module.exports = mongoose.model("Watchedlist", watchedMoviesSchema, "watchedlists") //model name, schema, the name of the collection in mongodb atlas
