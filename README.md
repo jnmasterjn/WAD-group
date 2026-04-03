@@ -167,8 +167,9 @@ http://localhost:3000
 
 ## 🔗 API Endpoints
 
-Liking User Reviews
-- `POST /like/:id` – Like other users' reviews
+Review Interaction
+- `POST /like/:id` – Like a user review
+- `POST /like/:id` — Unlike a user review
 
 Movie
 - `GET /movie` – Get all movies
@@ -183,31 +184,31 @@ Review
 - `GET /myReviews` – View all reviews by current user
 - `POST /myReviews` – Handle add review form submission request
 - `GET /review/edit/:id` – Show review edit form 
-- `POST /review/edit/:id` – Handle edited review request
+- `POST /review/edit/:id` – Handle submit edited review request
 - `POST /review/delete/:id` – Handle delete review request
 
 User
-- `GET /register` –
-- `POST /register` –
-- `GET /login` –
-- `POST /login` – 
-- `POST /logout` –
-- `GET /profile` –
-- `POST /profile/bio` –
-- `POST /profile/bio/edit` –
-- `GET /` –
+- `GET /register` – Show register form
+- `POST /register` – Handle register logic
+- `GET /login` – Show login form
+- `POST /login` – Handle login logic
+- `POST /logout` – Handle logout logic
+- `GET /profile` – Show user profile page
+- `POST /profile/bio` – Handle user create bio request
+- `POST /profile/bio/edit` – Handle user edit bio request
+- `GET /` – Landing page
 
 Watched Movies
-- `POST /watched/add/:id` –
-- `GET /watched` –
-- `POST /watched/remove/:id` –
-- `POST /watched/editdesc` –
+- `POST /watched/add/:id` – Handle add movie to watched list request
+- `GET /watched` – Show all user's watched movies
+- `POST /watched/remove/:id` – Handle remove watched movie request
+- `POST /watched/editdesc` – Handle edit watchedlist description request
 
 Watchlist
-- `POST /watchlist/add/:id` –
-- `POST /watchlist` –
-- `POST /watchlist/remove/:id` –
-- `POST /watchlist/editdesc` –
+- `POST /watchlist/add/:id` – Handle add movie to watchlist request
+- `GET /watchlist` – Show the user's watchlist
+- `POST /watchlist/remove/:id` – Remove a movie from the watchlist
+- `POST /watchlist/editdesc` – Handle edit watchlist description request
 
 ---
 
