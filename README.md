@@ -231,7 +231,8 @@ Watchlist
   - image: String
   - averageRating: Number
   - ratingCount: Number
-  - timestamps
+  - createdAt: Date
+  - updatedAt: Date
  
 - Review
   - user: ObjectId
@@ -239,23 +240,27 @@ Watchlist
   - movie: ObjectId
   - comment: String
   - rating: Number
-  - timestamps
+  - createdAt: Date
+  - updatedAt: Date
  
 - User
   - username: String
   - password: String
   - bio: String
   - isAdmin: Boolean
-  - timestamps
+  - createdAt: Date
+  - updatedAt: Date
  
 - Watchedlist
   - user: ObjectId
   - movies: ObjectId
   - watchedlistDesc: String
-  - timestamps
+  - createdAt: Date
+  - updatedAt: Date
 
 - Watchlist
   - user: ObjectId
   - movies: ObjectId
   - watchlistDesc: String
-  - timestamps
+  - createdAt: Date
+  - updatedAt: Date
