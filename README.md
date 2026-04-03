@@ -28,7 +28,7 @@ A full-stack web application that allows users to browse movies, manage watchlis
 - Mark/unmark movies as Watched
 - Track viewing history
 
-### 🔐 Admin Features
+### 🔒 Admin Features
 - Add new movies
 - Edit existing movie details
 - Delete movies from the database
@@ -162,12 +162,54 @@ node server.js
 ```
 http://localhost:3000
 ```
+
+---
+
 ## 🔗 API Endpoints
 
-- `GET /menu` – Get all teas
+Liking User Reviews
+- `POST /like/:id` – Like other users' reviews
 
+Movie
+- `GET /movie` – Get all movies
+- `GET /movie/:id` – Get single movie details
+- `GET /movie/add` – Show add movie form(admin only)
+- `POST /movie/add` – Handle add movie request (admin only)
+- `GET /movie/edit/:id` – Show edit movie form(admin only)
+- `POST /movie/edit/:id` – Handle edit movie request (admin only)
+- `POST /movie/delete/:id` – Handle delete movie request (admin only)
 
+Review
+- `GET /myReviews` – View all reviews by current user
+- `POST /myReviews` – Handle add review form submission request
+- `GET /review/edit/:id` – Show review edit form 
+- `POST /review/edit/:id` – Handle edited review request
+- `POST /review/delete/:id` – Handle delete review request
 
+User
+- `GET /register` –
+- `POST /register` –
+- `GET /login` –
+- `POST /login` – 
+- `POST /logout` –
+- `GET /profile` –
+- `POST /profile/bio` –
+- `POST /profile/bio/edit` –
+- `GET /` –
+
+Watched Movies
+- `POST /watched/add/:id` –
+- `GET /watched` –
+- `POST /watched/remove/:id` –
+- `POST /watched/editdesc` –
+
+Watchlist
+- `POST /watchlist/add/:id` –
+- `POST /watchlist` –
+- `POST /watchlist/remove/:id` –
+- `POST /watchlist/editdesc` –
+
+---
 
 ## 🛢️ Database Schema
 
