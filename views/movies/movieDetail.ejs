@@ -192,7 +192,7 @@
                     
                         (<%= review.rating %>/5)
                     </p>
-                    <p><strong>Comment:</strong> <%= review.comment %></p>
+                    <p style="overflow-wrap: break-word;"><strong>Comment:</strong> <%= review.comment %></p>
 
                     <!-- like count -->
                     <p>❤️ <%= likeMap[review._id] || 0 %></p>
