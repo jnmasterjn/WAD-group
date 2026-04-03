@@ -39,16 +39,22 @@
                     </a>
                 </span>
 
-                <a href="/logout" 
-                    style="
-                        text-decoration:none;
-                        color:white;
-                        background:#333;
-                        padding:6px 12px;
-                        border-radius:6px;
+                <form action="/logout" method="POST" 
+                onsubmit="return confirm('Are you sure you want to logout?')"
+                style="display:inline;">
+                
+                <button type="submit" style="
+                    text-decoration:none;
+                    color:white;
+                    background:#333;
+                    padding:6px 12px;
+                    border-radius:6px;
+                    border:none;
+                    cursor:pointer;
                 ">
                     Logout
-                </a>
+                </button>
+            </form>
 
             <% } else { %>
 

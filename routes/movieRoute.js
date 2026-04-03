@@ -9,7 +9,7 @@ const movieController = require("../controllers/movie-controllers")
 // Get all movies
 router.get("/movie", movieController.displayMovies);
 
-// show add movie form (needs to be above because :id is a catch-all parameter, it will match anything after /movie/ and store it in req.params.id. So instead of opening your add-movie page, it may try to find a movie whose id is "add".) 
+// Show add movie form (needs to be above because :id is a catch-all parameter, it will match anything after /movie/ and store it in req.params.id. So instead of opening your add-movie page, it may try to find a movie whose id is "add".) 
 router.get("/movie/add", isLoggedIn, isAdmin, (req, res) => {
     res.render("movies/addMovie", {
     movie: null,
@@ -22,13 +22,13 @@ router.get("/movie/add", isLoggedIn, isAdmin, (req, res) => {
 // Handle add movie request (admin only)
 router.post("/movie/add", isLoggedIn, isAdmin, movieController.movieAdd);
 
-// Show edit movie form (admin only)
+// Handle delete movie request (admin only)
 router.post("/movie/delete/:id", isLoggedIn, isAdmin, movieController.movieRemove);
 
 // Show edit movie form (admin only)
 router.get("/movie/edit/:id", isLoggedIn, isAdmin, movieController.movieEdit)
 
-// Show edit movie form (admin only)
+// Handle edit movie request (admin only)
 router.post("/movie/edit/:id", isLoggedIn, isAdmin, movieController.movieUpdate);
 
 // Get movie details by id  
