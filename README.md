@@ -67,13 +67,65 @@ A full-stack web application that allows users to browse movies, manage watchlis
 ---
 
 ## 📂 Project Structure
-controllers/     # Business logic
-models/          # Database schemas
-routes/          # API & page routes
-views/           # EJS templates
-middleware/      # Auth & protection logic
-public/          # Static files (CSS)
-server.js        # Entry point
+
+```
+movie-watchlist/
+│
+├── controllers/        # MVC Controllers, Business logic
+│   ├── like-controllers.js
+│   ├── movie-controllers.js
+│   ├── review-controllers.js
+│   ├── user-controllers.js
+│   ├── watched-controllers.js
+│   └── watchlist-controllers.js
+│
+├── middleware/         # Auth middleware
+│   └── auth.js
+│
+├── models/             # Mongoose schemas
+│   ├── like.js
+│   ├── movie.js
+│   ├── Review.js
+│   ├── user.js
+│   ├── watchedlist.js
+│   └── watchlist.js
+│
+├── public/             # Static files (CSS)
+│   └── css/
+│       └── style.css
+│
+├── routes/             # Route definitions
+│   ├── movieRoute.js
+│   ├── reviewRoute.js
+│   ├── userRoutes.js
+│   ├── watchedRoutes.js
+│   ├── watchlistRoutes.js
+│   └── likeRoute.js
+│
+├── views/              # EJS templates
+│   ├── movies/
+│   │   ├── _movieForm.ejs
+│   │   ├── addMovie.ejs
+│   │   ├── editMovie.ejs
+│   │   ├── movieDetail.ejs
+│   │   └── movieList.ejs
+│   │
+│   ├── partials/
+│   │   └── navbar.ejs
+│   │
+│   ├── index.ejs
+│   ├── login.ejs
+│   ├── register.ejs
+│   ├── profile.ejs
+│   ├── myReviews.ejs
+│   ├── watched-movies.ejs
+│   └── watchlist.ejs
+│
+│
+├── .env                # Environment variables
+├── package.json
+└── server.js           # Entry point
+```
 
 ---
 
