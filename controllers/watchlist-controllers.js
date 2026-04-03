@@ -21,8 +21,8 @@ exports.addMovietoWatchlist = async (req, res) => {
             { $pull: { movies: movieId } }
         );
 
-        // redirect back to the movies page
-        res.redirect("/movie")
+        // redirect back to previous page, if cannot refer go back to /movies 
+        res.redirect(req.get("referer") || "/movies");
 
     } catch (error) {
         console.error(error);
@@ -63,8 +63,10 @@ exports.removeWatchlistMovie = async (req, res) => {
             { $pull: { movies: movieId } }
         );
 
-        // redirect back to the watchlist page
-        res.redirect("/watchlist");
+        // redirect back to prev page, if cannot go back to /watchlist
+        res.redirect(req.get("referer") || "/watchlist");
+
+        
     } catch (error) {
         console.error(error);
         res.send("Failed to remove movie");

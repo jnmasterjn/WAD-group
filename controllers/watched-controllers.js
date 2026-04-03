@@ -20,8 +20,10 @@ exports.addWatchedMovies = async (req, res) => {
             { user: req.session.userId },
             { $pull: {movies: movieId} }
         )
-        // redirect back to the watched movies page
-        res.redirect("/movie");
+        // redirect back to previous page, if cannot refer go back to /movies
+        res.redirect(req.get("referer") || "/movies");
+
+
     } catch (error) {
         console.error(error);
         res.send("Failed to update watched movies list");
@@ -62,8 +64,10 @@ exports.removeWatchedMovies = async (req, res) => {
             { user: req.session.userId }, 
             { $pull: { movies: movieId } }
         );
-        // redirect back to the watched movies page
-        res.redirect("/watched");
+        // redirect back to prev page, if cannot refer go back to /watched
+        res.redirect(req.get("referer") || "/watched");
+
+
     } catch (error) {
         console.error(error);
         res.send("Failed to remove movie");
