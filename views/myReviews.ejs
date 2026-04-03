@@ -25,7 +25,7 @@
 
         <h1 style="text-align:center;">My Reviews</h1>    
 
-        <!-- Message when no reviews are given -->
+        <!-- Display message if no reviews exist -->
         <% if (reviews.length === 0) { %>
 
             <p>No Reviews yet.</p>
@@ -37,7 +37,7 @@
             <p style="color:red;"><%= error %></p>
         <% } %>
 
-        <!-- loop to render each movie -->
+        <!-- loop through each review -->
         <% reviews.forEach(review => { %>
 
             <div style="
