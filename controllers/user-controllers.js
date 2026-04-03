@@ -165,6 +165,7 @@ exports.createBio = async (req, res) => {
     }
 }
 
+// Edit bio
 exports.editBio = async (req, res) => {
     // retrieve the updated bio from the form submission
     const { bio } = req.body
