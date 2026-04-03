@@ -60,8 +60,8 @@
         <!-- hidden input to tell backend that admin confirmed, proceed anyway-->
         <input type="hidden" name="confirmWarning" value="true">
         <!-- changes button text to warn sdmin -->
-        <button type="submit">Add Anyway</button>
+        <button type="submit" onclick="this.disabled=true; this.form.submit()">Add Anyway</button>
     <% } else { %>
         <!-- used when no warning(s) -->
-        <button type="submit"><%= buttonText %></button>
+        <button type="submit" onclick="this.disabled=true; this.form.submit()"><%= buttonText %></button>
     <% } %>
