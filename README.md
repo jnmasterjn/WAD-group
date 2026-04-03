@@ -1,6 +1,6 @@
 # 🎬 Movie Watchlist Web Application
 
-A full-stack web application that allows users to browse movies, manage watchlists, track watched content, and share reviews with ratings.
+A web application that allows users to browse movies, manage watchlists, track watched content, and share reviews with ratings.
 
 ---
 
