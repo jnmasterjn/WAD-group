@@ -6,7 +6,7 @@
 
         <h1>My Watched Movies</h1>
         <h3>Watched movies description:</h3>
-        <% if (!watchedlistdesc) { %>
+        <% if (!watchedlistdesc || watchedlistdesc.trim() === "") { %>
             <p>No description yet.</p>
         <% } else { %>
             <p style="width: 1500px;overflow-wrap: break-word;"><%= watchedlistdesc %></p>

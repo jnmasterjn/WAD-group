@@ -52,5 +52,8 @@ router.get("/", (req, res) => {
     res.render("index", { username: req.session.username || null })
 });
 
+// delete user
+router.post("/profile/delete", isLoggedIn, userController.deleteUser);
+
 // ===================== EXPORT =====================
 module.exports = router;

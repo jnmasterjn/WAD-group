@@ -4,6 +4,7 @@ const Movie = require("../models/movie");
 const Watchlist = require("../models/watchlist");
 const Watchedlist = require("../models/watchedlist");
 const Review = require("../models/review");
+const Like = require("../models/like");
 
 
 // Register logic
@@ -178,3 +179,25 @@ exports.editBio = async (req, res) => {
         res.send("Failed to edit bio")
     }
 }
+
+// Delete user account and all associated data
+exports.deleteUser = async (req, res) => {
+    try {
+        const userId = req.session.userId;
+
+        // delete everything tied to this user
+        await Watchlist.deleteOne({ user: userId });
+        await Watchedlist.deleteOne({ user: userId });
+        await Review.deleteMany({ user: userId });
+        await User.findByIdAndDelete(userId);
+        await Like.deleteMany({ user: userId });
+
+        // destroy the session and redirect to register page
+        req.session.destroy();
+        res.redirect("/register");
+
+    } catch (err) {
+        console.error(err);
+        res.send("Error deleting account");
+    }
+};

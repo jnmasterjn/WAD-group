@@ -73,10 +73,11 @@ exports.removeWatchlistMovie = async (req, res) => {
     }
 };
 
+// Controller function to edit watchlist description
 exports.editWatchlistDesc = async (req, res) => {
     try {
         // retrieve the new description from the form submission
-        const watchlistdesc = req.body.watchlistdesc;
+        const watchlistdesc = req.body.watchlistdesc.trim();
 
         // find the current session's user's watchlist and update their description
         await Watchlist.findOneAndUpdate(

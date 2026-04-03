@@ -78,7 +78,7 @@ exports.removeWatchedMovies = async (req, res) => {
 exports.editWatchedDesc = async(req, res) => {
     try {
         // retrieve the new description from the form submission
-        const watchedlistdesc = req.body.watchedlistdesc;
+        const watchedlistdesc = req.body.watchedlistdesc.trim();
 
         // find the current session's user's watchedlist and update their description
         await Watchedlist.findOneAndUpdate(

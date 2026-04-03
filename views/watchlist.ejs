@@ -11,7 +11,7 @@
         <!-- ===================== WATCHLIST DESCRIPTION ===================== -->
         <h3>Watchlist description:</h3>
 
-        <% if (!watchlistdesc) { %>
+        <% if (!watchlistdesc || watchlistdesc.trim() === "") { %>
             <p>No description yet.</p>
         <% } else { %>
             <p style="width: 1500px;overflow-wrap: break-word;"><%= watchlistdesc %></p>

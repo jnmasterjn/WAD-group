@@ -141,6 +141,10 @@
                                 <% } %>
             </div>
 
+        <form action="/profile/delete" method="POST" 
+            onsubmit="return confirm('Are you sure you want to delete your account? This cannot be undone.')">
+            <button type="submit" class="btn">Delete Account</button>
+        </form>
 
         </div>
 
