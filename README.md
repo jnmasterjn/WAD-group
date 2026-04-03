@@ -80,17 +80,17 @@ server.js        # Entry point
 ## ⚙️ Installation
 
 1. Clone the repository:
-git clone 
-cd movie-watchlist
+`git clone `
+`cd movie-watchlist`
 
 2. Install dependencies:
-npm install
+`npm install`
 
 3. Create a `.env` file:
-MONGO_URI=your_mongodb_connection_string
+`MONGO_URI=your_mongodb_connection_string`
 
 4. Run the server
-node server.js
+`node server.js`
 
 5. Open in browser:
-http://localhost:3000
+`http://localhost:3000`
