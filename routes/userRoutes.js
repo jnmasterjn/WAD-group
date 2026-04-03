@@ -4,12 +4,15 @@ const router = express.Router();
 const { isLoggedIn } = require("../middleware/auth");
 const userController = require("../controllers/user-controllers")
 
-//reg page
+// Show register form
 router.get("/register", (req, res) => {
     res.render("register", {error:null, success: null})
 })
 
-//login page
+// Handle register logic
+router.post("/register", userController.registerLogic);
+
+// Show login form
 router.get("/login", (req, res) => {
 
     //logged in user cannot access /login again
@@ -25,34 +28,29 @@ router.get("/login", (req, res) => {
     res.render("login", { error:null, success})
 })
 
-//reg logic
-router.post("/register", userController.registerLogic);
-
-//login logic
+// Handle login logic
 router.post("/login", userController.loginLogic);
 
-//logout
-router.get("/logout", isLoggedIn, (req, res) => {
+// Handle logout logic
+router.post("/logout", isLoggedIn, (req, res) => {
     req.session.destroy(()=>{
         res.redirect('/')
     })
 }); 
 
-//profile
+// Show user profile page
 router.get("/profile", isLoggedIn, userController.profile);
 
-//landing page
+// Handle user create bio request
+router.post("/profile/bio", isLoggedIn, userController.createBio)
+
+// Handle user edit bio request
+router.post("/profile/bio/edit", isLoggedIn, userController.editBio)
+
+// Landing page
 router.get("/", (req, res) => {
     res.render("index", { username: req.session.username || null })
 });
-
-//user create bio
-router.post("/profile/bio", isLoggedIn, userController.createBio)
-
-
-//user edit bio
-router.post("/profile/bio/edit", isLoggedIn, userController.editBio)
-
 
 // ===================== EXPORT =====================
 module.exports = router;
