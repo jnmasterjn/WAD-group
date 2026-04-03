@@ -1,6 +1,5 @@
 const Movie = require("../models/movie");
 const Review = require("../models/review");
-const { movieEdit } = require("./movie-controllers");
 
 // Helper function to recalculate movie average
 async function updateMovieAverage(movieId) {
@@ -19,7 +18,6 @@ async function updateMovieAverage(movieId) {
         ratingsCount: reviewsWithRating.length
     });
 }
-
 
 // Save review
 exports.postReview = async (req, res) => {
@@ -110,23 +108,6 @@ exports.viewMyReviews = async (req, res) => {
     }
 };
 
-// Show form to create a new review
-// exports.viewNewReview = async (req, res) => {
-//     try {
-//         const movieId = req.params.movieId;
-//         const movie = await Movie.findById(movieId);
-
-//         const existingReview = await Review.findOne({ user: req.session.userId, movie: movieId });
-//         if (existingReview) {
-//             return res.redirect(`/movie/${movieId}`); // already reviewed
-//         }
-//         res.render("newReview", { movie });
-//     } catch (err) {
-//         console.error(err);
-//         res.send("You already made a review. One review allowed only.")
-//     }
-// };
-
 // Edit existing review
 exports.editReview = async (req, res) => {
     const { comment, rating } = req.body;
@@ -134,11 +115,13 @@ exports.editReview = async (req, res) => {
     try {
         const review = await Review.findById(req.params.id);
 
+        // check if review exists before proceeding
         if (!review) return res.send("Review not found");
 
         // trim the new comment
         const trimmedComment = comment.trim();
 
+        // validate comment is not empty
         if (!trimmedComment) {
             const reviews = await Review.find({ user: req.session.userId }).populate("user").populate("movie");
             const validReviews = reviews.filter(review => review.movie !== null);
@@ -148,13 +131,26 @@ exports.editReview = async (req, res) => {
             });
         }
 
+        // validate rating is between 1 and 5
+        if (!rating || isNaN(rating) || rating < 1 || rating > 5) {
+            const reviews = await Review.find({ user: req.session.userId }).populate("user").populate("movie");
+            const validReviews = reviews.filter(review => review.movie !== null);
+            return res.render("myReviews", {
+                reviews: validReviews,
+                error: "Rating must be between 1 and 5"
+            });
+        }
+
+        // update the review
         const updatedReview = await Review.findByIdAndUpdate(
             req.params.id,
             { comment, rating: Number(rating) },
             { new: true }
         );
 
+        // update the movie's rating average
         await updateMovieAverage(updatedReview.movie);
+
         res.redirect(req.get("referer") || "/myReviews");
 
     } catch (err) {
@@ -172,9 +168,8 @@ exports.deleteReview = async(req, res) => {
         if (review) {
             // recalculate average for this movie
             await updateMovieAverage(review.movie);
-
-            res.redirect(req.get("referer") || "/myReviews");
         }        
+        res.redirect(req.get("referer") || "/myReviews");
     }catch(err){
         console.log(err)
         res.send("Error deleting review")
